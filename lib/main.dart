@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/A%20start%20page/splash_screen_widget.dart';
 import 'package:learn_n/firebase_options.dart';
-import 'package:learn_n/start%20page/splash_screen_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +23,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// Platform  Firebase App Id
-// web       1:896261439291:web:23c4d2950fa1109065811e 
-// android   1:896261439291:android:012379d62b69521f65811e
-// ios       1:896261439291:ios:405647bf4574925d65811e

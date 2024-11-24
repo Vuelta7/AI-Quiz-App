@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:learn_n/start%20page/sign_up_screen_widget.dart';
+import 'package:learn_n/B%20home%20page/home_main_widget.dart';
 
 class SplashScreenWidget extends StatefulWidget {
   const SplashScreenWidget({super.key});
@@ -47,7 +47,7 @@ class SplashScreenWidgetState extends State<SplashScreenWidget>
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const SignupScreenWidget()),
+          MaterialPageRoute(builder: (context) => HomeMainWidget()),
         );
       }
     });

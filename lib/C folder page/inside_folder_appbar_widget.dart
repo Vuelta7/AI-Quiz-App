@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/folder%20page/add_button_dialog_widget.dart';
-import 'package:learn_n/home%20page/home_main_widget.dart';
+import 'package:learn_n/B%20home%20page/home_main_widget.dart';
+import 'package:learn_n/C%20folder%20page/add_button_dialog_widget.dart';
 
 PreferredSizeWidget insideFolderAppBarWidget(BuildContext context) {
   return AppBar(

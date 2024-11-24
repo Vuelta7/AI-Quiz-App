@@ -19,12 +19,12 @@ class PlayButtonWidget extends StatelessWidget {
         children: [
           Icon(
             Icons.hexagon_rounded,
-            size: 100,
+            size: 80,
             color: Colors.black,
           ),
           Icon(
             Icons.play_arrow,
-            size: 50,
+            size: 40,
             color: Colors.white,
           ),
         ],

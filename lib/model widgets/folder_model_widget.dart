@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/folder%20page/inside_folder_widget.dart';
+import 'package:learn_n/C%20folder%20page/inside_folder_widget.dart';
 
 // this widget is used for the HomeBody
 
