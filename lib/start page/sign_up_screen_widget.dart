@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/home%20page/home_main_widget.dart';
 
 class SignupScreenWidget extends StatelessWidget {
   const SignupScreenWidget({super.key});
-
-  final bool isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,87 +33,33 @@ class SignupScreenWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              isLoggedIn ? _playButton(context) : _loginForm(),
+              Column(
+                children: [
+                  _buildRetroTextField('Username'),
+                  const SizedBox(height: 10),
+                  _buildRetroTextField('Password', isPassword: true),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: 170,
+                    child: _buildRetroButton(
+                        'Login', const Color.fromARGB(255, 0, 0, 0), () {
+                      print('Login button pressed');
+                    }),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: 170,
+                    child: _buildRetroButton(
+                        'Sign Up', const Color.fromARGB(255, 0, 0, 0), () {
+                      print('Sign Up button pressed');
+                    }),
+                  ),
+                ],
+              )
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _playButton(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 250),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeMainWidget(),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Text(
-              'Get Started',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontFamily: 'PressStart2P',
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              print('Terms of Service clicked');
-            },
-            child: const Text(
-              'Terms of Service • Privacy Policy',
-              style: TextStyle(
-                color: Colors.grey,
-                decoration: TextDecoration.underline,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _loginForm() {
-    return Column(
-      children: [
-        _buildRetroTextField('Username'),
-        const SizedBox(height: 10),
-        _buildRetroTextField('Password', isPassword: true),
-        const SizedBox(height: 20),
-        SizedBox(
-          width: 170,
-          child: _buildRetroButton('Login', const Color.fromARGB(255, 0, 0, 0),
-              () {
-            print('Login button pressed');
-          }),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: 170,
-          child: _buildRetroButton(
-              'Sign Up', const Color.fromARGB(255, 0, 0, 0), () {
-            print('Sign Up button pressed');
-          }),
-        ),
-      ],
     );
   }
 
