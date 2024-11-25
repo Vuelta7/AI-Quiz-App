@@ -1,23 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/login_screen.dart';
+import 'package:learn_n/A%20start%20page/sign_up_screen_widget.dart';
 
-class SignupScreen extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   static route() => MaterialPageRoute(
-        builder: (context) => const SignupScreen(),
+        builder: (context) => const LoginScreen(),
       );
 
-  const SignupScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  // Getter functions for email and password
+
   @override
   void dispose() {
     emailController.dispose();
@@ -25,13 +26,13 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  Future<void> createUserWithEmailandPassword() async {
+  Future<void> loginUserWithEmailAndPassword() async {
     try {
-      final userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
+      final UserCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
               email: emailController.text.trim(),
               password: passwordController.text.trim());
-      print(userCredential);
+      print(UserCredential);
     } on FirebaseAuthException catch (e) {
       print(e.message);
     }
@@ -50,7 +51,7 @@ class _SignupScreenState extends State<SignupScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              const SizedBox(height: 100),
+              const SizedBox(height: 60),
               Image.asset(
                 'assets/logo_icon.png',
                 height: 200,
@@ -77,26 +78,25 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(
                     width: 170,
                     child: _buildRetroButton(
-                      'Sign Up',
+                      'Sign In',
                       const Color.fromARGB(255, 0, 0, 0),
-                      () async {
-                        await createUserWithEmailandPassword();
-                        Navigator.push(context, LoginScreen.route());
+                      () {
+                        print('Navigating to Sign In...');
                       },
                     ),
                   ),
                   const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, LoginScreen.route());
+                      Navigator.push(context, SignupScreen.route());
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: 'Already have an account? ',
+                        text: 'Don\'t have an account? ',
                         style: Theme.of(context).textTheme.titleMedium,
                         children: [
                           TextSpan(
-                            text: 'Sign In',
+                            text: 'Sign Up',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium

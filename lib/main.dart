@@ -23,3 +23,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// Platform  Firebase App Id
+// web       1:1031285993587:web:3ad51e4e6c175372133a06
+// android   1:1031285993587:android:f7d84d73551d5de6133a06
+// ios       1:1031285993587:ios:1e0b9df9f80d8983133a06

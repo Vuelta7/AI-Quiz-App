@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/A%20start%20page/sign_up_screen_widget.dart';
 import 'package:learn_n/B%20home%20page/home_main_widget.dart';
 
 class SplashScreenWidget extends StatefulWidget {
@@ -21,36 +23,57 @@ class SplashScreenWidgetState extends State<SplashScreenWidget>
   void initState() {
     super.initState();
 
+    // Initialize animation controller
     _controller = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     );
 
+    // Define the progress animation
     _progress = Tween<double>(begin: 0.0, end: 1.0).animate(_controller)
       ..addListener(() {
         setState(() {});
       });
 
+    // Start the animation
     _controller.forward();
 
+    // Timer to update loading text
     _dotTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (!mounted) return;
       setState(() {
         loadingText = 'Loading${'.' * ((timer.tick % 3) + 1)}';
       });
-      if (_controller.isCompleted) {
-        timer.cancel();
-      }
     });
 
-    Timer(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeMainWidget()),
-        );
-      }
-    });
+    // Navigate after animation finishes
+    Future.delayed(const Duration(seconds: 3), _checkAuthState);
+  }
+
+  Future<void> _checkAuthState() async {
+    if (!mounted) return;
+
+    // Add debugging information
+    print("Checking Firebase Authentication State...");
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    // Debugging: Log the user state
+    print("Current User: $user");
+
+    if (user != null) {
+      // User is logged in, navigate to HomeMainWidget
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeMainWidget()),
+      );
+    } else {
+      // User is not logged in, navigate to SignupScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const SignupScreen()),
+      );
+    }
   }
 
   @override
