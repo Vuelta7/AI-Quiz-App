@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/sign_up_screen_widget.dart';
+import 'package:learn_n/A%20start%20page/sign_up_screen.dart';
 import 'package:learn_n/B%20home%20page/home_main_widget.dart';
 
-class SplashScreenWidget extends StatefulWidget {
-  const SplashScreenWidget({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  SplashScreenWidgetState createState() => SplashScreenWidgetState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class SplashScreenWidgetState extends State<SplashScreenWidget>
+class SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _progress;

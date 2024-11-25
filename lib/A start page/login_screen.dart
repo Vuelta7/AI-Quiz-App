@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/sign_up_screen_widget.dart';
+import 'package:learn_n/A%20start%20page/sign_up_screen.dart';
+import 'package:learn_n/B%20home%20page/home_main_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -15,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -28,13 +28,43 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> loginUserWithEmailAndPassword() async {
     try {
-      final UserCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: emailController.text.trim(),
-              password: passwordController.text.trim());
-      print(UserCredential);
+      final userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      // Navigate to HomeMainWidget on success
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeMainWidget()),
+      );
+
+      // Success feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Login successful!',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+      print(userCredential);
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      // Show a generic error message for simplicity
+      String errorMessage = 'Invalid email or password. Please try again.';
+
+      // Error feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            errorMessage,
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -51,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              const SizedBox(height: 60),
+              const SizedBox(height: 100),
               Image.asset(
                 'assets/logo_icon.png',
                 height: 200,
@@ -81,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       'Sign In',
                       const Color.fromARGB(255, 0, 0, 0),
                       () {
-                        print('Navigating to Sign In...');
+                        loginUserWithEmailAndPassword();
                       },
                     ),
                   ),
