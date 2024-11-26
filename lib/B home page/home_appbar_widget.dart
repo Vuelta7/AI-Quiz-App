@@ -40,10 +40,6 @@ class HomeAppbarWidget extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.black,
               height: 4.0,
             ),
-            Container(
-              color: Colors.black.withOpacity(0.2),
-              height: 2.0,
-            ),
           ],
         ),
       ),
