@@ -60,6 +60,23 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
     }
   }
 
+  Future<void> deleteFolderFromDb() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .delete();
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  bool get _isFormValid {
+    return folderNameController.text.trim().isNotEmpty &&
+        descriptionController.text.trim().isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,17 +108,41 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: folderNameController,
-                    decoration: const InputDecoration(
+                    cursorColor: Colors.black, // Cursor line color
+                    decoration: InputDecoration(
                       hintText: 'Folder Name',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Black border when focused
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Black border when unfocused
+                      ),
                     ),
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: descriptionController,
-                    decoration: const InputDecoration(
+                    cursorColor: Colors.black, // Cursor line color
+                    decoration: InputDecoration(
                       hintText: 'Description',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Black border when focused
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Black border when unfocused
+                      ),
                     ),
                     maxLines: 3,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                   ),
                   const SizedBox(height: 10),
                   ColorPicker(
@@ -119,7 +160,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: _isLoading
+                    onPressed: _isLoading || !_isFormValid
                         ? null
                         : () async {
                             if (folderNameController.text.trim().isEmpty) {
@@ -160,13 +201,54 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
+                      backgroundColor:
+                          _isFormValid ? Colors.black : Colors.grey,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 12),
                     ),
                     child: const Text(
                       'Edit',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _isLoading || !_isFormValid
+                        ? null
+                        : () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            try {
+                              await deleteFolderFromDb();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Folder deleted successfully!'),
+                                ),
+                              );
+                              Navigator.pop(context);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Error: $e')),
+                              );
+                            } finally {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          _isFormValid ? Colors.black : Colors.grey,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                    ),
+                    child: const Text(
+                      'Delete Folder',
                       style: TextStyle(
                         fontSize: 16,
                       ),
