@@ -199,7 +199,7 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
       ),
-      validator: validator, // Add validator for form validation
+      validator: validator,
     );
   }
 
