@@ -42,7 +42,6 @@ class _FlashCardModelWidgetState extends State<FlashCardModelWidget>
       },
       child: Column(
         children: [
-          // Only animated front and back card area (no button inside)
           AnimatedBuilder(
             animation: _animation,
             builder: (context, child) {

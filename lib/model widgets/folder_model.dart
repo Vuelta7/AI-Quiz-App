@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:learn_n/C%20folder%20page/inside_folder_widget.dart';
+import 'package:learn_n/model%20widgets/edit_folder_widget.dart';
 
 class FolderModel extends StatelessWidget {
+  final String folderId; // Added folderId to track the folder
   final String folderName;
   final String description;
   final Color headerColor;
 
   const FolderModel({
     super.key,
+    required this.folderId, // Make sure to pass this when creating a FolderModel
     required this.folderName,
     required this.description,
     this.headerColor = const Color(0xFFBDBDBD),
@@ -86,18 +89,32 @@ class FolderModel extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
-                            Icons.star_border_purple500_rounded,
-                            size: 40,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                          ),
-                          Icon(
-                            Icons.more_horiz_rounded,
-                            size: 40,
-                            color: Color.fromARGB(255, 0, 0, 0),
+                          const Icon(Icons.star_border_rounded),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditFolderWidget(
+                                    folderId: folderId, // Pass the folderId
+                                    initialFolderName:
+                                        folderName, // Pass current folder name
+                                    initialDescription:
+                                        description, // Pass current description
+                                    initialColor:
+                                        headerColor, // Pass current header color
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.more_horiz_rounded,
+                              size: 40,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
                           ),
                         ],
                       ),

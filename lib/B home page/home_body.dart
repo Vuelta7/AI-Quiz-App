@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/model%20widgets/folder_model.dart';
 import 'package:learn_n/util.dart';
 
-class HomeBodyWidget extends StatelessWidget {
-  const HomeBodyWidget({super.key});
+class HomeBody extends StatelessWidget {
+  const HomeBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +27,16 @@ class HomeBodyWidget extends StatelessWidget {
         }
 
         return ListView.builder(
-          padding: EdgeInsets.zero, // Remove all padding at the top and bottom
+          padding: EdgeInsets.zero,
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
-            final folderData =
-                snapshot.data!.docs[index].data() as Map<String, dynamic>;
+            final folderDoc = snapshot.data!.docs[index];
+            final folderData = folderDoc.data() as Map<String, dynamic>;
 
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: FolderModel(
+                folderId: folderDoc.id,
                 headerColor: hexToColor(folderData['color']),
                 folderName: folderData['folderName'],
                 description: folderData['description'],
