@@ -80,9 +80,7 @@ class _FlashCardModelWidgetState extends State<FlashCardModelWidget>
       ),
       child: Stack(
         children: [
-          // Front Side (Question)
           _buildFront(),
-          // Back Side (Answer)
           _buildBack(),
         ],
       ),
@@ -91,8 +89,7 @@ class _FlashCardModelWidgetState extends State<FlashCardModelWidget>
 
   Widget _buildFront() {
     return Visibility(
-      visible:
-          _animation.value < 0.5, // Show front when animation is less than 0.5
+      visible: _animation.value < 0.5,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -149,7 +146,6 @@ class _FlashCardModelWidgetState extends State<FlashCardModelWidget>
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  // Handle edit action for front side
                   print("Edit button pressed");
                 },
               ),

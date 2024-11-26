@@ -3,14 +3,14 @@ import 'package:learn_n/C%20folder%20page/inside_folder_widget.dart';
 import 'package:learn_n/model%20widgets/edit_folder_widget.dart';
 
 class FolderModel extends StatelessWidget {
-  final String folderId; // Added folderId to track the folder
+  final String folderId;
   final String folderName;
   final String description;
   final Color headerColor;
 
   const FolderModel({
     super.key,
-    required this.folderId, // Make sure to pass this when creating a FolderModel
+    required this.folderId,
     required this.folderName,
     required this.description,
     this.headerColor = const Color(0xFFBDBDBD),

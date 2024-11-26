@@ -4,8 +4,8 @@ import 'package:learn_n/B%20home%20page/drawer_widget.dart';
 import 'package:learn_n/B%20home%20page/home_appbar_widget.dart';
 import 'package:learn_n/B%20home%20page/home_body.dart';
 
-class HomeMainWidget extends StatelessWidget {
-  HomeMainWidget({super.key});
+class HomeMainScreen extends StatelessWidget {
+  HomeMainScreen({super.key});
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 

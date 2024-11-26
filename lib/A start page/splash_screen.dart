@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/sign_up_screen.dart';
-import 'package:learn_n/B%20home%20page/home_main_widget.dart';
+import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -65,7 +65,7 @@ class SplashScreenState extends State<SplashScreen>
       // User is logged in, navigate to HomeMainWidget
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeMainWidget()),
+        MaterialPageRoute(builder: (context) => HomeMainScreen()),
       );
     } else {
       // User is not logged in, navigate to SignupScreen
