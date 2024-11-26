@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } on FirebaseAuthException catch (e) {
       // Show a generic error message for simplicity
       String errorMessage = 'Invalid email or password. Please try again.';
+      print(e);
 
       // Error feedback
       ScaffoldMessenger.of(context).showSnackBar(
