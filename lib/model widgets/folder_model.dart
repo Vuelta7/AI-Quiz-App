@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20folder%20page/inside_folder_main_widget.dart';
+import 'package:learn_n/C%20folder%20page/inside_folder_main.dart';
 import 'package:learn_n/model%20widgets/edit_folder_widget.dart';
 
 class FolderModel extends StatelessWidget {

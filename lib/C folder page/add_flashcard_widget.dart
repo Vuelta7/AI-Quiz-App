@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:learn_n/C%20folder%20page/add_flashcard_screen.dart';
 
-class AddFlashcardDialogWidget extends StatelessWidget {
-  const AddFlashcardDialogWidget({super.key});
+class AddFlashcardButtonWidget extends StatelessWidget {
+  final String folderId;
+  const AddFlashcardButtonWidget({super.key, required this.folderId});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,9 @@ class AddFlashcardDialogWidget extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const AddButtonDialog();
+            return AddFlashCardScreen(
+              folderId: folderId,
+            );
           },
         );
       },

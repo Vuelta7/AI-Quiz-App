@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/C%20folder%20page/add_flashcard_widget.dart';
 
-PreferredSizeWidget insideFolderAppBarWidget(BuildContext context) {
+PreferredSizeWidget insideFolderAppBarWidget(BuildContext context,
+    {required String folderId}) {
   return AppBar(
     backgroundColor: Colors.white,
     centerTitle: true,
@@ -26,8 +27,8 @@ PreferredSizeWidget insideFolderAppBarWidget(BuildContext context) {
         );
       },
     ),
-    actions: const [
-      AddFlashcardDialogWidget(),
+    actions: [
+      AddFlashcardButtonWidget(folderId: folderId),
     ],
     elevation: 0,
     bottom: PreferredSize(

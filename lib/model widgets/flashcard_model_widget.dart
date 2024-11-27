@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:learn_n/model%20widgets/edit_flashcard_widget.dart';
 
 class FlashCardModel extends StatefulWidget {
   final String question;
   final String answer;
-  final String? questionId; // Optional: For future updates/deletions
+  final String questionId; // Optional: For future updates/deletions
+  final String folderId; // Required for folder association
 
   const FlashCardModel({
     super.key,
     required this.question,
     required this.answer,
-    this.questionId,
+    required this.questionId,
+    required this.folderId,
   });
 
   @override
@@ -31,6 +34,12 @@ class _FlashCardModelState extends State<FlashCardModel>
     _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -116,7 +125,17 @@ class _FlashCardModelState extends State<FlashCardModel>
                 color: Colors.black,
               ),
               onPressed: () {
-                print("Edit button pressed");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditFlashCardWidget(
+                      folderId: widget.folderId,
+                      flashCardId: widget.questionId,
+                      initialQuestion: widget.question,
+                      initialAnswer: widget.answer,
+                    ),
+                  ),
+                );
               },
             ),
           ],
@@ -151,9 +170,8 @@ class _FlashCardModelState extends State<FlashCardModel>
                   color: Colors.black,
                 ),
                 onPressed: () {
+                  // Placeholder for edit action
                   print("Edit button pressed");
-                  //get the id for future so this edit button can update the question and answer
-                  //im gonna do this later
                 },
               ),
             ],

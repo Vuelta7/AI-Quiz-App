@@ -1,21 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
-class AddFlashCardScreen extends StatefulWidget {
+class EditFlashCardWidget extends StatefulWidget {
   final String folderId;
+  final String flashCardId;
+  final String initialQuestion;
+  final String initialAnswer;
 
-  const AddFlashCardScreen({super.key, required this.folderId});
+  const EditFlashCardWidget({
+    super.key,
+    required this.folderId,
+    required this.flashCardId,
+    required this.initialQuestion,
+    required this.initialAnswer,
+  });
 
   @override
-  State<AddFlashCardScreen> createState() => _AddFlashCardScreenState();
+  _EditFlashCardWidgetState createState() => _EditFlashCardWidgetState();
 }
 
-class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
-  final questionController = TextEditingController();
-  final answerController = TextEditingController();
+class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
+  late TextEditingController questionController;
+  late TextEditingController answerController;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    questionController = TextEditingController(text: widget.initialQuestion);
+    answerController = TextEditingController(text: widget.initialAnswer);
+  }
 
   @override
   void dispose() {
@@ -24,18 +38,16 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
     super.dispose();
   }
 
-  Future<void> uploadFlashCardToDb() async {
+  Future<void> updateFlashCardInDb() async {
     try {
-      final id = const Uuid().v4();
       await FirebaseFirestore.instance
           .collection("folders")
           .doc(widget.folderId)
           .collection("questions")
-          .doc(id)
-          .set({
+          .doc(widget.flashCardId)
+          .update({
         "question": questionController.text.trim(),
         "answer": answerController.text.trim(),
-        "creator": FirebaseAuth.instance.currentUser!.uid,
       });
     } catch (e) {
       print(e);
@@ -43,12 +55,31 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
     }
   }
 
+  Future<void> deleteFlashCardFromDb() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .collection("questions")
+          .doc(widget.flashCardId)
+          .delete();
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  bool get _isFormValid {
+    return questionController.text.trim().isNotEmpty &&
+        answerController.text.trim().isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Add Flashcard',
+          'Edit Flashcard',
           style: TextStyle(
             color: Colors.black,
             fontFamily: 'PressStart2P',
@@ -75,48 +106,70 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                   TextFormField(
                     controller: questionController,
                     decoration: const InputDecoration(
-                      hintText: 'Question or Definition',
+                      hintText: 'Question',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
                     ),
-                    maxLines: 3,
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: answerController,
                     decoration: const InputDecoration(
                       hintText: 'Answer',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
                     ),
                     maxLines: 3,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _isLoading || !_isFormValid
+                        ? null
+                        : () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            try {
+                              await updateFlashCardInDb();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Flashcard updated!'),
+                                ),
+                              );
+                              Navigator.pop(context);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Error: $e')),
+                              );
+                            } finally {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            }
+                          },
+                    child: const Text('Save Changes'),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: _isLoading
                         ? null
                         : () async {
-                            if (questionController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please enter a question.'),
-                                ),
-                              );
-                              return;
-                            }
-                            if (answerController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please enter an answer.'),
-                                ),
-                              );
-                              return;
-                            }
                             setState(() {
                               _isLoading = true;
                             });
                             try {
-                              await uploadFlashCardToDb();
+                              await deleteFlashCardFromDb();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content:
-                                      Text('Flashcard added successfully!'),
+                                  content: Text('Flashcard deleted!'),
                                 ),
                               );
                               Navigator.pop(context);
@@ -131,17 +184,9 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
+                      backgroundColor: Colors.red,
                     ),
-                    child: const Text(
-                      'SUBMIT',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
+                    child: const Text('Delete Flashcard'),
                   ),
                 ],
               ),

@@ -39,7 +39,8 @@ class InsideFolderBody extends StatelessWidget {
               child: FlashCardModel(
                 question: questionData['question'],
                 answer: questionData['answer'],
-                // Optional: Pass additional data like question ID if needed
+                questionId: questionDoc.id, // Pass question ID
+                folderId: folderId, // Pass folder ID
               ),
             );
           },

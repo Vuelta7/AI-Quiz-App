@@ -109,7 +109,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                   TextFormField(
                     controller: folderNameController,
                     cursorColor: Colors.black, // Cursor line color
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Folder Name',
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
@@ -128,7 +128,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                   TextFormField(
                     controller: descriptionController,
                     cursorColor: Colors.black, // Cursor line color
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Description',
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
