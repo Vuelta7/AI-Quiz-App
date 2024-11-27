@@ -6,7 +6,7 @@ class QuestionModelSettingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.settings, size: 30),
+      icon: const Icon(Icons.settings, size: 27),
       color: Colors.black,
       onPressed: () {
         showDialog(
