@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 
-class FlashCardModelWidget extends StatefulWidget {
-  final String title;
-  final String backContent;
+class FlashCardModel extends StatefulWidget {
+  final String question;
+  final String answer;
+  final String? questionId; // Optional: For future updates/deletions
 
-  const FlashCardModelWidget(
-      {super.key, required this.title, required this.backContent});
+  const FlashCardModel({
+    super.key,
+    required this.question,
+    required this.answer,
+    this.questionId,
+  });
 
   @override
-  _FlashCardModelWidgetState createState() => _FlashCardModelWidgetState();
+  _FlashCardModelState createState() => _FlashCardModelState();
 }
 
-class _FlashCardModelWidgetState extends State<FlashCardModelWidget>
+class _FlashCardModelState extends State<FlashCardModel>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -95,7 +100,7 @@ class _FlashCardModelWidgetState extends State<FlashCardModelWidget>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              widget.title,
+              widget.question,
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -131,7 +136,7 @@ class _FlashCardModelWidgetState extends State<FlashCardModelWidget>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                widget.backContent,
+                widget.answer,
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.black,
@@ -147,6 +152,8 @@ class _FlashCardModelWidgetState extends State<FlashCardModelWidget>
                 ),
                 onPressed: () {
                   print("Edit button pressed");
+                  //get the id for future so this edit button can update the question and answer
+                  //im gonna do this later
                 },
               ),
             ],
