@@ -8,7 +8,7 @@ PreferredSizeWidget insideFolderAppBarWidget(BuildContext context,
     backgroundColor: Colors.white,
     centerTitle: true,
     title: const Text(
-      'Python',
+      'Python', //change this to folderName
       style: TextStyle(
         color: Colors.black,
         fontFamily: 'PressStart2P',

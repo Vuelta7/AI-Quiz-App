@@ -276,7 +276,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.skip_previous_rounded),
+                          icon: const Icon(Icons.arrow_back_rounded),
                           iconSize: 45,
                           color: Colors.black,
                           onPressed: _previousQuestion,
@@ -291,7 +291,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                         ),
                         IconButton(
                           icon: const Icon(
-                            Icons.skip_next_rounded,
+                            Icons.arrow_forward_rounded,
                             size: 45,
                             color: Colors.black,
                           ),
