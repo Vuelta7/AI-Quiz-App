@@ -34,6 +34,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
         "creator": FirebaseAuth.instance.currentUser!.uid,
         "questions": {},
         "color": rgbToHex(_selectedColor),
+        "position": 0,
       });
     } catch (e) {
       print(e);

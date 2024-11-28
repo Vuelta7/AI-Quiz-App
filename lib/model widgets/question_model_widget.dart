@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-// there is a problem if Answer hint is finish there still an underscore, my suggestion is do a logic of -1 i just dont know where
-//this is the example "Answer_" it still has underscore if the whole letter is shown
 class QuestionModelWidget extends StatefulWidget {
   final List<Map<String, String>> questions;
   final String folderName;

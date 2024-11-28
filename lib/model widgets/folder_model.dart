@@ -56,73 +56,63 @@ class FolderModel extends StatelessWidget {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
                     color: headerColor,
-                    border: const Border(
-                      bottom: BorderSide(
-                        color: Colors.black,
-                        width: 4.0,
-                      ),
-                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 12.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        folderName,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      folderName,
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                      child: Text(
                         description,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 13,
                           color: Colors.black54,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Icon(Icons.star_border_rounded),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditFolderWidget(
-                                    folderId: folderId, // Pass the folderId
-                                    initialFolderName:
-                                        folderName, // Pass current folder name
-                                    initialDescription:
-                                        description, // Pass current description
-                                    initialColor:
-                                        headerColor, // Pass current header color
-                                  ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditFolderWidget(
+                                  folderId: folderId, // Pass the folderId
+                                  initialFolderName:
+                                      folderName, // Pass current folder name
+                                  initialDescription:
+                                      description, // Pass current description
+                                  initialColor:
+                                      headerColor, // Pass current header color
                                 ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.more_horiz_rounded,
-                              size: 40,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                            ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.more_horiz_rounded,
+                            size: 30,
+                            color: Color.fromARGB(255, 0, 0, 0),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
