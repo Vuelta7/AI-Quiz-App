@@ -1,4 +1,76 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+
+// Build a reusable Retro TextField widget
+Widget buildRetroTextField(
+  String label, {
+  bool isPassword = false,
+  required TextEditingController controller,
+  String? Function(String?)? validator,
+}) {
+  return TextFormField(
+    controller: controller,
+    obscureText: isPassword,
+    cursorColor: const Color.fromARGB(255, 7, 7, 7),
+    style: const TextStyle(
+      fontFamily: 'Arial',
+      color: Color.fromARGB(255, 0, 0, 0),
+      fontSize: 14,
+    ),
+    decoration: InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(
+        fontFamily: 'PressStart2P',
+        color: Color.fromARGB(255, 0, 0, 0),
+      ),
+      filled: true,
+      fillColor: const Color.fromARGB(255, 255, 255, 255),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(
+          color: Color.fromARGB(255, 0, 0, 0),
+          width: 2,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(
+          color: Color.fromARGB(255, 0, 0, 0),
+          width: 2,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(
+          color: Color.fromARGB(255, 0, 0, 0),
+          width: 3,
+        ),
+      ),
+    ),
+    validator: validator,
+  );
+}
+
+// Build a reusable Retro Button widget
+Widget buildRetroButton(String text, Color color, VoidCallback? onPressed) {
+  return ElevatedButton(
+    onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: color,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'PressStart2P',
+        fontSize: 16,
+        color: Color.fromARGB(255, 255, 255, 255),
+      ),
+    ),
+  );
+}
 
 Color strengthenColor(Color color, double factor) {
   int r = (color.red * factor).clamp(0, 255).toInt();

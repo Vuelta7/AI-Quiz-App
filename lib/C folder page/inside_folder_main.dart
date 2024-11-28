@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
-import 'package:learn_n/C%20folder%20page/add_flashcard_widget.dart';
+import 'package:learn_n/C%20folder%20page/add_flashcard_screen.dart';
 import 'package:learn_n/model%20widgets/flashcard_model_widget.dart';
 import 'package:learn_n/model%20widgets/question_model_widget.dart';
 
@@ -121,6 +121,32 @@ PreferredSizeWidget insideFolderAppBarWidget(
       ),
     ),
   );
+}
+
+class AddFlashcardButtonWidget extends StatelessWidget {
+  final String folderId;
+  const AddFlashcardButtonWidget({super.key, required this.folderId});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(
+        Icons.add_box_rounded,
+        size: 40,
+      ),
+      color: Colors.black,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AddFlashCardScreen(
+              folderId: folderId,
+            );
+          },
+        );
+      },
+    );
+  }
 }
 
 class InsideFolderBody extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/login_screen.dart';
+import 'package:learn_n/util.dart';
 
 class SignupScreen extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -53,7 +54,7 @@ class _SignupScreenState extends State<SignupScreen> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -80,7 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 key: formKey,
                 child: Column(
                   children: [
-                    _buildRetroTextField('Email', controller: emailController,
+                    buildRetroTextField('Email', controller: emailController,
                         validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Email is required';
@@ -91,7 +92,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       return null;
                     }),
                     const SizedBox(height: 10),
-                    _buildRetroTextField('Password',
+                    buildRetroTextField('Password',
                         isPassword: true,
                         controller: passwordController, validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -113,7 +114,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     SizedBox(
                       width: 170,
-                      child: _buildRetroButton(
+                      child: buildRetroButton(
                         isLoading
                             ? 'Loading...'
                             : 'Sign Up', // Show loading text if signing up
@@ -149,76 +150,6 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRetroTextField(
-    String label, {
-    bool isPassword = false,
-    required TextEditingController controller,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      obscureText: isPassword,
-      cursorColor: const Color.fromARGB(255, 7, 7, 7),
-      style: const TextStyle(
-        fontFamily: 'Arial',
-        color: Color.fromARGB(255, 0, 0, 0),
-        fontSize: 14,
-      ),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(
-          fontFamily: 'PressStart2P',
-          color: Color.fromARGB(255, 0, 0, 0),
-        ),
-        filled: true,
-        fillColor: const Color.fromARGB(255, 255, 255, 255),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 0, 0, 0),
-            width: 2,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 0, 0, 0),
-            width: 2,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 0, 0, 0),
-            width: 3,
-          ),
-        ),
-      ),
-      validator: validator,
-    );
-  }
-
-  Widget _buildRetroButton(String text, Color color, VoidCallback? onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontFamily: 'PressStart2P',
-          fontSize: 16,
-          color: Color.fromARGB(255, 255, 255, 255),
         ),
       ),
     );
