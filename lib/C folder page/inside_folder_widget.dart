@@ -6,122 +6,112 @@ import 'package:learn_n/C%20folder%20page/flashcard_model_widget.dart';
 import 'package:learn_n/C%20folder%20page/question_model_widget.dart';
 import 'package:uuid/uuid.dart';
 
-class InsideFolderMain extends StatelessWidget {
+// can u please fix my functions on bottomnavbar
+class InsideFolderMain extends StatefulWidget {
   final String folderId;
   final String folderName;
-  const InsideFolderMain(
-      {super.key, required this.folderId, required this.folderName});
+
+  const InsideFolderMain({
+    super.key,
+    required this.folderId,
+    required this.folderName,
+  });
+
+  @override
+  State<InsideFolderMain> createState() => _InsideFolderMainState();
+}
+
+class _InsideFolderMainState extends State<InsideFolderMain> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) async {
+    if (index == 0) {
+      // Navigate back to the Home Screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeMainScreen(),
+        ),
+      );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddFlashCardScreen(folderId: widget.folderId),
+        ),
+      );
+    } else if (index == 2) {
+      try {
+        final questionsSnapshot = await FirebaseFirestore.instance
+            .collection('folders')
+            .doc(widget.folderId)
+            .collection('questions')
+            .get();
+
+        final questions = questionsSnapshot.docs.map((doc) {
+          final data = doc.data();
+          return {
+            "id": doc.id,
+            "question": data['question']?.toString() ?? '',
+            "answer": data['answer']?.toString() ?? '',
+          };
+        }).toList();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuestionModelWidget(
+              folderName: widget.folderName,
+              folderId: widget.folderId,
+              questions: List<Map<String, String>>.from(questions),
+            ),
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load questions: $e')),
+        );
+      }
+    }
+
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: insideFolderAppBarWidget(context,
-          folderId: folderId, folderName: folderName),
-      body: InsideFolderBody(folderId: folderId),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: GestureDetector(
-        onTap: () async {
-          try {
-            final questionsSnapshot = await FirebaseFirestore.instance
-                .collection('folders')
-                .doc(folderId)
-                .collection('questions')
-                .get();
-
-            final questions = questionsSnapshot.docs.map((doc) {
-              final data = doc.data();
-              return {
-                "id": doc.id,
-                "question": data['question']?.toString() ?? '',
-                "answer": data['answer']?.toString() ?? '',
-              };
-            }).toList();
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => QuestionModelWidget(
-                  folderName: folderName,
-                  folderId: folderId,
-                  questions: List<Map<String, String>>.from(questions),
-                ),
-              ),
-            );
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to load questions: $e')),
-            );
-          }
-        },
-        child: const Stack(
-          alignment: Alignment.center,
-          children: [
-            Icon(
-              Icons.hexagon_rounded,
-              size: 80,
-              color: Colors.black,
-            ),
-            Icon(
-              Icons.play_arrow,
-              size: 40,
-              color: Colors.white,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-PreferredSizeWidget insideFolderAppBarWidget(
-  BuildContext context, {
-  required String folderId,
-  required String folderName, // Add folderName parameter
-}) {
-  return AppBar(
-    backgroundColor: Colors.white,
-    centerTitle: true,
-    title: Text(
-      folderName, // Use folderName here
-      style: const TextStyle(
-        color: Colors.black,
-        fontFamily: 'PressStart2P',
-      ),
-    ),
-    leading: IconButton(
-      icon: const Icon(
-        Icons.list_alt_rounded,
-        size: 40,
-      ),
-      color: Colors.black,
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeMainScreen()),
-        );
-      },
-    ),
-    actions: [
-      AddFlashcardButtonWidget(folderId: folderId),
-    ],
-    elevation: 0,
-    bottom: PreferredSize(
-      preferredSize: const Size.fromHeight(3.0),
-      child: Column(
+      body: Column(
         children: [
-          Container(
-            color: Colors.black,
-            height: 4.0,
+          const SizedBox(
+            height: 40,
           ),
-          Container(
-            color: Colors.black.withOpacity(0.2),
-            height: 2.0,
+          Expanded(
+            child: InsideFolderBody(folderId: widget.folderId),
           ),
         ],
       ),
-    ),
-  );
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt_rounded, size: 50),
+            label: 'Back to Folders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_box_rounded, size: 50),
+            label: 'Add Flashcard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.play_circle_fill_rounded, size: 50),
+            label: 'Play',
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class AddFlashcardButtonWidget extends StatelessWidget {

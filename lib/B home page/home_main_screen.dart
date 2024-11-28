@@ -55,15 +55,15 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
         onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_rounded, size: 30),
+            icon: Icon(Icons.menu_rounded, size: 50),
             label: 'Menu',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_rounded, size: 40),
+            icon: Icon(Icons.add_box_rounded, size: 50),
             label: 'Add Folder',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications, size: 30),
+            icon: Icon(Icons.notifications, size: 50),
             label: 'Notifications',
           ),
         ],

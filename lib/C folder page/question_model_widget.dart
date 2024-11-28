@@ -26,6 +26,8 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
   @override
   void initState() {
     super.initState();
+    // Randomize the questions list
+    widget.questions.shuffle();
     _pageController = PageController();
     wrongAnswerCount = List.filled(widget.questions.length, 0);
   }
@@ -81,15 +83,11 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
     final answer = widget.questions[currentIndex]['question']!;
     setState(() {
       if (currentHint.isEmpty) {
-        // Start with the first letter followed by an underscore
         currentHint = '${answer[0]}_';
       } else if (currentHint.length < answer.length) {
-        // Append the next letter from the answer
-        int revealedChars =
-            currentHint.length; // No need for `-1` since `_` is excluded
+        int revealedChars = currentHint.length;
         currentHint = '${answer.substring(0, revealedChars)}_';
       } else {
-        // If the full answer is revealed, remove the underscore
         currentHint = answer;
       }
     });
@@ -172,10 +170,14 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
       ),
       body: Column(
         children: [
-          LinearProgressIndicator(
-            value: (currentIndex + 1) / widget.questions.length,
-            color: Colors.green,
-            backgroundColor: Colors.grey,
+          // LinearProgressIndicator with custom thickness
+          Container(
+            height: 10, // Custom height for thicker progress indicator
+            child: LinearProgressIndicator(
+              value: (currentIndex + 1) / widget.questions.length,
+              color: Colors.green,
+              backgroundColor: Colors.grey,
+            ),
           ),
           Expanded(
               child: PageView.builder(
@@ -189,7 +191,6 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Box for the hint and answer
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -227,7 +228,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                               color: Colors.black,
                             ),
                             Text(
-                              question['answer']!, // Show the answer here
+                              question['answer']!,
                               style: const TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,
@@ -239,7 +240,6 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Input field for answer
                     TextField(
                       onSubmitted: checkAnswer,
                       cursorColor: const Color.fromARGB(255, 7, 7, 7),
@@ -280,7 +280,6 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                       ),
                     ),
                     const SizedBox(height: 20),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
