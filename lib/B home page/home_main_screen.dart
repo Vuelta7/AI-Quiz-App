@@ -16,26 +16,17 @@ class HomeMainScreen extends StatefulWidget {
 class _HomeMainScreenState extends State<HomeMainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Add a variable for the bottom navigation index
   int _selectedIndex = 0;
 
-  // Method to change the selected index when a button in the bottom navigation is tapped
   void _onItemTapped(int index) {
     if (index == 0) {
-      // Open drawer if "Menu" is tapped
       _scaffoldKey.currentState?.openDrawer();
     } else if (index == 1) {
-      // Navigate to Add Folder Screen
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const AddFolderScreen()), // Ensure you have AddFolderScreen defined
+        MaterialPageRoute(builder: (context) => const AddFolderScreen()),
       );
-    } else if (index == 2) {
-      // Handle notifications (this could trigger a dialog, etc.)
-      print('Notifications tapped');
-    }
+    } else if (index == 2) {}
 
     setState(() {
       _selectedIndex = index;
@@ -46,9 +37,8 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      resizeToAvoidBottomInset:
-          true, // Optional: to adjust when the keyboard appears
-      body: const HomeBody(), // Keep the body as is
+      resizeToAvoidBottomInset: true,
+      body: const HomeBody(),
       drawer: const DrawerWidget(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
