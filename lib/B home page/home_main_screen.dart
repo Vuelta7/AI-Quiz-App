@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/B%20home%20page/folder_widget.dart';
+import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
 import 'package:learn_n/util.dart';
 import 'package:uuid/uuid.dart';
 

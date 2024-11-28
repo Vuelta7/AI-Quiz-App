@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20folder%20page/inside_folder_main.dart';
+import 'package:learn_n/C%20folder%20page/inside_folder_widget.dart';
 import 'package:learn_n/util.dart';
 
 class FolderModel extends StatelessWidget {
@@ -233,17 +233,8 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: folderNameController,
-                    cursorColor: Colors.black, // Cursor line color
                     decoration: const InputDecoration(
                       hintText: 'Folder Name',
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.black), // Black border when focused
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.black), // Black border when unfocused
-                      ),
                     ),
                     onChanged: (value) {
                       setState(() {});
@@ -252,17 +243,8 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: descriptionController,
-                    cursorColor: Colors.black, // Cursor line color
                     decoration: const InputDecoration(
                       hintText: 'Description',
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.black), // Black border when focused
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.black), // Black border when unfocused
-                      ),
                     ),
                     maxLines: 3,
                     onChanged: (value) {
