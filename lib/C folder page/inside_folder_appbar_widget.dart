@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/C%20folder%20page/add_flashcard_widget.dart';
 
-PreferredSizeWidget insideFolderAppBarWidget(BuildContext context,
-    {required String folderId}) {
+PreferredSizeWidget insideFolderAppBarWidget(
+  BuildContext context, {
+  required String folderId,
+  required String folderName, // Add folderName parameter
+}) {
   return AppBar(
     backgroundColor: Colors.white,
     centerTitle: true,
-    title: const Text(
-      'Python', //change this to folderName
-      style: TextStyle(
+    title: Text(
+      folderName, // Use folderName here
+      style: const TextStyle(
         color: Colors.black,
         fontFamily: 'PressStart2P',
       ),

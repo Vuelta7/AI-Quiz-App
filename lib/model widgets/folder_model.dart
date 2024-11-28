@@ -25,7 +25,10 @@ class FolderModel extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => InsideFolderMain(folderId: folderId),
+                builder: (context) => InsideFolderMain(
+                  folderId: folderId,
+                  folderName: folderName,
+                ),
               ),
             );
           },

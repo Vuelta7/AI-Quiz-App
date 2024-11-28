@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
+// there is a problem if Answer hint is finish there still an underscore, my suggestion is do a logic of -1 i just dont know where
+//this is the example "Answer_" it still has underscore if the whole letter is shown
 class QuestionModelWidget extends StatefulWidget {
-  final List<Map<String, String>> questions; // List of questions and answers
+  final List<Map<String, String>> questions;
+  final String folderName;
   final String folderId;
 
   const QuestionModelWidget({
     super.key,
     required this.questions,
+    required this.folderName,
     required this.folderId,
   });
 
@@ -14,7 +18,6 @@ class QuestionModelWidget extends StatefulWidget {
   State<QuestionModelWidget> createState() => _QuestionModelWidgetState();
 }
 
-//hint not working
 class _QuestionModelWidgetState extends State<QuestionModelWidget> {
   late PageController _pageController;
   int currentIndex = 0;
@@ -58,7 +61,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       setState(() {
         currentIndex++;
-        currentHint = ''; // Reset hint for the new question
+        currentHint = '';
       });
     } else {
       _showCompletionDialog();
@@ -71,18 +74,27 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       setState(() {
         currentIndex--;
-        currentHint = ''; // Reset hint for the previous question
+        currentHint = '';
       });
     }
   }
 
   void _showHint() {
     final answer = widget.questions[currentIndex]['question']!;
-    if (currentHint.length < answer.length) {
-      setState(() {
-        currentHint = answer.substring(0, currentHint.length + 1);
-      });
-    }
+    setState(() {
+      if (currentHint.isEmpty) {
+        // Start with the first letter followed by an underscore
+        currentHint = '${answer[0]}_';
+      } else if (currentHint.length < answer.length) {
+        // Append the next letter from the answer
+        int revealedChars =
+            currentHint.length; // No need for `-1` since `_` is excluded
+        currentHint = '${answer.substring(0, revealedChars)}_';
+      } else {
+        // If the full answer is revealed, remove the underscore
+        currentHint = answer;
+      }
+    });
   }
 
   void _showSuccessEffect() {
@@ -120,7 +132,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pop(context); // Go back to the previous screen
+              Navigator.pop(context);
             },
             child: const Text("Finish"),
           ),
@@ -148,7 +160,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          widget.folderId,
+          widget.folderName,
           style: const TextStyle(
             color: Colors.black,
             fontFamily: 'PressStart2P',
@@ -202,10 +214,9 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                         child: Column(
                           children: [
                             Text(
-                              '_ ' *
-                                  (question['question']!.length -
-                                      currentHint
-                                          .length), // Show _ for each letter
+                              currentHint.isNotEmpty
+                                  ? currentHint
+                                  : '_', // Start with '_'
                               style: const TextStyle(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
