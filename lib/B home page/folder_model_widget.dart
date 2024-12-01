@@ -36,95 +36,95 @@ class FolderModel extends StatelessWidget {
           },
           child: Container(
             width: 310,
+            margin: const EdgeInsets.only(top: 20), // For tab overlap
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(9),
+              color: headerColor,
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
               border: Border.all(
-                width: 4,
-                color: const Color.fromARGB(255, 0, 0, 0),
+                width: 2,
+                color: headerColor
+                    .withOpacity(0.8), // Make border same as the background
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  offset: const Offset(0, 5),
+                  color: Colors.black.withOpacity(0.2),
+                  offset: const Offset(0, 8),
                   blurRadius: 10,
-                  spreadRadius: 0,
+                  spreadRadius: 1,
                 ),
               ],
             ),
             child: Column(
               children: [
+                // Folder Content Section
                 Container(
                   width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
-                    color: headerColor,
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        folderName,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: _getTextColorForBackground(headerColor),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        description,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: _getTextColorForBackground(headerColor)
+                              .withOpacity(0.8),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      folderName,
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                      child: Text(
-                        description,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.black54,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditFolderWidget(
-                                  folderId: folderId, // Pass the folderId
-                                  initialFolderName:
-                                      folderName, // Pass current folder name
-                                  initialDescription:
-                                      description, // Pass current description
-                                  initialColor:
-                                      headerColor, // Pass current header color
-                                ),
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.more_horiz_rounded,
-                            size: 30,
-                            color: Color.fromARGB(255, 0, 0, 0),
+
+                const SizedBox(height: 12),
+
+                // Action Button to Edit Folder
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditFolderWidget(
+                            folderId: folderId,
+                            initialFolderName: folderName,
+                            initialDescription: description,
+                            initialColor: headerColor,
                           ),
                         ),
-                      ],
+                      );
+                    },
+                    icon: Icon(
+                      Icons.more_horiz_rounded,
+                      size: 30,
+                      color: _getTextColorForBackground(headerColor),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        const SizedBox(
-          height: 15,
-        ),
+        const SizedBox(height: 15),
       ],
     );
+  }
+
+  // Function to determine appropriate text color based on background color
+  Color _getTextColorForBackground(Color backgroundColor) {
+    // If background color is dark, return light text color and vice versa
+    return backgroundColor.computeLuminance() > 0.5
+        ? Colors.black
+        : Colors.white;
   }
 }
 

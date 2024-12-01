@@ -18,6 +18,7 @@ dependencies:
   uuid: ^4.5.1
   flex_color_picker: ^3.6.0
   dotted_border: ^2.1.0
+  flutter_local_notifications: ^18.0.1
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
+import 'package:learn_n/B%20home%20page/notification_model_widget.dart';
 import 'package:learn_n/util.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,18 +20,27 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
+    print('Tapped index: $index');
+    setState(() {
+      _selectedIndex = index;
+    });
+
     if (index == 0) {
+      print('Opening Drawer');
       _scaffoldKey.currentState?.openDrawer();
     } else if (index == 1) {
+      print('Navigating to AddFolderScreen');
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AddFolderScreen()),
       );
-    } else if (index == 2) {}
-
-    setState(() {
-      _selectedIndex = index;
-    });
+    } else if (index == 2) {
+      print('Navigating to NotificationScreen');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const NotificationScreen()),
+      );
+    }
   }
 
   @override
@@ -339,8 +349,6 @@ class _HomeBodyState extends State<HomeBody> {
           ),
         ),
         const SizedBox(height: 10),
-
-        // StreamBuilder for getting folders
         StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('folders')
@@ -360,19 +368,16 @@ class _HomeBodyState extends State<HomeBody> {
               );
             }
 
-            // Filter the folders based on the search query
             final filteredFolders = snapshot.data!.docs.where((folderDoc) {
               final folderData = folderDoc.data() as Map<String, dynamic>;
               final folderName = folderData['folderName'] as String;
 
-              // Check if the folder name contains the search query
               return folderName.toLowerCase().contains(searchQuery);
             }).toList();
 
             return Expanded(
               child: ListView.builder(
-                padding: EdgeInsets
-                    .zero, // Remove any padding/margin around the ListView
+                padding: EdgeInsets.zero,
                 itemCount: filteredFolders.length,
                 itemBuilder: (context, index) {
                   final folderDoc = filteredFolders[index];
@@ -395,7 +400,6 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed
     _searchController.dispose();
     super.dispose();
   }
