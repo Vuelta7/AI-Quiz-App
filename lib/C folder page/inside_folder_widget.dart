@@ -6,7 +6,6 @@ import 'package:learn_n/C%20folder%20page/flashcard_model_widget.dart';
 import 'package:learn_n/C%20folder%20page/question_model_widget.dart';
 import 'package:uuid/uuid.dart';
 
-// can u please fix my functions on bottomnavbar
 class InsideFolderMain extends StatefulWidget {
   final String folderId;
   final String folderName;
@@ -34,13 +33,7 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
         ),
       );
     } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AddFlashCardScreen(folderId: widget.folderId),
-        ),
-      );
-    } else if (index == 2) {
+      // Now the "Play" button functionality
       try {
         final questionsSnapshot = await FirebaseFirestore.instance
             .collection('folders')
@@ -72,6 +65,14 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
           SnackBar(content: Text('Failed to load questions: $e')),
         );
       }
+    } else if (index == 2) {
+      // Now the "Add Flashcard" button functionality
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddFlashCardScreen(folderId: widget.folderId),
+        ),
+      );
     }
 
     setState(() {
@@ -101,12 +102,12 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
             label: 'Back to Folders',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_rounded, size: 50),
-            label: 'Add Flashcard',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.play_circle_fill_rounded, size: 50),
             label: 'Play',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_box_rounded, size: 50),
+            label: 'Add Flashcard',
           ),
         ],
       ),
