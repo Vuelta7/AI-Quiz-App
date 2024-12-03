@@ -315,7 +315,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                           horizontal: 24, vertical: 12),
                     ),
                     child: const Text(
-                      'Edit',
+                      'Save Changes',
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -348,8 +348,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          _isFormValid ? Colors.black : Colors.grey,
+                      backgroundColor: _isFormValid ? Colors.red : Colors.grey,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 12),

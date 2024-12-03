@@ -35,3 +35,4 @@ class MyApp extends StatelessWidget {
 //flashcard adapt
 //notifcation
 //dark mode/light mode
+//fix text in flashcard if it overlapped

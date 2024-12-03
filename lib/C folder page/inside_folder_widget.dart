@@ -151,14 +151,14 @@ class AddFlashCardScreen extends StatefulWidget {
 }
 
 class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
-  final questionController = TextEditingController();
   final answerController = TextEditingController();
+  final questionController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
-    questionController.dispose();
     answerController.dispose();
+    questionController.dispose();
     super.dispose();
   }
 
@@ -171,8 +171,8 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
           .collection("questions")
           .doc(id)
           .set({
-        "question": questionController.text.trim(),
         "answer": answerController.text.trim(),
+        "question": questionController.text.trim(),
         "creator": FirebaseAuth.instance.currentUser!.uid,
       });
     } catch (e) {
@@ -211,17 +211,17 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                 children: [
                   const SizedBox(height: 10),
                   TextFormField(
-                    controller: questionController,
+                    controller: answerController,
                     decoration: const InputDecoration(
-                      hintText: 'Question or Definition',
+                      hintText: 'Answer',
                     ),
                     maxLines: 3,
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
-                    controller: answerController,
+                    controller: questionController,
                     decoration: const InputDecoration(
-                      hintText: 'Answer',
+                      hintText: 'Question or Definition',
                     ),
                     maxLines: 3,
                   ),
@@ -230,7 +230,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                     onPressed: _isLoading
                         ? null
                         : () async {
-                            if (questionController.text.trim().isEmpty) {
+                            if (answerController.text.trim().isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Please enter a question.'),
@@ -238,7 +238,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                               );
                               return;
                             }
-                            if (answerController.text.trim().isEmpty) {
+                            if (questionController.text.trim().isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Please enter an answer.'),

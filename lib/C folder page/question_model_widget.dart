@@ -41,7 +41,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
   }
 
   void checkAnswer(String userAnswer) {
-    final correctAnswer = widget.questions[currentIndex]['question']!;
+    final correctAnswer = widget.questions[currentIndex]['answer']!;
     if (userAnswer.trim().toLowerCase() == correctAnswer.trim().toLowerCase()) {
       setState(() {
         currentHint = '';
@@ -188,6 +188,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -213,93 +214,90 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
               backgroundColor: Colors.grey,
             ),
           ),
-          //i want this part to occupy the whole empty space and i want it to shrink when user is typing
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      feedbackMessage,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: feedbackMessage == 'Try Again!'
-                            ? Colors.red
-                            : Colors.green,
-                      ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    feedbackMessage,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: feedbackMessage == 'Try Again!'
+                          ? Colors.red
+                          : Colors.green,
                     ),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height - 180,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: widget.questions.length,
-                      itemBuilder: (context, index) {
-                        final question = widget.questions[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(9),
-                                  border: Border.all(
-                                    width: 3,
-                                    color: const Color.fromARGB(255, 0, 0, 0),
+                ),
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: widget.questions.length,
+                    itemBuilder: (context, index) {
+                      final question = widget.questions[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(9),
+                                border: Border.all(
+                                  width: 3,
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    offset: const Offset(0, 5),
+                                    blurRadius: 10,
+                                    spreadRadius: 0,
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.5),
-                                      offset: const Offset(0, 5),
-                                      blurRadius: 10,
-                                      spreadRadius: 0,
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      currentHint.isNotEmpty
+                                          ? currentHint
+                                          : '_',
+                                      style: const TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const Divider(
+                                      thickness: 3,
+                                      color: Colors.black,
+                                    ),
+                                    Text(
+                                      question['question']!,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        currentHint.isNotEmpty
-                                            ? currentHint
-                                            : '_',
-                                        style: const TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const Divider(
-                                        thickness: 3,
-                                        color: Colors.black,
-                                      ),
-                                      Text(
-                                        question['answer']!,
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.black,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
                               ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           const Divider(

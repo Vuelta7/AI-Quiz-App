@@ -111,7 +111,7 @@ class _FlashCardModelState extends State<FlashCardModel>
             Text(
               widget.question,
               style: const TextStyle(
-                fontSize: 30,
+                fontSize: 17,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
@@ -121,7 +121,7 @@ class _FlashCardModelState extends State<FlashCardModel>
             IconButton(
               icon: const Icon(
                 Icons.edit,
-                size: 30,
+                size: 20,
                 color: Colors.black,
               ),
               onPressed: () {
@@ -157,7 +157,8 @@ class _FlashCardModelState extends State<FlashCardModel>
               Text(
                 widget.answer,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                   color: Colors.black,
                 ),
                 textAlign: TextAlign.center,
@@ -166,12 +167,21 @@ class _FlashCardModelState extends State<FlashCardModel>
               IconButton(
                 icon: const Icon(
                   Icons.edit,
-                  size: 30,
+                  size: 20,
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  // Placeholder for edit action
-                  print("Edit button pressed");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditFlashCardWidget(
+                        folderId: widget.folderId,
+                        flashCardId: widget.questionId,
+                        initialQuestion: widget.question,
+                        initialAnswer: widget.answer,
+                      ),
+                    ),
+                  );
                 },
               ),
             ],
@@ -285,9 +295,9 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
                 children: [
                   const SizedBox(height: 10),
                   TextFormField(
-                    controller: questionController,
+                    controller: answerController,
                     decoration: const InputDecoration(
-                      hintText: 'Question',
+                      hintText: 'Answer',
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
                       ),
@@ -298,9 +308,9 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
-                    controller: answerController,
+                    controller: questionController,
                     decoration: const InputDecoration(
-                      hintText: 'Answer',
+                      hintText: 'Question',
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
                       ),
@@ -336,6 +346,10 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
                               });
                             }
                           },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                    ),
                     child: const Text('Save Changes'),
                   ),
                   const SizedBox(height: 10),
@@ -366,8 +380,11 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
                           },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
                     ),
-                    child: const Text('Delete Flashcard'),
+                    child: const Text(
+                      'Delete Flashcard',
+                    ),
                   ),
                 ],
               ),
