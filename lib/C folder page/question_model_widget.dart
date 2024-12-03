@@ -219,7 +219,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Text(
                     feedbackMessage,
                     style: TextStyle(
@@ -261,27 +261,28 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                                     ),
                                   ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        currentHint.isNotEmpty
-                                            ? currentHint
-                                            : '_',
-                                        style: const TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const Divider(
-                                        thickness: 3,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      currentHint.isNotEmpty
+                                          ? currentHint
+                                          : '_',
+                                      style: const TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
                                         color: Colors.black,
                                       ),
-                                      Text(
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const Divider(
+                                      thickness: 3,
+                                      color: Colors.black,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Text(
                                         question['question']!,
                                         style: const TextStyle(
                                           fontSize: 20,
@@ -289,8 +290,8 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
