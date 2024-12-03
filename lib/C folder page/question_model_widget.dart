@@ -219,7 +219,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: Text(
                     feedbackMessage,
                     style: TextStyle(
@@ -239,55 +239,58 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                     itemBuilder: (context, index) {
                       final question = widget.questions[index];
                       return Padding(
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(9),
-                                border: Border.all(
-                                  width: 3,
-                                  color: const Color.fromARGB(255, 0, 0, 0),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.5),
-                                    offset: const Offset(0, 5),
-                                    blurRadius: 10,
-                                    spreadRadius: 0,
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(9),
+                                  border: Border.all(
+                                    width: 3,
+                                    color: const Color.fromARGB(255, 0, 0, 0),
                                   ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      currentHint.isNotEmpty
-                                          ? currentHint
-                                          : '_',
-                                      style: const TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const Divider(
-                                      thickness: 3,
-                                      color: Colors.black,
-                                    ),
-                                    Text(
-                                      question['question']!,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                      ),
-                                      textAlign: TextAlign.center,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.5),
+                                      offset: const Offset(0, 5),
+                                      blurRadius: 10,
+                                      spreadRadius: 0,
                                     ),
                                   ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        currentHint.isNotEmpty
+                                            ? currentHint
+                                            : '_',
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const Divider(
+                                        thickness: 3,
+                                        color: Colors.black,
+                                      ),
+                                      Text(
+                                        question['question']!,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.black,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
