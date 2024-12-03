@@ -65,7 +65,7 @@ class SplashScreenState extends State<SplashScreen>
       // User is logged in, navigate to HomeMainWidget
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeMainScreen()),
+        MaterialPageRoute(builder: (context) => const HomeMainScreen()),
       );
     } else {
       // User is not logged in, navigate to SignupScreen

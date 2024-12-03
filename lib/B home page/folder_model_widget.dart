@@ -181,7 +181,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
       });
     } catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
 
@@ -193,7 +193,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
           .delete();
     } catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
 

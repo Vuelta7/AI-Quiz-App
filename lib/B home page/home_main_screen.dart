@@ -177,7 +177,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
       });
     } catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
 

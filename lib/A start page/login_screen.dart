@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // Navigate to HomeMainWidget on success
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeMainScreen()),
+        MaterialPageRoute(builder: (context) => const HomeMainScreen()),
       );
 
       // Success feedback

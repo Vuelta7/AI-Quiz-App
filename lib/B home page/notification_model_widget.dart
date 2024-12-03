@@ -112,7 +112,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       builder: (BuildContext context) {
         int selectedMinutes = 0;
 
-        return Container(
+        return SizedBox(
           height: 250,
           child: Column(
             children: [

@@ -177,7 +177,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
       });
     } catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
 

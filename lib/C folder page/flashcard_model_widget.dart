@@ -232,7 +232,7 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
       });
     } catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
 
@@ -246,7 +246,7 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
           .delete();
     } catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
 

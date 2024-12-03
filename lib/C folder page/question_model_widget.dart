@@ -22,6 +22,8 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
   int wrongAnswers = 0;
   String currentHint = '';
   List<int> wrongAnswerCount = [];
+  String feedbackMessage = 'Work Smart';
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -34,6 +36,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
   @override
   void dispose() {
     _pageController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -42,26 +45,27 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
     if (userAnswer.trim().toLowerCase() == correctAnswer.trim().toLowerCase()) {
       setState(() {
         currentHint = '';
+        feedbackMessage = 'Very Good!';
       });
-      _showSuccessEffect();
       _nextQuestion();
     } else {
       setState(() {
         wrongAnswers++;
         wrongAnswerCount[currentIndex]++;
+        feedbackMessage = 'Try Again!';
       });
-      _showErrorEffect();
     }
+    _controller.clear();
+    FocusScope.of(context).unfocus();
   }
 
   void _nextQuestion() {
     if (currentIndex < widget.questions.length - 1) {
-      _pageController
-          .jumpToPage(currentIndex + 1); // Directly jump to the next question
       setState(() {
         currentIndex++;
         currentHint = '';
       });
+      _pageController.jumpToPage(currentIndex);
     } else {
       _showCompletionDialog();
     }
@@ -74,6 +78,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
       setState(() {
         currentIndex--;
         currentHint = '';
+        feedbackMessage = '';
       });
     }
   }
@@ -90,30 +95,6 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
         currentHint = answer;
       }
     });
-  }
-
-  void _showSuccessEffect() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Correct Answer!',
-          style: TextStyle(color: Colors.green),
-        ),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  void _showErrorEffect() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Wrong Answer. Try Again!',
-          style: TextStyle(color: Colors.red),
-        ),
-        duration: Duration(seconds: 1),
-      ),
-    );
   }
 
   void _showCompletionDialog() {
@@ -150,8 +131,8 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    _restartQuiz(); // Restart the quiz
-                    Navigator.pop(context); // Close the dialog
+                    _restartQuiz();
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -167,8 +148,8 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    _finishQuiz(); // Finish the quiz
-                    Navigator.pop(context); // Close the dialog
+                    _finishQuiz();
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -194,13 +175,14 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
       currentIndex = 0;
       wrongAnswers = 0;
       currentHint = '';
+      feedbackMessage = '';
       wrongAnswerCount = List.filled(widget.questions.length, 0);
       _pageController.jumpToPage(0);
     });
   }
 
   void _finishQuiz() {
-    Navigator.pop(context); // Go back to the previous screen
+    Navigator.pop(context);
   }
 
   @override
@@ -231,136 +213,179 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
               backgroundColor: Colors.grey,
             ),
           ),
+          //i want this part to occupy the whole empty space and i want it to shrink when user is typing
           Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: widget.questions.length,
-              itemBuilder: (context, index) {
-                final question = widget.questions[index];
-                return Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(9),
-                          border: Border.all(
-                            width: 3,
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              offset: const Offset(0, 5),
-                              blurRadius: 10,
-                              spreadRadius: 0,
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      feedbackMessage,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: feedbackMessage == 'Try Again!'
+                            ? Colors.red
+                            : Colors.green,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height - 180,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: widget.questions.length,
+                      itemBuilder: (context, index) {
+                        final question = widget.questions[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                currentHint.isNotEmpty ? currentHint : '_',
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(9),
+                                  border: Border.all(
+                                    width: 3,
+                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.5),
+                                      offset: const Offset(0, 5),
+                                      blurRadius: 10,
+                                      spreadRadius: 0,
+                                    ),
+                                  ],
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const Divider(
-                                thickness: 3,
-                                color: Colors.black,
-                              ),
-                              Text(
-                                question['answer']!,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        currentHint.isNotEmpty
+                                            ? currentHint
+                                            : '_',
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const Divider(
+                                        thickness: 3,
+                                        color: Colors.black,
+                                      ),
+                                      Text(
+                                        question['answer']!,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.black,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        onSubmitted: checkAnswer,
-                        cursorColor: const Color.fromARGB(255, 7, 7, 7),
-                        style: const TextStyle(
-                          fontFamily: 'Arial',
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 14,
-                        ),
-                        decoration: InputDecoration(
-                          labelText: 'Answer',
-                          labelStyle: const TextStyle(
-                            fontFamily: 'PressStart2P',
-                            color: Color.fromARGB(255, 0, 0, 0),
-                          ),
-                          filled: true,
-                          fillColor: const Color.fromARGB(255, 255, 255, 255),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              width: 3,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              width: 3,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              width: 3,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.arrow_back_rounded),
-                            iconSize: 45,
-                            color: Colors.black,
-                            onPressed: _previousQuestion,
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.lightbulb,
-                              size: 30,
-                              color: Colors.black,
-                            ),
-                            onPressed: _showHint,
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_forward_rounded,
-                              size: 45,
-                              color: Colors.black,
-                            ),
-                            onPressed: _nextQuestion,
-                          ),
-                        ],
-                      ),
-                    ],
+                        );
+                      },
+                    ),
                   ),
-                );
-              },
+                ],
+              ),
+            ),
+          ),
+          const Divider(
+            thickness: 2,
+            color: Colors.black,
+            height: 0,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _controller,
+                  onSubmitted: checkAnswer,
+                  cursorColor: const Color.fromARGB(255, 7, 7, 7),
+                  style: const TextStyle(
+                    fontFamily: 'Arial',
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 14,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Type Answer',
+                    hintStyle: const TextStyle(
+                      fontFamily: 'PressStart2P',
+                      color: Color.fromARGB(150, 0, 0, 0),
+                    ),
+                    labelStyle: const TextStyle(
+                      fontFamily: 'PressStart2P',
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    filled: true,
+                    fillColor: const Color.fromARGB(255, 255, 255, 255),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        width: 3,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        width: 3,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        width: 3,
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      iconSize: 45,
+                      color: Colors.black,
+                      onPressed: _previousQuestion,
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.lightbulb,
+                        size: 30,
+                        color: Colors.black,
+                      ),
+                      onPressed: _showHint,
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 45,
+                        color: Colors.black,
+                      ),
+                      onPressed: _nextQuestion,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],
