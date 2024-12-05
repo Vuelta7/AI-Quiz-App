@@ -29,10 +29,11 @@ class MyApp extends StatelessWidget {
 // ios       1:1031285993587:ios:1e0b9df9f80d8983133a06
 
 //task
-//add correct message
+//add more correct message
 //headercolor
-//renamesymbols
-//flashcard adapt
 //notifcation
-//dark mode/light mode
+//add content in the drawer
+//add background look like a paper
+//dark mode/light mode alongside search bar
+//add drag and drop foldering
 //fix text in flashcard if it overlapped

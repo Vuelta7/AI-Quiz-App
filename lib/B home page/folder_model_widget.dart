@@ -36,7 +36,7 @@ class FolderModel extends StatelessWidget {
           },
           child: Container(
             width: 310,
-            margin: const EdgeInsets.only(top: 20), // For tab overlap
+            margin: const EdgeInsets.only(top: 20),
             decoration: BoxDecoration(
               color: headerColor,
               borderRadius: const BorderRadius.all(Radius.circular(16)),
