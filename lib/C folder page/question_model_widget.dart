@@ -42,19 +42,36 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
 
   void checkAnswer(String userAnswer) {
     final correctAnswer = widget.questions[currentIndex]['answer']!;
-    if (userAnswer.trim().toLowerCase() == correctAnswer.trim().toLowerCase()) {
-      setState(() {
+    setState(() {
+      if (userAnswer.trim().toLowerCase() ==
+          correctAnswer.trim().toLowerCase()) {
         currentHint = '';
-        feedbackMessage = 'Very Good!';
-      });
-      _nextQuestion();
-    } else {
-      setState(() {
+        // Randomized positive feedback
+        final positiveFeedback = [
+          'Awesome!',
+          'Great Job!',
+          'Keep it up!',
+          'You got it!',
+          'Excellent!'
+        ];
+        feedbackMessage =
+            positiveFeedback[currentIndex % positiveFeedback.length];
+        _nextQuestion();
+      } else {
         wrongAnswers++;
         wrongAnswerCount[currentIndex]++;
-        feedbackMessage = 'Try Again!';
-      });
-    }
+        // Randomized negative feedback
+        final negativeFeedback = [
+          'Not quite!',
+          'Try Again!',
+          'Oops, wrong one!',
+          'Don’t give up!',
+          'Keep trying!'
+        ];
+        feedbackMessage =
+            negativeFeedback[currentIndex % negativeFeedback.length];
+      }
+    });
     _controller.clear();
     FocusScope.of(context).unfocus();
   }

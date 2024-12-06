@@ -199,6 +199,14 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
       ),
       body: Stack(
         children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/paper.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
