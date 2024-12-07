@@ -32,12 +32,11 @@ class MyApp extends StatelessWidget {
 // ios       1:1031285993587:ios:1e0b9df9f80d8983133a06
 
 //task
-//make the notification a widget and put time that was selected
 //add sound effect 
 //headercolor
+//add content in the drawer
 //dark mode/light mode alongside search bar
 //add multiple option
-//add content in the drawer
 //add drag and drop folder
 //fix text in flashcard if it overlapped
 //design

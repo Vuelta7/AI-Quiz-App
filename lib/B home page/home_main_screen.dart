@@ -50,23 +50,34 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
       resizeToAvoidBottomInset: true,
       body: const HomeBody(),
       drawer: const DrawerWidget(),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_rounded, size: 50),
-            label: 'Menu',
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.black,
+              width: 4, // Border thickness
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_rounded, size: 50),
-            label: 'Add Folder',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications, size: 50),
-            label: 'Notifications',
-          ),
-        ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          selectedItemColor: Colors.black,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_rounded, size: 50),
+              label: 'Menu',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_box_rounded, size: 50),
+              label: 'Add Folder',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications, size: 50),
+              label: 'Notifications',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -341,22 +352,31 @@ class _HomeBodyState extends State<HomeBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 40),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              labelText: 'Search Folder',
-              hintText: 'Enter folder name...',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+        const SizedBox(height: 35),
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black,
+                width: 4, // Border thickness
+              ),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Search Folder',
+                hintText: 'Enter folder name...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 10),
         StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('folders')

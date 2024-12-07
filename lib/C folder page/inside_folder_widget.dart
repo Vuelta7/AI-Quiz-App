@@ -9,11 +9,13 @@ import 'package:uuid/uuid.dart';
 class InsideFolderMain extends StatefulWidget {
   final String folderId;
   final String folderName;
+  final Color headerColor;
 
   const InsideFolderMain({
     super.key,
     required this.folderId,
     required this.folderName,
+    required this.headerColor,
   });
 
   @override
@@ -56,6 +58,7 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
             builder: (context) => QuestionModelWidget(
               folderName: widget.folderName,
               folderId: widget.folderId,
+              headerColor: widget.headerColor,
               questions: List<Map<String, String>>.from(questions),
             ),
           ),
@@ -85,31 +88,41 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
     return Scaffold(
       body: Column(
         children: [
-          const SizedBox(
-            height: 40,
-          ),
+          const SizedBox(height: 40),
           Expanded(
             child: InsideFolderBody(folderId: widget.folderId),
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt_rounded, size: 50),
-            label: 'Back to Folders',
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.black,
+              width: 4, // Border thickness
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.play_circle_fill_rounded, size: 50),
-            label: 'Play',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_rounded, size: 50),
-            label: 'Add Flashcard',
-          ),
-        ],
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          selectedItemColor: Colors.black,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.list_alt_rounded, size: 50),
+              label: 'Back to Folders',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.play_circle_fill_rounded, size: 50),
+              label: 'Play',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_box_rounded, size: 50),
+              label: 'Add Flashcard',
+            ),
+          ],
+        ),
       ),
     );
   }

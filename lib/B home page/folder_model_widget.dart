@@ -28,6 +28,7 @@ class FolderModel extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => InsideFolderMain(
+                  headerColor: headerColor,
                   folderId: folderId,
                   folderName: folderName,
                 ),

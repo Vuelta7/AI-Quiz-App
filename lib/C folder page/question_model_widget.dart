@@ -4,12 +4,14 @@ class QuestionModelWidget extends StatefulWidget {
   final List<Map<String, String>> questions;
   final String folderName;
   final String folderId;
+  final Color headerColor;
 
   const QuestionModelWidget({
     super.key,
     required this.questions,
     required this.folderName,
     required this.folderId,
+    required this.headerColor,
   });
 
   @override
@@ -101,7 +103,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
   }
 
   void _showHint() {
-    final answer = widget.questions[currentIndex]['question']!;
+    final answer = widget.questions[currentIndex]['answer']!;
     setState(() {
       if (currentHint.isEmpty) {
         currentHint = '${answer[0]}_';
@@ -227,7 +229,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
             height: 10,
             child: LinearProgressIndicator(
               value: (currentIndex + 1) / widget.questions.length,
-              color: Colors.green,
+              color: widget.headerColor,
               backgroundColor: Colors.grey,
             ),
           ),
@@ -267,7 +269,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                                   borderRadius: BorderRadius.circular(9),
                                   border: Border.all(
                                     width: 3,
-                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                    color: widget.headerColor,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
@@ -292,9 +294,9 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
-                                    const Divider(
+                                    Divider(
                                       thickness: 3,
-                                      color: Colors.black,
+                                      color: widget.headerColor,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -312,6 +314,9 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                                 ),
                               ),
                             ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                           ],
                         ),
                       );
@@ -322,7 +327,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
             ),
           ),
           const Divider(
-            thickness: 2,
+            thickness: 4,
             color: Colors.black,
             height: 0,
           ),
@@ -336,7 +341,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                 TextField(
                   controller: _controller,
                   onSubmitted: checkAnswer,
-                  cursorColor: const Color.fromARGB(255, 7, 7, 7),
+                  cursorColor: Colors.black,
                   style: const TextStyle(
                     fontFamily: 'Arial',
                     color: Color.fromARGB(255, 0, 0, 0),
@@ -364,14 +369,14 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        color: Colors.black,
                         width: 3,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        color: Colors.black,
                         width: 3,
                       ),
                     ),
