@@ -38,7 +38,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
       print('Navigating to NotifcationPage');
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const NotificationDialog()),
+        MaterialPageRoute(builder: (context) => const NotificationPage()),
       );
     }
   }
