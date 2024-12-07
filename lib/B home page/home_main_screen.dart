@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
+import 'package:learn_n/B%20home%20page/notification_page.dart';
 import 'package:learn_n/util.dart';
 import 'package:uuid/uuid.dart';
 
@@ -34,7 +35,11 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
         MaterialPageRoute(builder: (context) => const AddFolderScreen()),
       );
     } else if (index == 2) {
-      print('Navigating to NotificationScreen');
+      print('Navigating to NotifcationPage');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const NotificationDialog()),
+      );
     }
   }
 
