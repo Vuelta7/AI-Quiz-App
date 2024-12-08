@@ -55,7 +55,7 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => QuestionModelWidget(
+            builder: (context) => QuestionModelTypingModeWidget(
               folderName: widget.folderName,
               folderId: widget.folderId,
               headerColor: widget.headerColor,

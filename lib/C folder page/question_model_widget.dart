@@ -1,13 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-class QuestionModelWidget extends StatefulWidget {
+class QuestionModelTypingModeWidget extends StatefulWidget {
   final List<Map<String, String>> questions;
   final String folderName;
   final String folderId;
   final Color headerColor;
 
-  const QuestionModelWidget({
+  const QuestionModelTypingModeWidget({
     super.key,
     required this.questions,
     required this.folderName,
@@ -16,10 +16,12 @@ class QuestionModelWidget extends StatefulWidget {
   });
 
   @override
-  State<QuestionModelWidget> createState() => _QuestionModelWidgetState();
+  State<QuestionModelTypingModeWidget> createState() =>
+      _QuestionModelTypingModeWidgetState();
 }
 
-class _QuestionModelWidgetState extends State<QuestionModelWidget> {
+class _QuestionModelTypingModeWidgetState
+    extends State<QuestionModelTypingModeWidget> {
   late PageController _pageController;
   int currentIndex = 0;
   int wrongAnswers = 0;
@@ -86,7 +88,9 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
     if (currentIndex < widget.questions.length - 1) {
       setState(() {
         currentIndex++;
+        currentHint = 'Work Smart';
         currentHint = '';
+        ;
       });
       _pageController.jumpToPage(currentIndex);
     } else {
@@ -106,17 +110,17 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
     }
   }
 
-//if the user reveal all the letter its is counted as wrong and automatically skips to next one.
   void _showHint() {
     final answer = widget.questions[currentIndex]['answer']!;
     setState(() {
       if (currentHint.isEmpty) {
         currentHint = '${answer[0]}_';
-      } else if (currentHint.length < answer.length) {
+      } else if (currentHint.length < answer.length - 1) {
         int revealedChars = currentHint.length;
         currentHint = '${answer.substring(0, revealedChars)}_';
       } else {
         currentHint = answer;
+        _nextQuestion();
       }
     });
   }
