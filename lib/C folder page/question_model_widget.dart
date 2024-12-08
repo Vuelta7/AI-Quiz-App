@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 class QuestionModelWidget extends StatefulWidget {
@@ -26,6 +27,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
   List<int> wrongAnswerCount = [];
   String feedbackMessage = 'Work Smart';
   final TextEditingController _controller = TextEditingController();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -48,7 +50,8 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
       if (userAnswer.trim().toLowerCase() ==
           correctAnswer.trim().toLowerCase()) {
         currentHint = '';
-        // Randomized positive feedback
+        _audioPlayer.play(AssetSource('correct_sf.mp3'));
+
         final positiveFeedback = [
           'Awesome!',
           'Great Job!',
@@ -62,7 +65,8 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
       } else {
         wrongAnswers++;
         wrongAnswerCount[currentIndex]++;
-        // Randomized negative feedback
+        _audioPlayer.play(AssetSource('wrong_sf.mp3'));
+
         final negativeFeedback = [
           'Not quite!',
           'Try Again!',
@@ -102,6 +106,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
     }
   }
 
+//if the user reveal all the letter its is counted as wrong and automatically skips to next one.
   void _showHint() {
     final answer = widget.questions[currentIndex]['answer']!;
     setState(() {

@@ -32,11 +32,9 @@ class MyApp extends StatelessWidget {
 // ios       1:1031285993587:ios:1e0b9df9f80d8983133a06
 
 //task
-//add sound effect 
-//headercolor
+//make sound effect faster 
 //add content in the drawer
-//dark mode/light mode alongside search bar
+//add customize button in the drawer
 //add multiple option
 //add drag and drop folder
-//fix text in flashcard if it overlapped
 //design

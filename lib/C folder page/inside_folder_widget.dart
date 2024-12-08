@@ -94,35 +94,55 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: Colors.black,
-              width: 4, // Border thickness
+      bottomNavigationBar: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('folders')
+            .doc(widget.folderId)
+            .collection('questions')
+            .snapshots(),
+        builder: (context, snapshot) {
+          final hasFlashcards =
+              snapshot.hasData && snapshot.data!.docs.isNotEmpty;
+
+          return Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: Colors.black,
+                  width: 4,
+                ),
+              ),
             ),
-          ),
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          selectedItemColor: Colors.black,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt_rounded, size: 50),
-              label: 'Back to Folders',
+            child: BottomNavigationBar(
+              backgroundColor: Colors.white,
+              currentIndex: _selectedIndex,
+              onTap: (index) {
+                if (index == 1 && !hasFlashcards) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('No flashcards to play.')),
+                  );
+                  return;
+                }
+                _onItemTapped(index);
+              },
+              selectedItemColor: Colors.black,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list_alt_rounded, size: 50),
+                  label: 'Back to Folders',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.play_circle_fill_rounded, size: 50),
+                  label: 'Play',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add_box_rounded, size: 50),
+                  label: 'Add Flashcard',
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.play_circle_fill_rounded, size: 50),
-              label: 'Play',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_box_rounded, size: 50),
-              label: 'Add Flashcard',
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -328,8 +348,14 @@ class InsideFolderBody extends StatelessWidget {
           );
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Text('No questions found :<'),
+          return const Padding(
+            padding: EdgeInsets.all(40.0),
+            child: Center(
+              child: Text(
+                'No Flashcards here 🗂️\nCreate one by clicking the Add Flashcards.',
+                textAlign: TextAlign.center,
+              ),
+            ),
           );
         }
 

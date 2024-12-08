@@ -20,6 +20,7 @@ dependencies:
   dotted_border: ^2.1.0
   flutter_local_notifications: ^18.0.1
   flutter_datetime_picker: ^1.5.1
+  audioplayers: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -37,6 +38,8 @@ flutter:
 
   assets:
     - assets/logo_icon.png
+    - assets/wrong_sf.mp3
+    - assets/correct_sf.mp3
 
 flutter_icons:
   android: true

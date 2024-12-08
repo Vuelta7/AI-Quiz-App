@@ -50,34 +50,24 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
       resizeToAvoidBottomInset: true,
       body: const HomeBody(),
       drawer: const DrawerWidget(),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: Colors.black,
-              width: 4, // Border thickness
-            ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.black,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_rounded, size: 50),
+            label: 'Menu',
           ),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          selectedItemColor: Colors.black,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_rounded, size: 50),
-              label: 'Menu',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_box_rounded, size: 50),
-              label: 'Add Folder',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications, size: 50),
-              label: 'Notifications',
-            ),
-          ],
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_box_rounded, size: 50),
+            label: 'Add Folder',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications, size: 50),
+            label: 'Notifications',
+          ),
+        ],
       ),
     );
   }
@@ -353,26 +343,16 @@ class _HomeBodyState extends State<HomeBody> {
     return Column(
       children: [
         const SizedBox(height: 35),
-        Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.black,
-                width: 4, // Border thickness
-              ),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search Folder',
-                hintText: 'Enter folder name...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              labelText: 'Search Folder',
+              hintText: 'Enter folder name...',
+              prefixIcon: const Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
           ),
@@ -391,8 +371,14 @@ class _HomeBodyState extends State<HomeBody> {
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(
-                child: Text('No data here :<'),
+              return const Padding(
+                padding: EdgeInsets.all(40.0),
+                child: Center(
+                  child: Text(
+                    'No Folder here 🗂️\nCreate one by clicking the Add Folder ➕.',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               );
             }
 
