@@ -273,7 +273,7 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
           'Edit Flashcard',
           style: TextStyle(
             color: Colors.black,
-            fontFamily: 'PressStart2P',
+            fontWeight: FontWeight.bold,
           ),
         ),
         leading: IconButton(

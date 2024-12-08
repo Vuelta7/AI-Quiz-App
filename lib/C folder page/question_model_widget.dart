@@ -199,7 +199,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
       currentIndex = 0;
       wrongAnswers = 0;
       currentHint = '';
-      feedbackMessage = '';
+      feedbackMessage = 'Work Smart';
       wrongAnswerCount = List.filled(widget.questions.length, 0);
       _pageController.jumpToPage(0);
     });
@@ -215,6 +215,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: Colors.white,
         title: Text(
           widget.folderName,
           style: const TextStyle(
@@ -228,6 +229,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           SizedBox(
@@ -244,14 +246,18 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Text(
-                    feedbackMessage,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: feedbackMessage == 'Try Again!'
-                          ? Colors.red
-                          : Colors.green,
+                  child: Expanded(
+                    child: Center(
+                      child: Text(
+                        feedbackMessage,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: feedbackMessage == 'Try Again!'
+                              ? Colors.red
+                              : Colors.green,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -274,7 +280,7 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                                   borderRadius: BorderRadius.circular(9),
                                   border: Border.all(
                                     width: 3,
-                                    color: widget.headerColor,
+                                    color: Colors.black,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
@@ -299,9 +305,9 @@ class _QuestionModelWidgetState extends State<QuestionModelWidget> {
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
-                                    Divider(
+                                    const Divider(
                                       thickness: 3,
-                                      color: widget.headerColor,
+                                      color: Colors.black,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(

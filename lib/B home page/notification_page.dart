@@ -97,7 +97,7 @@ class _NotificationPageState extends State<NotificationPage> {
     if (_timer.isActive) {
       _timer.cancel();
       setState(() {
-        isNotificationSet = false; // Reset notification state
+        isNotificationSet = false;
         timeText = null;
         selectedTime = null;
       });
