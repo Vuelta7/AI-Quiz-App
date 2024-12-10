@@ -212,6 +212,53 @@ class _QuestionMultipleOptionModeModelWidgetState
     Navigator.pop(context);
   }
 
+  Widget buildAnswerButtons() {
+    String correctAnswer = widget.questions[currentIndex]['answer']!;
+
+    // Collect all unique answers except the correct one
+    List<String> incorrectAnswers = widget.questions
+        .where((q) => q['answer'] != correctAnswer)
+        .map((q) => q['answer']!)
+        .toSet()
+        .toList();
+
+    // Select 3 random incorrect answers
+    incorrectAnswers.shuffle();
+    List<String> answers = [correctAnswer, ...incorrectAnswers.take(3)];
+
+    answers.shuffle(); // Shuffle for randomness
+
+    return Column(
+      children: answers.map((answer) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: widget.headerColor,
+            ),
+            onPressed: () => checkAnswer(answer),
+            child: Text(
+              answer,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: _getTextColorForBackground(widget.headerColor),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+// Function to determine appropriate text color based on background color
+  Color _getTextColorForBackground(Color backgroundColor) {
+    return backgroundColor.computeLuminance() > 0.5
+        ? Colors.black
+        : Colors.white;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -341,21 +388,14 @@ class _QuestionMultipleOptionModeModelWidgetState
             ),
           ),
           // answer area
-          const Divider(
-            thickness: 4,
-            color: Colors.black,
-            height: 0,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
-                //can u make 4 buttons "here in the answer area" that the user will guess the guess option is the answers
-                //from the question map. if the question is pair or the user guess the correct answer that pair with the
-                //question means correct it will do the checkAnswer()
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: buildAnswerButtons(),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
