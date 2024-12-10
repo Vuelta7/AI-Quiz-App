@@ -64,8 +64,4 @@ class MyApp extends StatelessWidget {
 // ios       1:1031285993587:ios:1e0b9df9f80d8983133a06
 
 //task
-//add content in the drawer
-//add customize button in the drawer
-//add multiple option
 //add drag and drop folder
-//design

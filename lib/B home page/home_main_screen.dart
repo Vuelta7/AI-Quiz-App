@@ -310,7 +310,6 @@ class _HomeBodyState extends State<HomeBody> {
               );
             }
 
-            // Load folders only once
             if (_folders.isEmpty) {
               _folders = snapshot.data!.docs.where((folderDoc) {
                 final folderData = folderDoc.data() as Map<String, dynamic>;
