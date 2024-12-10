@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/A%20start%20page/drawer_contents.dart';
 import 'package:learn_n/A%20start%20page/sign_up_screen.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 
@@ -151,8 +152,15 @@ class SplashScreenState extends State<SplashScreen>
   }
 }
 
-class DrawerWidget extends StatelessWidget {
+class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
+
+  @override
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  late bool _isDoNotDisturb = false;
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +198,10 @@ class DrawerWidget extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(
+              Icons.do_not_disturb,
+              color: Colors.black,
+            ),
             title: const Text(
               'Do Not Disturb',
               style: TextStyle(
@@ -198,14 +210,23 @@ class DrawerWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            onTap: () {
-              Navigator.pop(context);
-              print('Settings tapped');
-            },
+            trailing: Switch(
+              activeColor: Colors.black,
+              value: _isDoNotDisturb,
+              onChanged: (bool value) {
+                setState(() {
+                  _isDoNotDisturb = value;
+                });
+              },
+            ),
           ),
           ListTile(
+            leading: const Icon(
+              Icons.feedback,
+              color: Colors.black,
+            ),
             title: const Text(
-              'Help Center',
+              'Feedback or Question',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 15,
@@ -214,24 +235,16 @@ class DrawerWidget extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
-              print('Settings tapped');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DrawerContent(),
+                ),
+              );
             },
           ),
           ListTile(
-            title: const Text(
-              'Feedback',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              print('Settings tapped');
-            },
-          ),
-          ListTile(
+            leading: const Icon(Icons.privacy_tip, color: Colors.black),
             title: const Text(
               'Privacy Policy',
               style: TextStyle(
@@ -242,10 +255,16 @@ class DrawerWidget extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
-              print('Settings tapped');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DrawerContent(),
+                ),
+              );
             },
           ),
           ListTile(
+            leading: const Icon(Icons.info, color: Colors.black),
             title: const Text(
               'About Us',
               style: TextStyle(
@@ -256,10 +275,14 @@ class DrawerWidget extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
-              print('About Us tapped');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const DrawerContent()),
+              );
             },
           ),
           ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text(
               'Logout',
               style: TextStyle(

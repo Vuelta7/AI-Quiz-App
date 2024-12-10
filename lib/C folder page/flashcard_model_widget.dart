@@ -104,41 +104,46 @@ class _FlashCardModelState extends State<FlashCardModel>
   Widget _buildFront() {
     return Visibility(
       visible: _animation.value < 0.5,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              widget.question,
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.question,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            IconButton(
-              icon: const Icon(
-                Icons.edit,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditFlashCardWidget(
-                      folderId: widget.folderId,
-                      flashCardId: widget.questionId,
-                      initialQuestion: widget.question,
-                      initialAnswer: widget.answer,
+              const SizedBox(height: 10),
+              IconButton(
+                icon: const Icon(
+                  Icons.edit,
+                  size: 20,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditFlashCardWidget(
+                        folderId: widget.folderId,
+                        flashCardId: widget.questionId,
+                        initialQuestion: widget.question,
+                        initialAnswer: widget.answer,
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
