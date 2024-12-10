@@ -1,13 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-class QuestionModelTypingModeWidget extends StatefulWidget {
+class QuestionMultipleOptionModeModelWidget extends StatefulWidget {
   final List<Map<String, String>> questions;
   final String folderName;
   final String folderId;
   final Color headerColor;
 
-  const QuestionModelTypingModeWidget({
+  const QuestionMultipleOptionModeModelWidget({
     super.key,
     required this.questions,
     required this.folderName,
@@ -16,12 +16,12 @@ class QuestionModelTypingModeWidget extends StatefulWidget {
   });
 
   @override
-  State<QuestionModelTypingModeWidget> createState() =>
-      _QuestionModelTypingModeWidgetState();
+  State<QuestionMultipleOptionModeModelWidget> createState() =>
+      _QuestionMultipleOptionModeModelWidgetState();
 }
 
-class _QuestionModelTypingModeWidgetState
-    extends State<QuestionModelTypingModeWidget> {
+class _QuestionMultipleOptionModeModelWidgetState
+    extends State<QuestionMultipleOptionModeModelWidget> {
   late PageController _pageController;
   int currentIndex = 0;
   int wrongAnswers = 0;
@@ -255,7 +255,7 @@ class _QuestionModelTypingModeWidgetState
                       child: Text(
                         feedbackMessage,
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: feedbackMessage == 'Try Again!'
                               ? Colors.red
@@ -341,6 +341,7 @@ class _QuestionModelTypingModeWidgetState
               ],
             ),
           ),
+          // answer area
           const Divider(
             thickness: 4,
             color: Colors.black,
@@ -353,50 +354,9 @@ class _QuestionModelTypingModeWidgetState
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
-                TextField(
-                  controller: _controller,
-                  onSubmitted: checkAnswer,
-                  cursorColor: Colors.black,
-                  style: const TextStyle(
-                    fontFamily: 'Arial',
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 14,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Type Answer',
-                    hintStyle: const TextStyle(
-                      fontFamily: 'PressStart2P',
-                      color: Color.fromARGB(150, 0, 0, 0),
-                    ),
-                    labelStyle: const TextStyle(
-                      fontFamily: 'PressStart2P',
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
-                    filled: true,
-                    fillColor: const Color.fromARGB(255, 255, 255, 255),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        width: 3,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.black,
-                        width: 3,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.black,
-                        width: 3,
-                      ),
-                    ),
-                  ),
-                ),
+                //can u make 4 buttons "here in the answer area" that the user will guess the guess option is the answers
+                //from the question map. if the question is pair or the user guess the correct answer that pair with the
+                //question means correct it will do the checkAnswer()
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

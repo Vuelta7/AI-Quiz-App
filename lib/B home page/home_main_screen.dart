@@ -205,14 +205,6 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
       ),
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/paper.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -348,8 +340,7 @@ class _HomeBodyState extends State<HomeBody> {
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              labelText: 'Search Folder',
-              hintText: 'Enter folder name...',
+              hintText: 'Search Folder',
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),

@@ -52,7 +52,7 @@ class _NotificationPageState extends State<NotificationPage> {
       setState(() {
         selectedTime = picked;
         timeText = "Time selected: ${picked.format(context)}";
-        isNotificationSet = true; // Mark notification as set
+        isNotificationSet = true;
       });
       _scheduleNotification(picked);
     }
@@ -144,7 +144,10 @@ class _NotificationPageState extends State<NotificationPage> {
           child: Text(
             "⏰ Time Interval",
             style: TextStyle(
-                fontFamily: 'PressStart2P', fontSize: 16, color: Colors.black),
+              fontFamily: 'PressStart2P',
+              fontSize: 16,
+              color: Colors.black,
+            ),
           ),
         ),
         Container(
@@ -173,8 +176,12 @@ class _NotificationPageState extends State<NotificationPage> {
               fontSize: 11,
               color: Colors.black,
             ),
+            // Preventing theme inheritance
             decoration: const InputDecoration(
               border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
             ),
             items: timeIntervals.map((int value) {
               return DropdownMenuItem<int>(

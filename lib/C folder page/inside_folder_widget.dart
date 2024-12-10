@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/C%20folder%20page/flashcard_model_widget.dart';
-import 'package:learn_n/C%20folder%20page/question_model_widget.dart';
+import 'package:learn_n/C%20folder%20page/question_multiple_option_model_widget.dart';
+import 'package:learn_n/C%20folder%20page/question_typing_mode_model_widget.dart';
 import 'package:uuid/uuid.dart';
 
 class InsideFolderMain extends StatefulWidget {
@@ -27,7 +28,6 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
 
   void _onItemTapped(int index) async {
     if (index == 0) {
-      // Navigate back to the Home Screen
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -35,7 +35,6 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
         ),
       );
     } else if (index == 1) {
-      // Now the "Play" button functionality
       try {
         final questionsSnapshot = await FirebaseFirestore.instance
             .collection('folders')
@@ -52,24 +51,19 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
           };
         }).toList();
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuestionModelTypingModeWidget(
-              folderName: widget.folderName,
-              folderId: widget.folderId,
-              headerColor: widget.headerColor,
-              questions: List<Map<String, String>>.from(questions),
-            ),
-          ),
-        );
+        if (questions.isNotEmpty) {
+          _showChooseModeDialog(questions);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No questions available to play.')),
+          );
+        }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to load questions: $e')),
         );
       }
     } else if (index == 2) {
-      // Now the "Add Flashcard" button functionality
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -77,10 +71,116 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
         ),
       );
     }
-
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _showChooseModeDialog(List<Map<String, String>> questions) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Choose a Quiz Mode',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QuestionTypingModeModelWidget(
+                          folderName: widget.folderName,
+                          folderId: widget.folderId,
+                          headerColor: widget.headerColor,
+                          questions: questions,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    minimumSize: const Size.fromHeight(50),
+                    fixedSize: const Size(200, 50),
+                  ),
+                  child: const Text(
+                    'Typing Mode',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'PressStart2P',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            QuestionMultipleOptionModeModelWidget(
+                          folderName: widget.folderName,
+                          folderId: widget.folderId,
+                          headerColor: widget.headerColor,
+                          questions: questions,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    minimumSize: const Size.fromHeight(50),
+                    fixedSize: const Size(200, 50),
+                  ),
+                  child: const Text(
+                    'Multiple Option Mode',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'PressStart2P',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close dialog
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    minimumSize: const Size.fromHeight(50),
+                    fixedSize: const Size(200, 50),
+                  ),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'PressStart2P',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

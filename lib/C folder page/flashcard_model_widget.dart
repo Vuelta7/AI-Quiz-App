@@ -294,16 +294,16 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
+                  //     TextFormField(
+                  //   controller: titleController,
+                  //   decoration: const InputDecoration(
+                  //     hintText: 'Title',
+                  //   ),
+                  // ),
                   TextFormField(
                     controller: answerController,
                     decoration: const InputDecoration(
                       hintText: 'Answer',
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -311,12 +311,6 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
                     controller: questionController,
                     decoration: const InputDecoration(
                       hintText: 'Question',
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
                     ),
                     maxLines: 3,
                   ),
