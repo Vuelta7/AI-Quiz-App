@@ -105,7 +105,8 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => QuestionTypingModeModelWidget(
+                        builder: (context) =>
+                            QuestionIdentificationModeModelWidget(
                           folderName: widget.folderName,
                           folderId: widget.folderId,
                           headerColor: widget.headerColor,
@@ -117,13 +118,15 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     minimumSize: const Size.fromHeight(50),
-                    fixedSize: const Size(200, 50),
+                    fixedSize: const Size(250, 50),
                   ),
                   child: const Text(
-                    'Typing Mode',
+                    'Identification Mode',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'PressStart2P',
+                      fontSize: 12,
                     ),
                   ),
                 ),
@@ -147,13 +150,15 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     minimumSize: const Size.fromHeight(50),
-                    fixedSize: const Size(200, 50),
+                    fixedSize: const Size(250, 50),
                   ),
                   child: const Text(
                     'Multiple Option Mode',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'PressStart2P',
+                      fontSize: 12,
                     ),
                   ),
                 ),

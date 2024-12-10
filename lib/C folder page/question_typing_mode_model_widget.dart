@@ -1,13 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-class QuestionTypingModeModelWidget extends StatefulWidget {
+class QuestionIdentificationModeModelWidget extends StatefulWidget {
   final List<Map<String, String>> questions;
   final String folderName;
   final String folderId;
   final Color headerColor;
 
-  const QuestionTypingModeModelWidget({
+  const QuestionIdentificationModeModelWidget({
     super.key,
     required this.questions,
     required this.folderName,
@@ -16,12 +16,12 @@ class QuestionTypingModeModelWidget extends StatefulWidget {
   });
 
   @override
-  State<QuestionTypingModeModelWidget> createState() =>
-      _QuestionTypingModeModelWidgetState();
+  State<QuestionIdentificationModeModelWidget> createState() =>
+      _QuestionIdentificationModeModelWidgetState();
 }
 
-class _QuestionTypingModeModelWidgetState
-    extends State<QuestionTypingModeModelWidget> {
+class _QuestionIdentificationModeModelWidgetState
+    extends State<QuestionIdentificationModeModelWidget> {
   late PageController _pageController;
   int currentIndex = 0;
   int wrongAnswers = 0;

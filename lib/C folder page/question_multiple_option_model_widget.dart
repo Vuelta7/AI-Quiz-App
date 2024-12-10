@@ -27,9 +27,24 @@ class _QuestionMultipleOptionModeModelWidgetState
   int wrongAnswers = 0;
   String currentHint = '';
   List<int> wrongAnswerCount = [];
+  List<String> attemptedAnswers = [];
   String feedbackMessage = 'Work Smart';
   final TextEditingController _controller = TextEditingController();
   final AudioPlayer _audioPlayer = AudioPlayer();
+  List<List<String>> cachedAnswers = [];
+  List<String> positiveFeedback = [
+    "Great Job!",
+    "Well Done!",
+    "Excellent!",
+    "Keep it up!"
+  ];
+
+  List<String> negativeFeedback = [
+    "Try Again!",
+    "Oops, not quite!",
+    "Incorrect, give it another shot!",
+    "Almost there!"
+  ];
 
   @override
   void initState() {
@@ -37,6 +52,19 @@ class _QuestionMultipleOptionModeModelWidgetState
     widget.questions.shuffle();
     _pageController = PageController();
     wrongAnswerCount = List.filled(widget.questions.length, 0);
+    for (var question in widget.questions) {
+      String correctAnswer = question['answer']!;
+      List<String> incorrectAnswers = widget.questions
+          .where((q) => q['answer'] != correctAnswer)
+          .map((q) => q['answer']!)
+          .toSet()
+          .toList();
+
+      incorrectAnswers.shuffle();
+      List<String> answers = [correctAnswer, ...incorrectAnswers.take(3)];
+      answers.shuffle();
+      cachedAnswers.add(answers);
+    }
   }
 
   @override
@@ -48,47 +76,41 @@ class _QuestionMultipleOptionModeModelWidgetState
 
   void checkAnswer(String userAnswer) {
     final correctAnswer = widget.questions[currentIndex]['answer']!;
+
+    if (attemptedAnswers.contains(userAnswer)) {
+      return;
+    }
+
     setState(() {
       if (userAnswer.trim().toLowerCase() ==
           correctAnswer.trim().toLowerCase()) {
         currentHint = '';
         _audioPlayer.play(AssetSource('correct_sf.mp3'));
-
-        final positiveFeedback = [
-          'Awesome!',
-          'Great Job!',
-          'Keep it up!',
-          'You got it!',
-          'Excellent!'
-        ];
         feedbackMessage =
             positiveFeedback[currentIndex % positiveFeedback.length];
         _nextQuestion();
       } else {
         wrongAnswers++;
         wrongAnswerCount[currentIndex]++;
+        attemptedAnswers.add(userAnswer);
         _audioPlayer.play(AssetSource('wrong_sf.mp3'));
 
-        final negativeFeedback = [
-          'Not quite!',
-          'Try Again!',
-          'Oops, wrong one!',
-          'Don’t give up!',
-          'Keep trying!'
-        ];
-        feedbackMessage =
-            negativeFeedback[currentIndex % negativeFeedback.length];
+        feedbackMessage = negativeFeedback[
+            wrongAnswerCount[currentIndex] % negativeFeedback.length];
+
+        if (attemptedAnswers.length == 3) {
+          feedbackMessage = 'Wrong, next question...';
+          _nextQuestion();
+        }
       }
     });
-    _controller.clear();
-    FocusScope.of(context).unfocus();
   }
 
   void _nextQuestion() {
     if (currentIndex < widget.questions.length - 1) {
       setState(() {
         currentIndex++;
-        currentHint = 'Work Smart';
+        attemptedAnswers.clear();
         currentHint = '';
       });
       _pageController.jumpToPage(currentIndex);
@@ -213,35 +235,24 @@ class _QuestionMultipleOptionModeModelWidgetState
   }
 
   Widget buildAnswerButtons() {
-    String correctAnswer = widget.questions[currentIndex]['answer']!;
-
-    // Collect all unique answers except the correct one
-    List<String> incorrectAnswers = widget.questions
-        .where((q) => q['answer'] != correctAnswer)
-        .map((q) => q['answer']!)
-        .toSet()
-        .toList();
-
-    // Select 3 random incorrect answers
-    incorrectAnswers.shuffle();
-    List<String> answers = [correctAnswer, ...incorrectAnswers.take(3)];
-
-    answers.shuffle(); // Shuffle for randomness
+    List<String> answers = cachedAnswers[currentIndex];
 
     return Column(
       children: answers.map((answer) {
+        Color buttonColor = attemptedAnswers.contains(answer)
+            ? Colors.grey
+            : widget.headerColor;
+
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: widget.headerColor,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
             onPressed: () => checkAnswer(answer),
             child: Text(
               answer,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: _getTextColorForBackground(widget.headerColor),
+                color: _getTextColorForBackground(buttonColor),
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),

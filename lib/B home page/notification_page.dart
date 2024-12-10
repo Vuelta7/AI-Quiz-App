@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:learn_n/notification.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Widget buildRetroButton(String text, Color color, VoidCallback? onPressed) {
   return ElevatedButton(
@@ -275,7 +275,6 @@ class _NotificationPageState extends State<NotificationPage> {
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
-        // notification cards
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -338,7 +337,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   ],
                 ),
                 child: _buildNotificationDetails(),
-              )
+              ),
             ],
           ),
         ),
@@ -352,4 +351,70 @@ void showNotificationPage(BuildContext context) {
     context,
     MaterialPageRoute(builder: (context) => const NotificationPage()),
   );
+}
+
+class NotificationService {
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  static const String customChannelId = 'custom_sound_channel_id';
+
+  static Future<void> init() async {
+    const androidSettings = AndroidInitializationSettings('logo_icon');
+
+    const initializationSettings = InitializationSettings(
+      android: androidSettings,
+    );
+
+    try {
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+      );
+
+      const customSoundChannel = AndroidNotificationChannel(
+        customChannelId,
+        'Custom Sound Notifications',
+        description: 'Channel for custom sound notifications',
+        importance: Importance.max,
+        sound: RawResourceAndroidNotificationSound('notification'),
+      );
+
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(customSoundChannel);
+
+      print("Notifications initialized successfully!");
+    } catch (e) {
+      print("Notification initialization error: $e");
+    }
+  }
+
+  static Future<void> showInstantNotification(
+    String title,
+    String body,
+  ) async {
+    const platformChannelSpecifics = NotificationDetails(
+      android: AndroidNotificationDetails(
+        customChannelId,
+        'Custom Sound Notifications',
+        sound: RawResourceAndroidNotificationSound('notification'),
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+    );
+
+    try {
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        title,
+        body,
+        platformChannelSpecifics,
+        payload: 'instant_notification',
+      );
+      print("Notification sent!");
+    } catch (e) {
+      print("Failed to show notification: $e");
+    }
+  }
 }
