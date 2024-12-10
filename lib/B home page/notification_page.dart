@@ -360,23 +360,23 @@ class NotificationService {
   static const String customChannelId = 'custom_sound_channel_id';
 
   static Future<void> init() async {
-    const androidSettings = AndroidInitializationSettings('logo_icon');
+    const androidSettings = AndroidInitializationSettings(
+        'logo'); // Ensure logo exists in the 'res/drawable' directory
 
     const initializationSettings = InitializationSettings(
       android: androidSettings,
     );
 
     try {
-      await flutterLocalNotificationsPlugin.initialize(
-        initializationSettings,
-      );
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
       const customSoundChannel = AndroidNotificationChannel(
         customChannelId,
         'Custom Sound Notifications',
         description: 'Channel for custom sound notifications',
         importance: Importance.max,
-        sound: RawResourceAndroidNotificationSound('notification'),
+        sound: RawResourceAndroidNotificationSound(
+            'notification'), // Ensure 'notification' sound file exists in 'res/raw'
       );
 
       await flutterLocalNotificationsPlugin
@@ -390,21 +390,19 @@ class NotificationService {
     }
   }
 
-  static Future<void> showInstantNotification(
-    String title,
-    String body,
-  ) async {
-    const platformChannelSpecifics = NotificationDetails(
-      android: AndroidNotificationDetails(
-        customChannelId,
-        'Custom Sound Notifications',
-        sound: RawResourceAndroidNotificationSound('notification'),
-        importance: Importance.max,
-        priority: Priority.high,
-      ),
-    );
-
+  static Future<void> showInstantNotification(String title, String body) async {
     try {
+      const platformChannelSpecifics = NotificationDetails(
+        android: AndroidNotificationDetails(
+          customChannelId,
+          'Custom Sound Notifications',
+          importance: Importance.max,
+          priority: Priority.high,
+          sound: RawResourceAndroidNotificationSound(
+              'notification'), // Ensure sound file exists
+        ),
+      );
+
       await flutterLocalNotificationsPlugin.show(
         0,
         title,
@@ -412,9 +410,13 @@ class NotificationService {
         platformChannelSpecifics,
         payload: 'instant_notification',
       );
+
       print("Notification sent!");
     } catch (e) {
       print("Failed to show notification: $e");
     }
   }
 }
+
+//Failed to show notification: PlatformException(error, Attempt to invoke virtual method 'int java.lang.Integer.intValue()' on a null object reference, null, java.lang.NullPointerException: Attempt to invoke virtual method 'int java.lang.Integer.intValue()'
+//this error is showing how do i fix this
