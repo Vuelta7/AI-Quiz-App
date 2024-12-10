@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/A%20start%20page/splash_screen.dart';
 import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
 import 'package:learn_n/B%20home%20page/notification_page.dart';
 import 'package:learn_n/util.dart';
@@ -48,6 +49,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
       body: const HomeBody(),
       drawer: const DrawerWidget(),
       bottomNavigationBar: BottomNavigationBar(
@@ -66,78 +68,6 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications, size: 50),
             label: 'Notifications',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DrawerWidget extends StatelessWidget {
-  const DrawerWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.grey[850],
-              border: const Border(
-                bottom: BorderSide(
-                  color: Colors.black,
-                  width: 4.0,
-                ),
-              ),
-            ),
-            child: Column(
-              children: [
-                Image.asset(
-                  'assets/logo_icon.png',
-                  width: 80,
-                  height: 80,
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Learn-N',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "PressStart2P"),
-                ),
-              ],
-            ),
-          ),
-          ListTile(
-            title: const Text(
-              'Settings',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              print('Settings tapped');
-            },
-          ),
-          ListTile(
-            title: const Text(
-              'About Us',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              print('About Us tapped');
-            },
           ),
         ],
       ),
@@ -207,12 +137,13 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
         children: [
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Column(
                 children: [
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: folderNameController,
+                    cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       hintText: 'Folder Name',
                     ),
@@ -220,6 +151,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: descriptionController,
+                    cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       hintText: 'Description',
                     ),
@@ -339,6 +271,7 @@ class _HomeBodyState extends State<HomeBody> {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: TextField(
             controller: _searchController,
+            cursorColor: Colors.black,
             decoration: InputDecoration(
               hintText: 'Search Folder',
               prefixIcon: const Icon(Icons.search),

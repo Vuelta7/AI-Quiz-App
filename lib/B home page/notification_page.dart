@@ -34,7 +34,6 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   TimeOfDay? selectedTime;
-  bool isDndEnabled = false;
   late Timer _timer;
   String? timeText;
   bool isNotificationSet = false;
@@ -80,12 +79,11 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void _sendNotification() {
-    if (!isDndEnabled) {
-      NotificationService.showInstantNotification(
-        'Time to Study!',
-        'Keep pushing forward — your future self will thank you!',
-      );
-    }
+    NotificationService.showInstantNotification(
+      'Time to Study!',
+      'Keep pushing forward — your future self will thank you!',
+    );
+
     setState(() {
       isNotificationSet = false;
       timeText = null;
@@ -105,34 +103,6 @@ class _NotificationPageState extends State<NotificationPage> {
         const SnackBar(content: Text("Notification cancelled.")),
       );
     }
-  }
-
-  Widget _buildDndSettings() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "🔕 Do Not Disturb",
-          style: TextStyle(
-              fontFamily: 'PressStart2P', fontSize: 16, color: Colors.black),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Switch(
-                value: isDndEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    isDndEnabled = value;
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
   }
 
   Widget _buildTimeIntervalSelector() {
@@ -176,7 +146,6 @@ class _NotificationPageState extends State<NotificationPage> {
               fontSize: 11,
               color: Colors.black,
             ),
-            // Preventing theme inheritance
             decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
@@ -212,7 +181,7 @@ class _NotificationPageState extends State<NotificationPage> {
     if (delay > 0) {
       _timer = Timer(Duration(seconds: delay), _sendNotification);
       setState(() {
-        timeText = "Notification set for ${interval} minutes from now.";
+        timeText = "Notification set for $interval minutes from now.";
         isNotificationSet = true;
       });
     }
@@ -228,7 +197,7 @@ class _NotificationPageState extends State<NotificationPage> {
             "📅 Time Selection",
             style: TextStyle(
               fontFamily: 'PressStart2P',
-              fontSize: 20,
+              fontSize: 16,
               color: Colors.black,
             ),
           ),
@@ -240,18 +209,30 @@ class _NotificationPageState extends State<NotificationPage> {
             _pickTime,
           ),
         ),
-        if (timeText != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Text(
-              timeText!,
-              style: const TextStyle(
-                fontFamily: 'PressStart2P',
-                fontSize: 18,
-                color: Colors.black,
+      ],
+    );
+  }
+
+  Widget _buildNotificationDetails() {
+    return Column(
+      children: [
+        timeText != null
+            ? Text(
+                timeText!,
+                style: const TextStyle(
+                  fontFamily: 'PressStart2P',
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
+              )
+            : const Text(
+                "Please choose a time interval or select a time.",
+                style: TextStyle(
+                  fontFamily: 'PressStart2P',
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
               ),
-            ),
-          ),
         if (isNotificationSet)
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -270,104 +251,94 @@ class _NotificationPageState extends State<NotificationPage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.black,
-                width: 4,
-              ),
+        child: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: const Text(
+            'Notification',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-          child: AppBar(
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: const Text(
-              'Notification',
-              style: TextStyle(fontFamily: 'PressStart2P', color: Colors.black),
-            ),
-            backgroundColor: Colors.white,
-            elevation: 0,
-          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
         ),
       ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
+        // notification cards
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // DND Settings Card
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(
                     color: Colors.black,
-                    width: 4, // Thicker border
+                    width: 4,
                   ),
-                  borderRadius: BorderRadius.circular(12), // Border radius
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.grey,
-                      blurRadius: 5,
-                      offset: Offset(0, 2), // Shadow position
-                    ),
-                  ],
-                ),
-                child: _buildDndSettings(),
-              ),
-              const SizedBox(height: 30),
-
-              // Time Interval Selector Card
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 4, // Thicker border
-                  ),
-                  borderRadius: BorderRadius.circular(12), // Border radius
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5,
-                      offset: Offset(0, 2), // Shadow position
+                      blurRadius: 3,
+                      offset: Offset(0, 2),
                     ),
                   ],
                 ),
                 child: _buildTimeIntervalSelector(),
               ),
-              const SizedBox(height: 30),
-              // Notification Settings Card
+              const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(
                     color: Colors.black,
-                    width: 4, // Thicker border
+                    width: 4,
                   ),
-                  borderRadius: BorderRadius.circular(12), // Border radius
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black,
-                      blurRadius: 5,
-                      offset: Offset(0, 2), // Shadow position
+                      blurRadius: 3,
+                      offset: Offset(0, 2),
                     ),
                   ],
                 ),
                 child: _buildNotificationSettings(),
               ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 4,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 3,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: _buildNotificationDetails(),
+              )
             ],
           ),
         ),

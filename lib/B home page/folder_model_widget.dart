@@ -43,8 +43,7 @@ class FolderModel extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               border: Border.all(
                 width: 2,
-                color: headerColor
-                    .withOpacity(0.8), // Make border same as the background
+                color: headerColor.withOpacity(0.8),
               ),
               boxShadow: [
                 BoxShadow(
@@ -228,7 +227,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
         children: [
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Column(
                 children: [
                   const SizedBox(height: 10),

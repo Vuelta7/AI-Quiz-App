@@ -90,7 +90,6 @@ class _QuestionTypingModeModelWidgetState
         currentIndex++;
         currentHint = 'Work Smart';
         currentHint = '';
-        ;
       });
       _pageController.jumpToPage(currentIndex);
     } else {

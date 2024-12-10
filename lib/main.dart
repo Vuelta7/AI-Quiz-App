@@ -44,11 +44,15 @@ class MyApp extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              // color: Pallete.gradient2,
               width: 3,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: Colors.red[100],
+          selectionHandleColor: Colors.black,
+          cursorColor: Colors.black,
         ),
       ),
     );
@@ -60,7 +64,6 @@ class MyApp extends StatelessWidget {
 // ios       1:1031285993587:ios:1e0b9df9f80d8983133a06
 
 //task
-//make sound effect faster 
 //add content in the drawer
 //add customize button in the drawer
 //add multiple option

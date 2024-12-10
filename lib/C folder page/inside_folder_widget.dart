@@ -329,7 +329,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
         children: [
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Column(
                 children: [
                   const SizedBox(height: 10),
@@ -338,15 +338,15 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Answer',
                     ),
-                    maxLines: 3,
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: questionController,
+                    cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       hintText: 'Question or Definition',
                     ),
-                    maxLines: 3,
+                    maxLines: 14,
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(

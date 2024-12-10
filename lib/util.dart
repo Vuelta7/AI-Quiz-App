@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Build a reusable Retro TextField widget
 Widget buildRetroTextField(
   String label, {
   bool isPassword = false,
@@ -10,7 +9,7 @@ Widget buildRetroTextField(
   return TextFormField(
     controller: controller,
     obscureText: isPassword,
-    cursorColor: const Color.fromARGB(255, 7, 7, 7),
+    cursorColor: Colors.black,
     style: const TextStyle(
       fontFamily: 'Arial',
       color: Color.fromARGB(255, 0, 0, 0),
@@ -50,7 +49,6 @@ Widget buildRetroTextField(
   );
 }
 
-// Build a reusable Retro Button widget
 Widget buildRetroButton(String text, Color color, VoidCallback? onPressed) {
   return ElevatedButton(
     onPressed: onPressed,

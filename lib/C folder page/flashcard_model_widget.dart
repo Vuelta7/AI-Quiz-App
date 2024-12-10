@@ -290,18 +290,13 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
         children: [
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  //     TextFormField(
-                  //   controller: titleController,
-                  //   decoration: const InputDecoration(
-                  //     hintText: 'Title',
-                  //   ),
-                  // ),
                   TextFormField(
                     controller: answerController,
+                    cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       hintText: 'Answer',
                     ),
@@ -309,10 +304,11 @@ class _EditFlashCardWidgetState extends State<EditFlashCardWidget> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: questionController,
+                    cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       hintText: 'Question',
                     ),
-                    maxLines: 3,
+                    maxLines: 14,
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
