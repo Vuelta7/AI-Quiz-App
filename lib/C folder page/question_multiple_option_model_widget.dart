@@ -263,7 +263,6 @@ class _QuestionMultipleOptionModeModelWidgetState
     );
   }
 
-// Function to determine appropriate text color based on background color
   Color _getTextColorForBackground(Color backgroundColor) {
     return backgroundColor.computeLuminance() > 0.5
         ? Colors.black
