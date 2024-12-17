@@ -30,7 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future<void> createUserWithEmailandPassword() async {
     if (formKey.currentState?.validate() ?? false) {
-      setState(() => isLoading = true); // Show loading indicator
+      setState(() => isLoading = true);
       try {
         final userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -115,9 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     SizedBox(
                       width: 170,
                       child: buildRetroButton(
-                        isLoading
-                            ? 'Loading...'
-                            : 'Sign Up', // Show loading text if signing up
+                        isLoading ? 'Loading...' : 'Sign Up',
                         const Color.fromARGB(255, 0, 0, 0),
                         isLoading ? null : createUserWithEmailandPassword,
                       ),

@@ -249,20 +249,36 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   final TextEditingController _searchController = TextEditingController();
+  List<DocumentSnapshot> _folders = [];
   String searchQuery = '';
 
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_updateSearchQuery);
+  }
 
-    _searchController.addListener(() {
-      setState(() {
-        searchQuery = _searchController.text.toLowerCase();
-      });
+  void _updateSearchQuery() {
+    setState(() {
+      searchQuery = _searchController.text.toLowerCase();
     });
   }
 
-  List<DocumentSnapshot> _folders = [];
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) newIndex--;
+      final item = _folders.removeAt(oldIndex);
+      _folders.insert(newIndex, item);
+    });
+  }
+
+  List<DocumentSnapshot> _filterFolders(List<DocumentSnapshot> docs) {
+    return docs.where((folderDoc) {
+      final folderData = folderDoc.data() as Map<String, dynamic>;
+      final folderName = folderData['folderName'] as String;
+      return folderName.toLowerCase().contains(searchQuery);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -292,12 +308,9 @@ class _HomeBodyState extends State<HomeBody> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
+                child: CircularProgressIndicator(color: Colors.black),
               );
             }
-
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
               return const Padding(
                 padding: EdgeInsets.all(40.0),
@@ -310,27 +323,13 @@ class _HomeBodyState extends State<HomeBody> {
               );
             }
 
-            if (_folders.isEmpty) {
-              _folders = snapshot.data!.docs.where((folderDoc) {
-                final folderData = folderDoc.data() as Map<String, dynamic>;
-                final folderName = folderData['folderName'] as String;
-                return folderName
-                    .toLowerCase()
-                    .contains(_searchController.text.toLowerCase());
-              }).toList();
-            }
+            _folders = _filterFolders(snapshot.data!.docs);
 
             return Expanded(
               child: ReorderableListView.builder(
                 padding: EdgeInsets.zero,
                 itemCount: _folders.length,
-                onReorder: (oldIndex, newIndex) {
-                  setState(() {
-                    if (newIndex > oldIndex) newIndex--;
-                    final item = _folders.removeAt(oldIndex);
-                    _folders.insert(newIndex, item);
-                  });
-                },
+                onReorder: _onReorder,
                 itemBuilder: (context, index) {
                   final folderDoc = _folders[index];
                   final folderData = folderDoc.data() as Map<String, dynamic>;

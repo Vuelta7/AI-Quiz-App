@@ -360,8 +360,7 @@ class NotificationService {
   static const String customChannelId = 'custom_sound_channel_id';
 
   static Future<void> init() async {
-    const androidSettings = AndroidInitializationSettings(
-        'logo'); // Ensure logo exists in the 'res/drawable' directory
+    const androidSettings = AndroidInitializationSettings('logo');
 
     const initializationSettings = InitializationSettings(
       android: androidSettings,
@@ -375,8 +374,7 @@ class NotificationService {
         'Custom Sound Notifications',
         description: 'Channel for custom sound notifications',
         importance: Importance.max,
-        sound: RawResourceAndroidNotificationSound(
-            'notification'), // Ensure 'notification' sound file exists in 'res/raw'
+        sound: RawResourceAndroidNotificationSound('notification'),
       );
 
       await flutterLocalNotificationsPlugin
@@ -398,8 +396,7 @@ class NotificationService {
           'Custom Sound Notifications',
           importance: Importance.max,
           priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound(
-              'notification'), // Ensure sound file exists
+          sound: RawResourceAndroidNotificationSound('notification'),
         ),
       );
 
@@ -417,6 +414,3 @@ class NotificationService {
     }
   }
 }
-
-//Failed to show notification: PlatformException(error, Attempt to invoke virtual method 'int java.lang.Integer.intValue()' on a null object reference, null, java.lang.NullPointerException: Attempt to invoke virtual method 'int java.lang.Integer.intValue()'
-//this error is showing how do i fix this

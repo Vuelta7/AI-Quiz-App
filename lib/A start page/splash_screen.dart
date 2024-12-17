@@ -24,22 +24,18 @@ class SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // Initialize animation controller
     _controller = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     );
 
-    // Define the progress animation
     _progress = Tween<double>(begin: 0.0, end: 1.0).animate(_controller)
       ..addListener(() {
         setState(() {});
       });
 
-    // Start the animation
     _controller.forward();
 
-    // Timer to update loading text
     _dotTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (!mounted) return;
       setState(() {
@@ -47,29 +43,24 @@ class SplashScreenState extends State<SplashScreen>
       });
     });
 
-    // Navigate after animation finishes
     Future.delayed(const Duration(seconds: 3), _checkAuthState);
   }
 
   Future<void> _checkAuthState() async {
     if (!mounted) return;
 
-    // Add debugging information
     print("Checking Firebase Authentication State...");
 
     User? user = FirebaseAuth.instance.currentUser;
 
-    // Debugging: Log the user state
     print("Current User: $user");
 
     if (user != null) {
-      // User is logged in, navigate to HomeMainWidget
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeMainScreen()),
       );
     } else {
-      // User is not logged in, navigate to SignupScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const SignupScreen()),

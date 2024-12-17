@@ -56,7 +56,6 @@ class FolderModel extends StatelessWidget {
             ),
             child: Column(
               children: [
-                // Folder Content Section
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
@@ -83,10 +82,7 @@ class FolderModel extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 12),
-
-                // Action Button to Edit Folder
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(
@@ -119,9 +115,7 @@ class FolderModel extends StatelessWidget {
     );
   }
 
-  // Function to determine appropriate text color based on background color
   Color _getTextColorForBackground(Color backgroundColor) {
-    // If background color is dark, return light text color and vice versa
     return backgroundColor.computeLuminance() > 0.5
         ? Colors.black
         : Colors.white;
