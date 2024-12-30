@@ -35,7 +35,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   TimeOfDay? selectedTime;
-  late Timer _timer;
+  Timer? _timer;
   String? timeText;
   bool isNotificationSet = false;
 
@@ -57,6 +57,13 @@ class _NotificationPageState extends State<NotificationPage> {
     });
     print(
         "Loaded preferences: selectedInterval=$selectedInterval, timeText=$timeText, isNotificationSet=$isNotificationSet");
+
+    if (isNotificationSet) {
+      final int? remainingTime = prefs.getInt('remainingTime');
+      if (remainingTime != null && remainingTime > 0) {
+        _timer = Timer(Duration(seconds: remainingTime), _sendNotification);
+      }
+    }
   }
 
   Future<void> _savePreferences() async {
@@ -64,6 +71,12 @@ class _NotificationPageState extends State<NotificationPage> {
     await prefs.setInt('selectedInterval', selectedInterval ?? 0);
     await prefs.setString('timeText', timeText ?? '');
     await prefs.setBool('isNotificationSet', isNotificationSet);
+    if (_timer != null && _timer!.isActive) {
+      final remainingTime = _timer!.tick;
+      await prefs.setInt('remainingTime', remainingTime);
+    } else {
+      await prefs.remove('remainingTime');
+    }
     print(
         "Saved preferences: selectedInterval=$selectedInterval, timeText=$timeText, isNotificationSet=$isNotificationSet");
   }
@@ -114,6 +127,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
     if (delay > 0) {
       _timer = Timer(Duration(seconds: delay), _sendNotification);
+      _savePreferences();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please pick a future time!")),
@@ -136,8 +150,8 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void _cancelNotification() {
-    if (_timer.isActive) {
-      _timer.cancel();
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
       setState(() {
         isNotificationSet = false;
         timeText = null;
