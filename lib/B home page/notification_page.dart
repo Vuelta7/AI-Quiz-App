@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Widget buildRetroButton(String text, Color color, VoidCallback? onPressed) {
   return ElevatedButton(
@@ -41,6 +42,32 @@ class _NotificationPageState extends State<NotificationPage> {
   List<int> timeIntervals = [5, 10, 15, 20, 25, 30];
   int? selectedInterval;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedInterval = prefs.getInt('selectedInterval');
+      timeText = prefs.getString('timeText');
+      isNotificationSet = prefs.getBool('isNotificationSet') ?? false;
+    });
+    print(
+        "Loaded preferences: selectedInterval=$selectedInterval, timeText=$timeText, isNotificationSet=$isNotificationSet");
+  }
+
+  Future<void> _savePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('selectedInterval', selectedInterval ?? 0);
+    await prefs.setString('timeText', timeText ?? '');
+    await prefs.setBool('isNotificationSet', isNotificationSet);
+    print(
+        "Saved preferences: selectedInterval=$selectedInterval, timeText=$timeText, isNotificationSet=$isNotificationSet");
+  }
+
   Future<void> _pickTime() async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -48,12 +75,28 @@ class _NotificationPageState extends State<NotificationPage> {
     );
 
     if (picked != null && picked != selectedTime) {
-      setState(() {
-        selectedTime = picked;
-        timeText = "Time selected: ${picked.format(context)}";
-        isNotificationSet = true;
-      });
-      _scheduleNotification(picked);
+      final now = DateTime.now();
+      final notificationTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        picked.hour,
+        picked.minute,
+      );
+
+      if (notificationTime.isAfter(now)) {
+        setState(() {
+          selectedTime = picked;
+          timeText = "Time selected: ${picked.format(context)}";
+          isNotificationSet = true;
+        });
+        _savePreferences();
+        _scheduleNotification(picked);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please pick a future time!")),
+        );
+      }
     }
   }
 
@@ -89,6 +132,7 @@ class _NotificationPageState extends State<NotificationPage> {
       timeText = null;
       selectedTime = null;
     });
+    _savePreferences();
   }
 
   void _cancelNotification() {
@@ -99,6 +143,7 @@ class _NotificationPageState extends State<NotificationPage> {
         timeText = null;
         selectedTime = null;
       });
+      _savePreferences();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Notification cancelled.")),
       );
@@ -165,6 +210,7 @@ class _NotificationPageState extends State<NotificationPage> {
               if (newValue != null) {
                 _scheduleIntervalNotification(newValue);
               }
+              _savePreferences();
             },
           ),
         ),
@@ -184,6 +230,7 @@ class _NotificationPageState extends State<NotificationPage> {
         timeText = "Notification set for $interval minutes from now.";
         isNotificationSet = true;
       });
+      _savePreferences();
     }
   }
 

@@ -134,14 +134,11 @@ class _QuestionMultipleOptionModeModelWidgetState
   void _showHint() {
     final answer = widget.questions[currentIndex]['answer']!;
     setState(() {
-      if (currentHint.isEmpty) {
-        currentHint = '${answer[0]}_';
-      } else if (currentHint.length < answer.length - 1) {
-        int revealedChars = currentHint.length;
-        currentHint = '${answer.substring(0, revealedChars)}_';
+      int hintLength = (answer.length / 2).ceil();
+      if (currentHint.length < hintLength) {
+        currentHint = answer.substring(0, currentHint.length + 1);
       } else {
-        currentHint = answer;
-        _nextQuestion();
+        feedbackMessage = 'Hint maxed out';
       }
     });
   }
