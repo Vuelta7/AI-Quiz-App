@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/sign_up_screen.dart';
+import 'package:learn_n/A%20start%20page/start_screen.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -62,7 +62,7 @@ class SplashScreenState extends State<SplashScreen>
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const SignupScreen()),
+        MaterialPageRoute(builder: (context) => const StartScreen()),
       );
     }
   }
