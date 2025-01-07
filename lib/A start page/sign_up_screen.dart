@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/login_screen.dart';
+import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/util.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -15,7 +17,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   String? errorMessage;
@@ -23,23 +25,28 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void dispose() {
-    emailController.dispose();
+    usernameController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> createUserWithEmailandPassword() async {
+  Future<void> registerUser() async {
     if (formKey.currentState?.validate() ?? false) {
       setState(() => isLoading = true);
       try {
-        final userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim(),
-        );
-        print(userCredential);
+        // Sign in anonymously
+        final userCredential = await FirebaseAuth.instance.signInAnonymously();
+        final uid = userCredential.user!.uid;
+
+        // Store username and password in Firestore
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          'username': usernameController.text.trim(),
+          'password': passwordController.text.trim(),
+        });
+
         setState(() => errorMessage = null);
-        Navigator.pushReplacement(context, LoginScreen.route());
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeMainScreen()));
       } on FirebaseAuthException catch (e) {
         setState(() => errorMessage = e.message);
       } finally {
@@ -81,13 +88,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 key: formKey,
                 child: Column(
                   children: [
-                    buildRetroTextField('Email', controller: emailController,
-                        validator: (value) {
+                    buildRetroTextField('Username',
+                        controller: usernameController, validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Email is required';
-                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                          .hasMatch(value)) {
-                        return 'Enter a valid email';
+                        return 'Username is required';
                       }
                       return null;
                     }),
@@ -115,9 +119,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     SizedBox(
                       width: 170,
                       child: buildRetroButton(
-                        isLoading ? 'Loading...' : 'Sign Up',
+                        isLoading ? 'Loading...' : 'Register',
                         const Color.fromARGB(255, 0, 0, 0),
-                        isLoading ? null : createUserWithEmailandPassword,
+                        isLoading ? null : registerUser,
                       ),
                     ),
                     const SizedBox(height: 20),
