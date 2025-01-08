@@ -1,4 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class QuestionMultipleOptionModeModelWidget extends StatefulWidget {
@@ -176,7 +178,8 @@ class _QuestionMultipleOptionModeModelWidgetState
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await _addPointsToUser(5);
                     _restartQuiz();
                     Navigator.pop(context);
                   },
@@ -193,7 +196,8 @@ class _QuestionMultipleOptionModeModelWidgetState
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await _addPointsToUser(5);
                     _finishQuiz();
                     Navigator.pop(context);
                   },
@@ -214,6 +218,21 @@ class _QuestionMultipleOptionModeModelWidgetState
         );
       },
     );
+  }
+
+  Future<void> _addPointsToUser(int points) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final snapshot = await transaction.get(userDoc);
+        if (snapshot.exists) {
+          final currentPoints = snapshot.data()?['points'] ?? 0;
+          transaction.update(userDoc, {'points': currentPoints + points});
+        }
+      });
+    }
   }
 
   void _restartQuiz() {

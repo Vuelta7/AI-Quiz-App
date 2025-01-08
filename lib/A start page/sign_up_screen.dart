@@ -38,10 +38,11 @@ class _SignupScreenState extends State<SignupScreen> {
         final userCredential = await FirebaseAuth.instance.signInAnonymously();
         final uid = userCredential.user!.uid;
 
-        // Store username and password in Firestore
+        // Store username, password, and points in Firestore
         await FirebaseFirestore.instance.collection('users').doc(uid).set({
           'username': usernameController.text.trim(),
           'password': passwordController.text.trim(),
+          'points': 0,
         });
 
         setState(() => errorMessage = null);

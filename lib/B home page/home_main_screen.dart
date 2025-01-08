@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/A%20start%20page/drawer_contents.dart';
 import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
 import 'package:learn_n/B%20home%20page/notification_page.dart';
 import 'package:learn_n/util.dart';
@@ -50,7 +51,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: const HomeBody(),
-      drawer: const Drawer(),
+      drawer: const DrawerContent(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -283,7 +284,6 @@ class _HomeBodyState extends State<HomeBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 35),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
           child: TextField(
