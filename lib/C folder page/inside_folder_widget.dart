@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/C%20folder%20page/flashcard_model_widget.dart';
 import 'package:learn_n/C%20folder%20page/question_multiple_option_model_widget.dart';
 import 'package:learn_n/C%20folder%20page/question_typing_mode_model_widget.dart';
@@ -31,7 +30,7 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomeMainScreen(),
+          builder: (context) => AddFlashCardScreen(folderId: widget.folderId),
         ),
       );
     } else if (index == 1) {
@@ -67,7 +66,7 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => AddFlashCardScreen(folderId: widget.folderId),
+          builder: (context) => LeaderboardScreen(folderId: widget.folderId),
         ),
       );
     }
@@ -191,55 +190,61 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 40),
-          Expanded(
-            child: InsideFolderBody(folderId: widget.folderId),
+        appBar: AppBar(
+          title: Text(
+            widget.folderName,
+            style: const TextStyle(
+              color: Colors.black,
+              fontFamily: 'PressStart2P',
+            ),
           ),
-        ],
-      ),
-      bottomNavigationBar: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('folders')
-            .doc(widget.folderId)
-            .collection('questions')
-            .snapshots(),
-        builder: (context, snapshot) {
-          final hasFlashcards =
-              snapshot.hasData && snapshot.data!.docs.isNotEmpty;
-
-          return BottomNavigationBar(
-            backgroundColor: Colors.white,
-            currentIndex: _selectedIndex,
-            onTap: (index) {
-              if (index == 1 && !hasFlashcards) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('No flashcards to play.')),
-                );
-                return;
-              }
-              _onItemTapped(index);
-            },
-            selectedItemColor: Colors.black,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.list_alt_rounded, size: 50),
-                label: 'Back to Folders',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.play_circle_fill_rounded, size: 50),
-                label: 'Play',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.add_box_rounded, size: 50),
-                label: 'Add Flashcard',
-              ),
-            ],
-          );
-        },
-      ),
-    );
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded,
+                size: 30, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+          backgroundColor: Colors.white,
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: InsideFolderBody(folderId: widget.folderId),
+            ),
+          ],
+        ),
+        bottomNavigationBar: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('folders')
+              .doc(widget.folderId)
+              .collection('questions')
+              .snapshots(),
+          builder: (context, snapshot) {
+            return BottomNavigationBar(
+              backgroundColor: Colors.white,
+              currentIndex: _selectedIndex,
+              onTap:
+                  _onItemTapped, // Directly call the method without extra conditions
+              selectedItemColor: Colors.black,
+              unselectedItemColor: Colors.black,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.add_box_rounded,
+                      size: 50, color: Colors.black),
+                  label: 'Add Flashcard',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.play_circle_fill_rounded,
+                      size: 50, color: Colors.black),
+                  label: 'Play',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.leaderboard, size: 50, color: Colors.black),
+                  label: 'Leaderboard',
+                ),
+              ],
+            );
+          },
+        ));
   }
 }
 
@@ -256,13 +261,11 @@ class AddFlashcardButtonWidget extends StatelessWidget {
       ),
       color: Colors.black,
       onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AddFlashCardScreen(
-              folderId: folderId,
-            );
-          },
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddFlashCardScreen(folderId: folderId),
+          ),
         );
       },
     );
@@ -475,6 +478,73 @@ class InsideFolderBody extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class LeaderboardScreen extends StatelessWidget {
+  final String folderId;
+
+  const LeaderboardScreen({super.key, required this.folderId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Leaderboard',
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'PressStart2P',
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('folders')
+            .doc(folderId)
+            .collection('leaderboard')
+            .orderBy('timeSpent')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            );
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text('No leaderboard data available.'),
+            );
+          }
+
+          final leaderboardEntries = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: leaderboardEntries.length,
+            itemBuilder: (context, index) {
+              final entry = leaderboardEntries[index];
+              final data = entry.data() as Map<String, dynamic>;
+              final username = data['username'] as String;
+              final timeSpent = data['timeSpent'] as int;
+
+              return ListTile(
+                title: Text(username),
+                subtitle: Text('Time Spent: ${timeSpent}s'),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

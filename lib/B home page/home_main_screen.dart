@@ -4,7 +4,8 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/drawer_contents.dart';
 import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
-import 'package:learn_n/B%20home%20page/notification_page.dart';
+import 'package:learn_n/B%20home%20page/notification_body.dart';
+import 'package:learn_n/B%20home%20page/reels_page.dart';
 import 'package:learn_n/util.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,52 +22,65 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    print('Tapped index: $index');
     setState(() {
       _selectedIndex = index;
     });
-
-    if (index == 0) {
-      print('Opening Drawer');
-      _scaffoldKey.currentState?.openDrawer();
-    } else if (index == 1) {
-      print('Navigating to AddFolderScreen');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AddFolderScreen()),
-      );
-    } else if (index == 2) {
-      print('Navigating to NotifcationPage');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const NotificationPage()),
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget body;
+    if (_selectedIndex == 0) {
+      body = const DrawerContent();
+    } else if (_selectedIndex == 1) {
+      body = const HomeBody();
+    } else if (_selectedIndex == 2) {
+      body = const ReelsPage();
+    } else if (_selectedIndex == 3) {
+      body = const NotificationBody();
+    } else {
+      body = const HomeBody();
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      body: const HomeBody(),
+      body: body,
       drawer: const DrawerContent(),
+      floatingActionButton: _selectedIndex == 1
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddFolderScreen()),
+                );
+              },
+              backgroundColor: Colors.black,
+              child: const Icon(Icons.add),
+            )
+          : null,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_rounded, size: 50),
+            icon: Icon(Icons.menu_rounded, size: 50, color: Colors.black),
             label: 'Menu',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_rounded, size: 50),
-            label: 'Add Folder',
+            icon: Icon(Icons.folder, size: 50, color: Colors.black),
+            label: 'Folders',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications, size: 50),
+            icon: Icon(Icons.video_library, size: 50, color: Colors.black),
+            label: 'Reels',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications, size: 50, color: Colors.black),
             label: 'Notifications',
           ),
         ],

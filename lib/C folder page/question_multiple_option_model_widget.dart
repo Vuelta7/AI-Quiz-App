@@ -47,6 +47,7 @@ class _QuestionMultipleOptionModeModelWidgetState
     "Incorrect, give it another shot!",
     "Almost there!"
   ];
+  late Stopwatch _stopwatch;
 
   @override
   void initState() {
@@ -67,12 +68,14 @@ class _QuestionMultipleOptionModeModelWidgetState
       answers.shuffle();
       cachedAnswers.add(answers);
     }
+    _stopwatch = Stopwatch()..start();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     _controller.dispose();
+    _stopwatch.stop();
     super.dispose();
   }
 
@@ -146,6 +149,9 @@ class _QuestionMultipleOptionModeModelWidgetState
   }
 
   void _showCompletionDialog() {
+    _stopwatch.stop();
+    final timeSpent = _stopwatch.elapsed.inSeconds;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -169,7 +175,7 @@ class _QuestionMultipleOptionModeModelWidgetState
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "You've completed all questions.\n\nTotal Wrong Attempts: $wrongAnswers",
+                  "You've completed all questions.\n\nTotal Wrong Attempts: $wrongAnswers\nTime Spent: ${timeSpent}s",
                   style: const TextStyle(
                     fontSize: 20,
                     color: Colors.black,
@@ -180,6 +186,7 @@ class _QuestionMultipleOptionModeModelWidgetState
                 ElevatedButton(
                   onPressed: () async {
                     await _addPointsToUser(5);
+                    await _updateLeaderboard(timeSpent);
                     _restartQuiz();
                     Navigator.pop(context);
                   },
@@ -198,6 +205,7 @@ class _QuestionMultipleOptionModeModelWidgetState
                 ElevatedButton(
                   onPressed: () async {
                     await _addPointsToUser(5);
+                    await _updateLeaderboard(timeSpent);
                     _finishQuiz();
                     Navigator.pop(context);
                   },
@@ -228,9 +236,34 @@ class _QuestionMultipleOptionModeModelWidgetState
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final snapshot = await transaction.get(userDoc);
         if (snapshot.exists) {
-          final currentPoints = snapshot.data()?['points'] ?? 0;
-          transaction.update(userDoc, {'points': currentPoints + points});
+          final currentRankPoints = snapshot.data()?['rankpoints'] ?? 0;
+          final currentCurrencyPoints = snapshot.data()?['currencypoints'] ?? 0;
+          transaction.update(userDoc, {
+            'rankpoints': currentRankPoints + points,
+            'currencypoints': currentCurrencyPoints + points,
+          });
         }
+      });
+    }
+  }
+
+  Future<void> _updateLeaderboard(int timeSpent) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final userSnapshot = await userDoc.get();
+      final username = userSnapshot.data()?['username'] ?? 'Unknown';
+
+      final leaderboardDoc = FirebaseFirestore.instance
+          .collection('folders')
+          .doc(widget.folderId)
+          .collection('leaderboard')
+          .doc(user.uid);
+
+      await leaderboardDoc.set({
+        'username': username,
+        'timeSpent': timeSpent,
       });
     }
   }

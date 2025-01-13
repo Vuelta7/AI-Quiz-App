@@ -2,38 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:learn_n/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Widget buildRetroButton(String text, Color color, VoidCallback? onPressed) {
-  return ElevatedButton(
-    onPressed: onPressed,
-    style: ElevatedButton.styleFrom(
-      backgroundColor: color,
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      minimumSize: const Size(200, 50),
-    ),
-    child: Text(
-      text,
-      style: const TextStyle(
-        fontFamily: 'PressStart2P',
-        fontSize: 12,
-        color: Colors.white,
-      ),
-    ),
-  );
-}
-
-class NotificationPage extends StatefulWidget {
-  const NotificationPage({super.key});
+class NotificationBody extends StatefulWidget {
+  const NotificationBody({super.key});
 
   @override
-  State<NotificationPage> createState() => _NotificationPageState();
+  State<NotificationBody> createState() => _NotificationBodyState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _NotificationBodyState extends State<NotificationBody>
+    with WidgetsBindingObserver {
   TimeOfDay? selectedTime;
   Timer? _timer;
   String? timeText;
@@ -45,18 +25,37 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    NotificationService.init();
     _loadPreferences();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _cancelNotification(); // Ensure the timer is canceled when the widget is disposed
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _cancelNotification(); // Cancel the timer if the app goes to the background or becomes inactive
+    }
   }
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       selectedInterval = prefs.getInt('selectedInterval');
+      if (selectedInterval != null &&
+          !timeIntervals.contains(selectedInterval)) {
+        selectedInterval = null;
+      }
       timeText = prefs.getString('timeText');
       isNotificationSet = prefs.getBool('isNotificationSet') ?? false;
     });
-    print(
-        "Loaded preferences: selectedInterval=$selectedInterval, timeText=$timeText, isNotificationSet=$isNotificationSet");
 
     if (isNotificationSet) {
       final int? remainingTime = prefs.getInt('remainingTime');
@@ -77,8 +76,6 @@ class _NotificationPageState extends State<NotificationPage> {
     } else {
       await prefs.remove('remainingTime');
     }
-    print(
-        "Saved preferences: selectedInterval=$selectedInterval, timeText=$timeText, isNotificationSet=$isNotificationSet");
   }
 
   Future<void> _pickTime() async {
@@ -309,109 +306,76 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: AppBar(
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.black,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 4,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 3,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: _buildTimeIntervalSelector(),
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: const Text(
-            'Notification',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 4,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 3,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: _buildNotificationSettings(),
             ),
-          ),
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
-      ),
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 4,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 3,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 4,
                 ),
-                child: _buildTimeIntervalSelector(),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
                     color: Colors.black,
-                    width: 4,
+                    blurRadius: 3,
+                    offset: Offset(0, 2),
                   ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 3,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: _buildNotificationSettings(),
+                ],
               ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 4,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 3,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: _buildNotificationDetails(),
-              ),
-            ],
-          ),
+              child: _buildNotificationDetails(),
+            ),
+          ],
         ),
       ),
     );
   }
-}
-
-void showNotificationPage(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const NotificationPage()),
-  );
 }
 
 class NotificationService {

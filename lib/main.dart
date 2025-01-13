@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:learn_n/A%20start%20page/splash_screen.dart';
-import 'package:learn_n/B%20home%20page/notification_page.dart';
+import 'package:learn_n/B%20home%20page/notification_body.dart';
 import 'package:learn_n/firebase_options.dart';
 
 void main() async {
