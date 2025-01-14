@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/start_screen.dart';
@@ -55,10 +56,25 @@ class SplashScreenState extends State<SplashScreen>
     print("Current User: $user");
 
     if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeMainScreen()),
-      );
+      // Fetch the user ID from Firestore
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userDoc.exists) {
+        final userId = userDoc.id;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomeMainScreen(userId: userId)),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const StartScreen()),
+        );
+      }
     } else {
       Navigator.pushReplacement(
         context,

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/drawer_contents.dart';
+import 'package:learn_n/B%20home%20page/drawer_contents.dart';
 import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
 import 'package:learn_n/B%20home%20page/notification_body.dart';
 import 'package:learn_n/B%20home%20page/reels_page.dart';
@@ -10,7 +10,9 @@ import 'package:learn_n/util.dart';
 import 'package:uuid/uuid.dart';
 
 class HomeMainScreen extends StatefulWidget {
-  const HomeMainScreen({super.key});
+  final String userId;
+
+  const HomeMainScreen({super.key, required this.userId});
 
   @override
   _HomeMainScreenState createState() => _HomeMainScreenState();
@@ -22,33 +24,37 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 0) {
+      _scaffoldKey.currentState?.openDrawer();
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     Widget body;
-    if (_selectedIndex == 0) {
-      body = const DrawerContent();
-    } else if (_selectedIndex == 1) {
-      body = const HomeBody();
+    if (_selectedIndex == 1) {
+      body = HomeBody(userId: widget.userId);
     } else if (_selectedIndex == 2) {
       body = const ReelsPage();
     } else if (_selectedIndex == 3) {
       body = const NotificationBody();
     } else {
-      body = const HomeBody();
+      body = HomeBody(userId: widget.userId);
     }
 
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
+      drawer: const Drawer(
+        child: DrawerContent(),
+      ),
       body: body,
-      drawer: const DrawerContent(),
-      floatingActionButton: _selectedIndex == 1
+      floatingActionButton: _selectedIndex == 1 || _selectedIndex == 0
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.push(
@@ -255,7 +261,9 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
 }
 
 class HomeBody extends StatefulWidget {
-  const HomeBody({super.key});
+  final String userId;
+
+  const HomeBody({super.key, required this.userId});
 
   @override
   _HomeBodyState createState() => _HomeBodyState();
@@ -315,8 +323,7 @@ class _HomeBodyState extends State<HomeBody> {
         StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('folders')
-              .where('creator',
-                  isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              .where('creator', isEqualTo: widget.userId)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

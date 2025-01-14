@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/sign_up_screen.dart';
+import 'package:learn_n/A%20start%20page/register_screen.dart';
+import 'package:learn_n/A%20start%20page/start_screen.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/util.dart';
 
@@ -42,12 +43,17 @@ class _LoginScreenState extends State<LoginScreen> {
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
-          // User found, sign in anonymously
+          // User found, use the Firestore database ID
+          final userDoc = querySnapshot.docs.first;
+          final userId = userDoc.id;
+
+          // Sign in with the user ID
           await FirebaseAuth.instance.signInAnonymously();
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HomeMainScreen()),
+            MaterialPageRoute(
+                builder: (context) => HomeMainScreen(userId: userId)),
           );
 
           ScaffoldMessenger.of(context).showSnackBar(
@@ -89,6 +95,19 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const StartScreen()),
+            );
+          },
+        ),
+      ),
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       body: Padding(
@@ -98,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 100),
               Image.asset(
                 'assets/logo_icon.png',
                 height: 200,
@@ -111,6 +129,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.black,
                   fontSize: 24,
                   letterSpacing: 2.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Login',
+                style: TextStyle(
+                  fontFamily: 'PressStart2P',
+                  color: Colors.black,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -137,9 +165,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     }),
                     const SizedBox(height: 20),
                     SizedBox(
-                      width: 170,
+                      width: double.infinity,
                       child: buildRetroButton(
-                        'Sign In',
+                        'Login',
                         const Color.fromARGB(255, 0, 0, 0),
                         loginUser,
                       ),

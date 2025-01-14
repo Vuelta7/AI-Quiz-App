@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/login_screen.dart';
+import 'package:learn_n/A%20start%20page/start_screen.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/util.dart';
 
@@ -34,12 +35,15 @@ class _SignupScreenState extends State<SignupScreen> {
     if (formKey.currentState?.validate() ?? false) {
       setState(() => isLoading = true);
       try {
-        // Sign in anonymously
+        // Sign in anonymously to get a Firebase Auth user
         final userCredential = await FirebaseAuth.instance.signInAnonymously();
-        final uid = userCredential.user!.uid;
+        final firebaseUser = userCredential.user;
 
-        // Store username, password, currencypoints, and rankpoints in Firestore
-        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        // Create a new user in Firestore with the Firebase user ID
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseUser!.uid)
+            .set({
           'username': usernameController.text.trim(),
           'password': passwordController.text.trim(),
           'currencypoints': 0,
@@ -47,8 +51,12 @@ class _SignupScreenState extends State<SignupScreen> {
         });
 
         setState(() => errorMessage = null);
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeMainScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeMainScreen(userId: firebaseUser.uid),
+          ),
+        );
       } on FirebaseAuthException catch (e) {
         setState(() => errorMessage = e.message);
       } finally {
@@ -60,6 +68,19 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const StartScreen()),
+            );
+          },
+        ),
+      ),
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       body: Padding(
@@ -69,7 +90,6 @@ class _SignupScreenState extends State<SignupScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 100),
               Image.asset(
                 'assets/logo_icon.png',
                 height: 200,
@@ -82,6 +102,16 @@ class _SignupScreenState extends State<SignupScreen> {
                   color: Colors.black,
                   fontSize: 24,
                   letterSpacing: 2.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Register',
+                style: TextStyle(
+                  fontFamily: 'PressStart2P',
+                  color: Colors.black,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -119,7 +149,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     SizedBox(
-                      width: 170,
+                      width: double.infinity,
                       child: buildRetroButton(
                         isLoading ? 'Loading...' : 'Register',
                         const Color.fromARGB(255, 0, 0, 0),

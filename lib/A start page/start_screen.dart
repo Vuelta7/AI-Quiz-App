@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/login_screen.dart';
-import 'package:learn_n/A%20start%20page/sign_up_screen.dart';
+import 'package:learn_n/A%20start%20page/register_screen.dart';
 import 'package:learn_n/util.dart';
 
 class StartScreen extends StatelessWidget {
