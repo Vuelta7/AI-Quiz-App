@@ -5,6 +5,7 @@ import 'package:learn_n/A%20start%20page/login_screen.dart';
 import 'package:learn_n/A%20start%20page/start_screen.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupScreen extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -49,6 +50,10 @@ class _SignupScreenState extends State<SignupScreen> {
           'currencypoints': 0,
           'rankpoints': 0,
         });
+
+        // Save user ID to SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', firebaseUser.uid);
 
         setState(() => errorMessage = null);
         Navigator.pushReplacement(

@@ -64,7 +64,11 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                 );
               },
               backgroundColor: Colors.black,
-              child: const Icon(Icons.add),
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
+                size: 30,
+              ),
             )
           : null,
       bottomNavigationBar: BottomNavigationBar(

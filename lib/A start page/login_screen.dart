@@ -5,6 +5,7 @@ import 'package:learn_n/A%20start%20page/register_screen.dart';
 import 'package:learn_n/A%20start%20page/start_screen.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:learn_n/util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -49,6 +50,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Sign in with the user ID
           await FirebaseAuth.instance.signInAnonymously();
+
+          // Save user ID to SharedPreferences
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('userId', userId);
 
           Navigator.pushReplacement(
             context,

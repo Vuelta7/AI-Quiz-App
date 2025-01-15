@@ -61,6 +61,15 @@ class ReelsPage extends StatelessWidget {
                 allQuestions.addAll(querySnapshot.docs);
               }
 
+              if (allQuestions.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No questions available.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              }
+
               return PageView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: allQuestions.length,
