@@ -20,13 +20,21 @@ class HomeMainScreen extends StatefulWidget {
 
 class _HomeMainScreenState extends State<HomeMainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isDisposed = false; // Add this flag
 
   int _selectedIndex = 0;
+
+  @override
+  void dispose() {
+    _isDisposed = true; // Set the flag to true when disposing
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     if (index == 0) {
       _scaffoldKey.currentState?.openDrawer();
     } else {
+      if (_isDisposed) return; // Check if the widget is disposed
       setState(() {
         _selectedIndex = index;
       });
@@ -39,7 +47,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
     if (_selectedIndex == 1) {
       body = HomeBody(userId: widget.userId);
     } else if (_selectedIndex == 2) {
-      body = ReelsPage(userId: widget.userId); // Pass userId here
+      body = ReelsPage(userId: widget.userId);
     } else if (_selectedIndex == 3) {
       body = const NotificationBody();
     } else {

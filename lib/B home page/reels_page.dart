@@ -117,6 +117,13 @@ class QuestionCard extends StatefulWidget {
 
 class _QuestionCardState extends State<QuestionCard> {
   bool _showAnswer = false;
+  bool _isDisposed = false; // Add this flag
+
+  @override
+  void dispose() {
+    _isDisposed = true; // Set the flag to true when disposing
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +148,7 @@ class _QuestionCardState extends State<QuestionCard> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
+              if (_isDisposed) return; // Check if the widget is disposed
               setState(() {
                 _showAnswer = !_showAnswer;
               });

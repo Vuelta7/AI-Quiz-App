@@ -18,6 +18,7 @@ class _NotificationBodyState extends State<NotificationBody>
   Timer? _timer;
   String? timeText;
   bool isNotificationSet = false;
+  bool _isDisposed = false;
 
   List<int> timeIntervals = [5, 10, 15, 20, 25, 30];
   int? selectedInterval;
@@ -32,6 +33,7 @@ class _NotificationBodyState extends State<NotificationBody>
 
   @override
   void dispose() {
+    _isDisposed = true; // Set the flag to true when disposing
     WidgetsBinding.instance.removeObserver(this);
     _cancelNotification(); // Ensure the timer is canceled when the widget is disposed
     super.dispose();
@@ -47,6 +49,7 @@ class _NotificationBodyState extends State<NotificationBody>
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
+    if (_isDisposed) return; // Check if the widget is disposed
     setState(() {
       selectedInterval = prefs.getInt('selectedInterval');
       if (selectedInterval != null &&
@@ -140,7 +143,8 @@ class _NotificationBodyState extends State<NotificationBody>
 
     setState(() {
       isNotificationSet = false;
-      timeText = null;
+      timeText =
+          "Please choose a time interval or select a time."; // Ensure default text is shown
       selectedTime = null;
     });
     _savePreferences();
@@ -149,23 +153,22 @@ class _NotificationBodyState extends State<NotificationBody>
   void _cancelNotification() {
     if (_timer != null && _timer!.isActive) {
       _timer!.cancel();
+      if (_isDisposed) return; // Check if the widget is disposed
       setState(() {
         isNotificationSet = false;
-        timeText = null;
+        timeText =
+            "Please choose a time interval or select a time."; // Ensure default text is shown
         selectedTime = null;
       });
       _savePreferences();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Notification cancelled.")),
       );
-      setState(() {
-        timeText = "Please choose a time interval or select a time.";
-      });
     } else {
+      if (_isDisposed) return; // Check if the widget is disposed
       setState(() {
-        timeText = "Please choose a time interval or select a time.";
-      });
-      setState(() {
+        timeText =
+            "Please choose a time interval or select a time."; // Ensure default text is shown
         isNotificationSet = false;
       });
     }
