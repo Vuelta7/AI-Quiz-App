@@ -39,7 +39,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
     if (_selectedIndex == 1) {
       body = HomeBody(userId: widget.userId);
     } else if (_selectedIndex == 2) {
-      body = const ReelsPage();
+      body = ReelsPage(userId: widget.userId); // Pass userId here
     } else if (_selectedIndex == 3) {
       body = const NotificationBody();
     } else {

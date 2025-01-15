@@ -1,10 +1,11 @@
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ReelsPage extends StatelessWidget {
-  const ReelsPage({super.key});
+  final String userId;
+
+  const ReelsPage({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -13,15 +14,17 @@ class ReelsPage extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('folders')
-            .where('creator', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where('creator', isEqualTo: userId)
             .snapshots(),
         builder: (context, folderSnapshot) {
           if (folderSnapshot.connectionState == ConnectionState.waiting) {
+            print('Fetching folders...');
             return const Center(
               child: CircularProgressIndicator(color: Colors.white),
             );
           }
           if (!folderSnapshot.hasData || folderSnapshot.data!.docs.isEmpty) {
+            print('No folders found.');
             return const Center(
               child: Text(
                 'No questions available.',
@@ -32,23 +35,26 @@ class ReelsPage extends StatelessWidget {
 
           List<Stream<QuerySnapshot>> questionStreams =
               folderSnapshot.data!.docs.map((folderDoc) {
+            print('Fetching questions for folder: ${folderDoc.id}');
             return FirebaseFirestore.instance
                 .collection('folders')
                 .doc(folderDoc.id)
                 .collection('questions')
                 .snapshots();
           }).toList();
-          print(questionStreams);
+          print('Total folders: ${questionStreams.length}');
 
           return StreamBuilder<List<QuerySnapshot>>(
             stream: StreamZip(questionStreams),
             builder: (context, questionSnapshot) {
               if (questionSnapshot.connectionState == ConnectionState.waiting) {
+                print('Fetching questions...');
                 return const Center(
                   child: CircularProgressIndicator(color: Colors.white),
                 );
               }
               if (!questionSnapshot.hasData || questionSnapshot.data!.isEmpty) {
+                print('No questions found.');
                 return const Center(
                   child: Text(
                     'No questions available.',
@@ -61,8 +67,10 @@ class ReelsPage extends StatelessWidget {
               for (var querySnapshot in questionSnapshot.data!) {
                 allQuestions.addAll(querySnapshot.docs);
               }
+              print('Total questions: ${allQuestions.length}');
 
               if (allQuestions.isEmpty) {
+                print('No questions available after merging.');
                 return const Center(
                   child: Text(
                     'No questions available.',
