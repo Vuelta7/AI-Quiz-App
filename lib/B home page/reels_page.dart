@@ -38,6 +38,7 @@ class ReelsPage extends StatelessWidget {
                 .collection('questions')
                 .snapshots();
           }).toList();
+          print(questionStreams);
 
           return StreamBuilder<List<QuerySnapshot>>(
             stream: StreamZip(questionStreams),

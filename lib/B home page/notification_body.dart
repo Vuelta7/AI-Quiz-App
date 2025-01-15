@@ -158,6 +158,16 @@ class _NotificationBodyState extends State<NotificationBody>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Notification cancelled.")),
       );
+      setState(() {
+        timeText = "Please choose a time interval or select a time.";
+      });
+    } else {
+      setState(() {
+        timeText = "Please choose a time interval or select a time.";
+      });
+      setState(() {
+        isNotificationSet = false;
+      });
     }
   }
 
@@ -274,23 +284,14 @@ class _NotificationBodyState extends State<NotificationBody>
   Widget _buildNotificationDetails() {
     return Column(
       children: [
-        timeText != null
-            ? Text(
-                timeText!,
-                style: const TextStyle(
-                  fontFamily: 'PressStart2P',
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-              )
-            : const Text(
-                "Please choose a time interval or select a time.",
-                style: TextStyle(
-                  fontFamily: 'PressStart2P',
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-              ),
+        Text(
+          timeText ?? "Please choose a time interval or select a time.",
+          style: const TextStyle(
+            fontFamily: 'PressStart2P',
+            fontSize: 14,
+            color: Colors.black,
+          ),
+        ),
         if (isNotificationSet)
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
