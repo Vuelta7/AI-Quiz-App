@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/B%20home%20page/drawer_contents.dart';
@@ -7,6 +6,7 @@ import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
 import 'package:learn_n/B%20home%20page/notification_body.dart';
 import 'package:learn_n/B%20home%20page/reels_page.dart';
 import 'package:learn_n/util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class HomeMainScreen extends StatefulWidget {
@@ -130,14 +130,18 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
   Future<void> uploadFolderToDb() async {
     try {
       final id = const Uuid().v4();
-      await FirebaseFirestore.instance.collection("folders").doc(id).set({
-        "folderName": folderNameController.text.trim(),
-        "description": descriptionController.text.trim(),
-        "creator": FirebaseAuth.instance.currentUser!.uid,
-        "questions": {},
-        "color": rgbToHex(_selectedColor),
-        "position": 0,
-      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString('userId');
+      if (userId != null) {
+        await FirebaseFirestore.instance.collection("folders").doc(id).set({
+          "folderName": folderNameController.text.trim(),
+          "description": descriptionController.text.trim(),
+          "creator": userId,
+          "questions": {},
+          "color": rgbToHex(_selectedColor),
+          "position": 0,
+        });
+      }
     } catch (e) {
       print(e);
       rethrow;
