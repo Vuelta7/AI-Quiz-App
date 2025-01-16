@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/C%20folder%20page/flashcard_model_widget.dart';
 import 'package:learn_n/C%20folder%20page/leaderboards.dart';
@@ -305,7 +304,6 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
           .set({
         "answer": answerController.text.trim(),
         "question": questionController.text.trim(),
-        "creator": FirebaseAuth.instance.currentUser!.uid,
       });
     } catch (e) {
       print(e);

@@ -48,9 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
           final userDoc = querySnapshot.docs.first;
           final userId = userDoc.id;
 
-          // Sign in with the user ID
-          await FirebaseAuth.instance.signInAnonymously();
-
           // Save user ID to SharedPreferences
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('userId', userId);
