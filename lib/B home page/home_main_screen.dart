@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,6 @@ import 'package:learn_n/B%20home%20page/notification_body.dart';
 import 'package:learn_n/B%20home%20page/reels_page.dart';
 import 'package:learn_n/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 class HomeMainScreen extends StatefulWidget {
   final String userId;
@@ -127,9 +128,28 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
     super.dispose();
   }
 
+  Future<String> _generateUnique4DigitCode() async {
+    final random = Random();
+    String code = '';
+    bool exists = true;
+
+    while (exists) {
+      code = (1000 + random.nextInt(9000)).toString();
+      final doc = await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(code)
+          .get();
+      if (!doc.exists) {
+        exists = false;
+      }
+    }
+
+    return code;
+  }
+
   Future<void> uploadFolderToDb() async {
     try {
-      final id = const Uuid().v4();
+      final id = await _generateUnique4DigitCode();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? userId = prefs.getString('userId');
       if (userId != null) {
