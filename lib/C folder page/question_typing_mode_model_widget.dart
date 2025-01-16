@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class QuestionIdentificationModeModelWidget extends StatefulWidget {
   final List<Map<String, String>> questions;
@@ -207,10 +207,11 @@ class _QuestionIdentificationModeModelWidgetState
   }
 
   Future<void> _addPointsToUser(int points) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    if (userId != null) {
       final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(user.uid);
+          FirebaseFirestore.instance.collection('users').doc(userId);
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final snapshot = await transaction.get(userDoc);
         if (snapshot.exists) {
@@ -226,10 +227,11 @@ class _QuestionIdentificationModeModelWidgetState
   }
 
   Future<void> _updateLeaderboard(int timeSpent) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    if (userId != null) {
       final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(user.uid);
+          FirebaseFirestore.instance.collection('users').doc(userId);
       final userSnapshot = await userDoc.get();
       final username = userSnapshot.data()?['username'] ?? 'Unknown';
 
@@ -237,7 +239,7 @@ class _QuestionIdentificationModeModelWidgetState
           .collection('folders')
           .doc(widget.folderId)
           .collection('leaderboard')
-          .doc(user.uid);
+          .doc(userId);
 
       await leaderboardDoc.set({
         'username': username,
