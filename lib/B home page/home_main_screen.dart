@@ -7,6 +7,7 @@ import 'package:learn_n/B%20home%20page/drawer_contents.dart';
 import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
 import 'package:learn_n/B%20home%20page/notification_body.dart';
 import 'package:learn_n/B%20home%20page/reels_page.dart';
+import 'package:learn_n/B%20home%20page/user_leaderboards.dart';
 import 'package:learn_n/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,10 +47,12 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   Widget build(BuildContext context) {
     Widget body;
     if (_selectedIndex == 1) {
-      body = HomeBody(userId: widget.userId);
+      body = UserLeaderboards(userId: widget.userId); // Add leaderboard screen
     } else if (_selectedIndex == 2) {
-      body = ReelsPage(userId: widget.userId);
+      body = HomeBody(userId: widget.userId);
     } else if (_selectedIndex == 3) {
+      body = ReelsPage(userId: widget.userId);
+    } else if (_selectedIndex == 4) {
       body = const NotificationBody();
     } else {
       body = HomeBody(userId: widget.userId);
@@ -63,7 +66,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
         child: DrawerContent(),
       ),
       body: body,
-      floatingActionButton: _selectedIndex == 1 || _selectedIndex == 0
+      floatingActionButton: _selectedIndex == 2 || _selectedIndex == 0
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.push(
@@ -89,6 +92,10 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_rounded, size: 50, color: Colors.black),
             label: 'Menu',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.leaderboard, size: 50, color: Colors.black),
+            label: 'Leaderboards',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.folder, size: 50, color: Colors.black),
