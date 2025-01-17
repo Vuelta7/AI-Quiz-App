@@ -143,8 +143,7 @@ class _NotificationBodyState extends State<NotificationBody>
 
     setState(() {
       isNotificationSet = false;
-      timeText =
-          "Please choose a time interval or select a time."; // Ensure default text is shown
+      timeText = "Please choose a time interval or select a time.";
       selectedTime = null;
     });
     _savePreferences();
