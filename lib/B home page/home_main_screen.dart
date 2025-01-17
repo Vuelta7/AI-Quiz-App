@@ -391,6 +391,9 @@ class _HomeBodyState extends State<HomeBody> {
                 itemBuilder: (context, index) {
                   final folderDoc = _folders[index];
                   final folderData = folderDoc.data() as Map<String, dynamic>;
+                  final isImported =
+                      List<String>.from(folderData['accessUsers'])
+                          .contains(widget.userId);
 
                   return ListTile(
                     key: ValueKey(folderDoc.id),
@@ -399,6 +402,7 @@ class _HomeBodyState extends State<HomeBody> {
                       headerColor: hexToColor(folderData['color']),
                       folderName: folderData['folderName'],
                       description: folderData['description'],
+                      isImported: isImported, // Set the value
                     ),
                   );
                 },

@@ -3,12 +3,14 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/C%20folder%20page/inside_folder_widget.dart';
 import 'package:learn_n/util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FolderModel extends StatelessWidget {
   final String folderId;
   final String folderName;
   final String description;
   final Color headerColor;
+  final bool isImported; // Add this field
 
   const FolderModel({
     super.key,
@@ -16,6 +18,7 @@ class FolderModel extends StatelessWidget {
     required this.folderName,
     required this.description,
     this.headerColor = const Color(0xFFBDBDBD),
+    required this.isImported, // Make it required
   });
 
   @override
@@ -95,6 +98,7 @@ class FolderModel extends StatelessWidget {
                             initialFolderName: folderName,
                             initialDescription: description,
                             initialColor: headerColor,
+                            isImported: isImported, // Pass the value
                           ),
                         ),
                       );
@@ -127,6 +131,7 @@ class EditFolderWidget extends StatefulWidget {
   final String initialFolderName;
   final String initialDescription;
   final Color initialColor;
+  final bool isImported; // Add this field
 
   const EditFolderWidget({
     super.key,
@@ -134,6 +139,7 @@ class EditFolderWidget extends StatefulWidget {
     required this.initialFolderName,
     required this.initialDescription,
     required this.initialColor,
+    this.isImported = false, // Default to false
   });
 
   @override
@@ -191,6 +197,24 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
     }
   }
 
+  Future<void> removeFolderFromHomeBody() async {
+    try {
+      final userId = await SharedPreferences.getInstance()
+          .then((prefs) => prefs.getString('userId'));
+      if (userId != null) {
+        await FirebaseFirestore.instance
+            .collection("folders")
+            .doc(widget.folderId)
+            .update({
+          "accessUsers": FieldValue.arrayRemove([userId]),
+        });
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   bool get _isFormValid {
     return folderNameController.text.trim().isNotEmpty &&
         descriptionController.text.trim().isNotEmpty;
@@ -225,135 +249,191 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  TextFormField(
-                    controller: folderNameController,
-                    decoration: const InputDecoration(
-                      hintText: 'Folder Name',
+                  if (!widget.isImported) ...[
+                    TextFormField(
+                      controller: folderNameController,
+                      decoration: const InputDecoration(
+                        hintText: 'Folder Name',
+                      ),
+                      onChanged: (value) {
+                        setState(() {});
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {});
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: descriptionController,
-                    decoration: const InputDecoration(
-                      hintText: 'Description',
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: descriptionController,
+                      decoration: const InputDecoration(
+                        hintText: 'Description',
+                      ),
+                      maxLines: 3,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
                     ),
-                    maxLines: 3,
-                    onChanged: (value) {
-                      setState(() {});
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  ColorPicker(
-                    pickersEnabled: const {
-                      ColorPickerType.wheel: true,
-                    },
-                    color: _selectedColor,
-                    onColorChanged: (Color color) {
-                      setState(() {
-                        _selectedColor = color;
-                      });
-                    },
-                    heading: const Text('Select color'),
-                    subheading: const Text('Select a different shade'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _isLoading || !_isFormValid
-                        ? null
-                        : () async {
-                            if (folderNameController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please enter a folder name.'),
-                                ),
-                              );
-                              return;
-                            }
-                            if (descriptionController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please enter a description.'),
-                                ),
-                              );
-                              return;
-                            }
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            try {
-                              await editFolderToDb();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Folder updated successfully!'),
-                                ),
-                              );
-                              Navigator.pop(context);
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Error: $e')),
-                              );
-                            } finally {
+                    const SizedBox(height: 10),
+                    ColorPicker(
+                      pickersEnabled: const {
+                        ColorPickerType.wheel: true,
+                      },
+                      color: _selectedColor,
+                      onColorChanged: (Color color) {
+                        setState(() {
+                          _selectedColor = color;
+                        });
+                      },
+                      heading: const Text('Select color'),
+                      subheading: const Text('Select a different shade'),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _isLoading || !_isFormValid
+                          ? null
+                          : () async {
+                              if (folderNameController.text.trim().isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Please enter a folder name.'),
+                                  ),
+                                );
+                                return;
+                              }
+                              if (descriptionController.text.trim().isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Please enter a description.'),
+                                  ),
+                                );
+                                return;
+                              }
                               setState(() {
-                                _isLoading = false;
+                                _isLoading = true;
                               });
-                            }
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          _isFormValid ? Colors.black : Colors.grey,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                    ),
-                    child: const Text(
-                      'Save Changes',
-                      style: TextStyle(
-                        fontSize: 16,
+                              try {
+                                await editFolderToDb();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Folder updated successfully!'),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error: $e')),
+                                );
+                              } finally {
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            _isFormValid ? Colors.black : Colors.grey,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                      ),
+                      child: const Text(
+                        'Save Changes',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _isLoading || !_isFormValid
-                        ? null
-                        : () async {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            try {
-                              await deleteFolderFromDb();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Folder deleted successfully!'),
-                                ),
-                              );
-                              Navigator.pop(context);
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Error: $e')),
-                              );
-                            } finally {
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _isLoading || !_isFormValid
+                          ? null
+                          : () async {
                               setState(() {
-                                _isLoading = false;
+                                _isLoading = true;
                               });
-                            }
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _isFormValid ? Colors.red : Colors.grey,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                    ),
-                    child: const Text(
-                      'Delete Folder',
-                      style: TextStyle(
-                        fontSize: 16,
+                              try {
+                                await deleteFolderFromDb();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Folder deleted successfully!'),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error: $e')),
+                                );
+                              } finally {
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            _isFormValid ? Colors.red : Colors.grey,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                      ),
+                      child: const Text(
+                        'Delete Folder',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                  ),
+                  ] else ...[
+                    const Text(
+                      'This folder is imported. Only the creator can edit this folder.',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              try {
+                                await removeFolderFromHomeBody();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Folder removed successfully!'),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error: $e')),
+                                );
+                              } finally {
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                      ),
+                      child: const Text(
+                        'Remove Folder',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
