@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Add this import
 import 'package:learn_n/C%20folder%20page/inside_folder_widget.dart';
 import 'package:learn_n/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,26 +89,89 @@ class FolderModel extends StatelessWidget {
                 const SizedBox(height: 12),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditFolderWidget(
-                            folderId: folderId,
-                            initialFolderName: folderName,
-                            initialDescription: description,
-                            initialColor: headerColor,
-                            isImported: isImported, // Pass the value
-                          ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditFolderWidget(
+                                folderId: folderId,
+                                initialFolderName: folderName,
+                                initialDescription: description,
+                                initialColor: headerColor,
+                                isImported: isImported, // Pass the value
+                              ),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.more_horiz_rounded,
+                          size: 30,
+                          color: _getTextColorForBackground(headerColor),
                         ),
-                      );
-                    },
-                    icon: Icon(
-                      Icons.more_horiz_rounded,
-                      size: 30,
-                      color: _getTextColorForBackground(headerColor),
-                    ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Share Folder'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      'Share this Folder ID with your friend. They can use it to add this folder to their account.',
+                                    ),
+                                    const SizedBox(height: 10),
+                                    SelectableText(
+                                      folderId,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                          ClipboardData(text: folderId),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Folder ID copied to clipboard!',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Copy Folder ID'),
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(
+                          Icons.share_rounded,
+                          size: 30,
+                          color: _getTextColorForBackground(headerColor),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

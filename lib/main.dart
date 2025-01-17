@@ -26,12 +26,9 @@ void main() async {
 
 //Mighty Creation of Uriel
 //fix
-// Register and Login fix (After Registration automatically goes in Home Page)
 // Fullscreen for DnD and stopping students from distraction (Can manually turn off and on)
-// Notification Timer fix (Fix The Notification Text reseting when changing page)
 // UX redesign
 // enhance the UX of the Answering experience 
-// limited hints(half of the word, if theres a multiple word half of every word)
 // Leader boards based on score
 // points to change the UI color
 // points to change the background music
