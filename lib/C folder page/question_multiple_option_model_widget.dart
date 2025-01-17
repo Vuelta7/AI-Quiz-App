@@ -357,17 +357,15 @@ class _QuestionMultipleOptionModeModelWidgetState
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Expanded(
-                    child: Center(
-                      child: Text(
-                        feedbackMessage,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: feedbackMessage == 'Try Again!'
-                              ? Colors.red
-                              : Colors.green,
-                        ),
+                  child: Center(
+                    child: Text(
+                      feedbackMessage,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: feedbackMessage == 'Try Again!'
+                            ? Colors.red
+                            : Colors.green,
                       ),
                     ),
                   ),

@@ -372,6 +372,8 @@ class _NotificationBodyState extends State<NotificationBody>
               ),
               child: _buildNotificationDetails(),
             ),
+            const Text(
+                'dipato gumagana sa website pero sa mobile oks na hehehe'),
           ],
         ),
       ),

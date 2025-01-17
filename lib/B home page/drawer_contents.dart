@@ -5,6 +5,26 @@ import 'package:learn_n/A%20start%20page/start_screen.dart';
 class DrawerContent extends StatelessWidget {
   const DrawerContent({super.key});
 
+  void _showDialog(BuildContext context, String title) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: const Text('diko pa tapos to hehe'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -42,21 +62,21 @@ class DrawerContent extends StatelessWidget {
                 leading: const Icon(Icons.info),
                 title: const Text('About Us'),
                 onTap: () {
-                  // Handle About Us tap
+                  _showDialog(context, 'About Us');
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.privacy_tip),
                 title: const Text('Privacy Policy'),
                 onTap: () {
-                  // Handle Privacy Policy tap
+                  _showDialog(context, 'Privacy Policy');
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.feedback),
                 title: const Text('Feedback and Question'),
                 onTap: () {
-                  // Handle Feedback and Question tap
+                  _showDialog(context, 'Feedback and Question');
                 },
               ),
             ],
