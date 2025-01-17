@@ -157,7 +157,6 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
           "folderName": folderNameController.text.trim(),
           "description": descriptionController.text.trim(),
           "creator": userId,
-          "questions": {},
           "color": rgbToHex(_selectedColor),
           "position": 0,
         });
