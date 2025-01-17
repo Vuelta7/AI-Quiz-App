@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class UserLeaderboards extends StatelessWidget {
   final String userId;
@@ -62,7 +63,9 @@ class UserLeaderboards extends StatelessWidget {
                     color: Colors.black,
                   ),
                   title: Text(user['username']),
-                  subtitle: Text('Rank Points: ${user['rankpoints']}'),
+                  subtitle: Text(
+                    'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
+                  ),
                 );
               } else if (userRank > 10) {
                 final user = users[userRank - 1];
@@ -72,7 +75,9 @@ class UserLeaderboards extends StatelessWidget {
                     color: Colors.black,
                   ),
                   title: Text(user['username']),
-                  subtitle: Text('Rank Points: ${user['rankpoints']}'),
+                  subtitle: Text(
+                    'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
+                  ),
                   trailing: Text('Rank: $userRank'),
                 );
               } else {

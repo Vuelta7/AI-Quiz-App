@@ -522,7 +522,15 @@ class _HomeBodyState extends State<HomeBody> {
                 child: CircularProgressIndicator(color: Colors.black),
               );
             }
-            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+
+            _folders = _filterFolders(snapshot.data!.docs.where((folderDoc) {
+              final folderData = folderDoc.data() as Map<String, dynamic>;
+              final accessUsers = List<String>.from(folderData['accessUsers']);
+              return folderData['creator'] == widget.userId ||
+                  accessUsers.contains(widget.userId);
+            }).toList());
+
+            if (_folders.isEmpty) {
               return const Padding(
                 padding: EdgeInsets.all(40.0),
                 child: Center(
@@ -533,13 +541,6 @@ class _HomeBodyState extends State<HomeBody> {
                 ),
               );
             }
-
-            _folders = _filterFolders(snapshot.data!.docs.where((folderDoc) {
-              final folderData = folderDoc.data() as Map<String, dynamic>;
-              final accessUsers = List<String>.from(folderData['accessUsers']);
-              return folderData['creator'] == widget.userId ||
-                  accessUsers.contains(widget.userId);
-            }).toList());
 
             return Expanded(
               child: ReorderableListView.builder(
