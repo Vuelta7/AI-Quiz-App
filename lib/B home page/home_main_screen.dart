@@ -159,6 +159,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
           "creator": userId,
           "color": rgbToHex(_selectedColor),
           "position": 0,
+          "accessUsers": [],
         });
       }
     } catch (e) {
@@ -356,10 +357,7 @@ class _HomeBodyState extends State<HomeBody> {
           ),
         ),
         StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('folders')
-              .where('creator', isEqualTo: widget.userId)
-              .snapshots(),
+          stream: FirebaseFirestore.instance.collection('folders').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -378,7 +376,12 @@ class _HomeBodyState extends State<HomeBody> {
               );
             }
 
-            _folders = _filterFolders(snapshot.data!.docs);
+            _folders = _filterFolders(snapshot.data!.docs.where((folderDoc) {
+              final folderData = folderDoc.data() as Map<String, dynamic>;
+              final accessUsers = List<String>.from(folderData['accessUsers']);
+              return folderData['creator'] == widget.userId ||
+                  accessUsers.contains(widget.userId);
+            }).toList());
 
             return Expanded(
               child: ReorderableListView.builder(

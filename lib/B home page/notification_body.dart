@@ -33,9 +33,9 @@ class _NotificationBodyState extends State<NotificationBody>
 
   @override
   void dispose() {
-    _isDisposed = true; // Set the flag to true when disposing
+    _isDisposed = true;
     WidgetsBinding.instance.removeObserver(this);
-    _cancelNotification(); // Ensure the timer is canceled when the widget is disposed
+    _cancelNotification();
     super.dispose();
   }
 
@@ -43,7 +43,7 @@ class _NotificationBodyState extends State<NotificationBody>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      _cancelNotification(); // Cancel the timer if the app goes to the background or becomes inactive
+      _cancelNotification();
     }
   }
 
@@ -152,11 +152,10 @@ class _NotificationBodyState extends State<NotificationBody>
   void _cancelNotification() {
     if (_timer != null && _timer!.isActive) {
       _timer!.cancel();
-      if (_isDisposed) return; // Check if the widget is disposed
+      if (_isDisposed) return;
       setState(() {
         isNotificationSet = false;
-        timeText =
-            "Please choose a time interval or select a time."; // Ensure default text is shown
+        timeText = "Please choose a time interval or select a time.";
         selectedTime = null;
       });
       _savePreferences();
@@ -164,10 +163,9 @@ class _NotificationBodyState extends State<NotificationBody>
         const SnackBar(content: Text("Notification cancelled.")),
       );
     } else {
-      if (_isDisposed) return; // Check if the widget is disposed
+      if (_isDisposed) return;
       setState(() {
-        timeText =
-            "Please choose a time interval or select a time."; // Ensure default text is shown
+        timeText = "Please choose a time interval or select a time.";
         isNotificationSet = false;
       });
     }
