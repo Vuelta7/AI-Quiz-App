@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/B%20home%20page/dashboard.dart'; // Change import to dashboard
 import 'package:learn_n/B%20home%20page/drawer_contents.dart';
 import 'package:learn_n/B%20home%20page/folder_model_widget.dart';
 import 'package:learn_n/B%20home%20page/notification_body.dart';
 import 'package:learn_n/B%20home%20page/reels_page.dart';
-import 'package:learn_n/B%20home%20page/user_leaderboards.dart';
 import 'package:learn_n/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,7 +47,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   Widget build(BuildContext context) {
     Widget body;
     if (_selectedIndex == 1) {
-      body = UserLeaderboards(userId: widget.userId); // Add leaderboard screen
+      body = Dashboard(userId: widget.userId); // Change to dashboard screen
     } else if (_selectedIndex == 2) {
       body = HomeBody(userId: widget.userId);
     } else if (_selectedIndex == 3) {
@@ -94,8 +94,8 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
             label: 'Menu',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.leaderboard, size: 50, color: Colors.black),
-            label: 'Leaderboards',
+            icon: Icon(Icons.dashboard, size: 50, color: Colors.black),
+            label: 'Dashboard',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.folder, size: 50, color: Colors.black),
