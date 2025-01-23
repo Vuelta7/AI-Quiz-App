@@ -27,12 +27,18 @@ class _AuthScreenState extends State<AuthScreen> {
   final formKey = GlobalKey<FormState>();
   String? errorMessage;
   bool isLoading = false;
+  final FocusNode passwordFocusNode = FocusNode();
 
   @override
   void dispose() {
     usernameController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   Future<void> authenticateUser() async {
@@ -191,17 +197,22 @@ class _AuthScreenState extends State<AuthScreen> {
                         return 'Username is required';
                       }
                       return null;
+                    }, onFieldSubmitted: (_) {
+                      FocusScope.of(context).requestFocus(passwordFocusNode);
                     }),
                     const SizedBox(height: 10),
                     buildRetroTextField('Password',
                         isPassword: true,
-                        controller: passwordController, validator: (value) {
+                        controller: passwordController,
+                        focusNode: passwordFocusNode, validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Password is required';
                       } else if (!widget.isLogin && value.length < 6) {
                         return 'Password must be at least 6 characters';
                       }
                       return null;
+                    }, onFieldSubmitted: (_) {
+                      authenticateUser();
                     }),
                     const SizedBox(height: 20),
                     if (errorMessage != null)

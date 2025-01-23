@@ -5,11 +5,15 @@ Widget buildRetroTextField(
   bool isPassword = false,
   required TextEditingController controller,
   String? Function(String?)? validator,
+  FocusNode? focusNode,
+  void Function(String)? onFieldSubmitted, // Add onFieldSubmitted parameter
 }) {
   return TextFormField(
     controller: controller,
     obscureText: isPassword,
     cursorColor: Colors.black,
+    focusNode: focusNode,
+    onFieldSubmitted: onFieldSubmitted, // Use the onFieldSubmitted parameter
     style: const TextStyle(
       fontFamily: 'Arial',
       color: Color.fromARGB(255, 0, 0, 0),

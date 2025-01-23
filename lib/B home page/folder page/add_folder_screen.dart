@@ -20,12 +20,14 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
   Color _selectedColor = Colors.blue;
   bool _isLoading = false;
   bool _isAddingFolder = true; // Track whether adding or importing folder
+  final FocusNode descriptionFocusNode = FocusNode();
 
   @override
   void dispose() {
     folderNameController.dispose();
     descriptionController.dispose();
     folderIdController.dispose();
+    descriptionFocusNode.dispose();
     super.dispose();
   }
 
@@ -158,6 +160,7 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                     child: buildFolderForm(
+                      context: context,
                       isLoading: _isLoading,
                       isFormValid:
                           folderNameController.text.trim().isNotEmpty &&
@@ -244,6 +247,11 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                         }
                       },
                       isAddScreen: true,
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context)
+                            .requestFocus(descriptionFocusNode);
+                      },
+                      descriptionFocusNode: descriptionFocusNode,
                     ),
                   ),
                 ),

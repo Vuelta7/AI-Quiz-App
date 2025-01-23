@@ -17,6 +17,7 @@ Color hexToColor(String hex) {
 }
 
 Widget buildFolderForm({
+  required BuildContext context,
   required bool isLoading,
   required bool isFormValid,
   required TextEditingController folderNameController,
@@ -29,6 +30,8 @@ Widget buildFolderForm({
   TextEditingController? folderIdController,
   Function()? onImport,
   bool isAddScreen = false,
+  void Function(String)? onFieldSubmitted, // Add onFieldSubmitted parameter
+  FocusNode? descriptionFocusNode, // Add FocusNode parameter
 }) {
   return Column(
     children: [
@@ -42,6 +45,8 @@ Widget buildFolderForm({
           onChanged: (value) {
             // Handle form validation state change
           },
+          onFieldSubmitted:
+              onFieldSubmitted, // Use the onFieldSubmitted parameter
         ),
         const SizedBox(height: 10),
         TextFormField(
@@ -53,6 +58,7 @@ Widget buildFolderForm({
           onChanged: (value) {
             // Handle form validation state change
           },
+          focusNode: descriptionFocusNode, // Use the FocusNode parameter
         ),
         const SizedBox(height: 10),
         ColorPicker(

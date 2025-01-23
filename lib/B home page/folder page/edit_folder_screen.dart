@@ -28,6 +28,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
   late TextEditingController descriptionController;
   late Color _selectedColor;
   bool _isLoading = false;
+  final FocusNode descriptionFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -43,6 +44,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
   void dispose() {
     folderNameController.dispose();
     descriptionController.dispose();
+    descriptionFocusNode.dispose();
     super.dispose();
   }
 
@@ -118,6 +120,7 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: buildFolderForm(
+                context: context,
                 isLoading: _isLoading,
                 isFormValid: _isFormValid,
                 folderNameController: folderNameController,
@@ -212,6 +215,11 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
                   }
                 },
                 isAddScreen: false,
+                folderIdController: null,
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(descriptionFocusNode);
+                },
+                descriptionFocusNode: descriptionFocusNode,
               ),
             ),
           ),
