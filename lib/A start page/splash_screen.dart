@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_utils.dart';
 import 'package:learn_n/A%20start%20page/start_screen.dart';
 import 'package:learn_n/B%20home%20page/home_main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -82,21 +83,8 @@ class SplashScreenState extends State<SplashScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              'assets/logo_icon.png',
-              width: 200,
-              height: 200,
-            ),
-            const Text(
-              'Learn-N',
-              style: TextStyle(
-                fontFamily: 'PressStart2P',
-                color: Colors.black,
-                fontSize: 24,
-                letterSpacing: 2.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            buildLogo(),
+            buildTitleText('Learn-N'),
             const SizedBox(height: 300),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),

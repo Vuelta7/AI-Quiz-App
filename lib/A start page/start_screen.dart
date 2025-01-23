@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/login_screen.dart';
-import 'package:learn_n/A%20start%20page/register_screen.dart';
-import 'package:learn_n/util.dart';
+import 'package:learn_n/A%20start%20page/auth_screen.dart';
+import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_button.dart';
+import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_utils.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -17,42 +17,23 @@ class StartScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/logo_icon.png',
-                height: 200,
-                width: 200,
-              ),
-              const Text(
-                'Learn-N',
-                style: TextStyle(
-                  fontFamily: 'PressStart2P',
-                  color: Colors.black,
-                  fontSize: 24,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              buildLogo(),
+              buildTitleText('Learn-N'),
               const SizedBox(height: 40),
-              SizedBox(
-                width: 200,
-                child: buildRetroButton(
-                  'Register',
-                  Colors.black,
-                  () {
-                    Navigator.push(context, SignupScreen.route());
-                  },
-                ),
+              buildRetroButton(
+                'Register',
+                Colors.black,
+                () {
+                  Navigator.push(context, AuthScreen.route(isLogin: false));
+                },
               ),
               const SizedBox(height: 20),
-              SizedBox(
-                width: 200,
-                child: buildRetroButton(
-                  'Log In',
-                  Colors.black,
-                  () {
-                    Navigator.push(context, LoginScreen.route());
-                  },
-                ),
+              buildRetroButton(
+                'Log In',
+                Colors.black,
+                () {
+                  Navigator.push(context, AuthScreen.route(isLogin: true));
+                },
               ),
             ],
           ),

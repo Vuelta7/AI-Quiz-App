@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:learn_n/util.dart';
+import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationBody extends StatefulWidget {

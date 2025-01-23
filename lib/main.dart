@@ -29,6 +29,5 @@ void main() async {
 // Fullscreen for DnD and stopping students from distraction (Can manually turn off and on)
 // UX redesign
 // enhance the UX of the Answering experience 
-// Leader boards based on score
 // points to change the UI color
 // points to change the background music
