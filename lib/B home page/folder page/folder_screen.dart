@@ -77,29 +77,20 @@ class _FolderPageState extends State<FolderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Folders',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'PressStart2P',
-          ),
-        ),
+      appBar: const CustomAppBar(
+        title: 'Folders',
         automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 0),
+            padding: const EdgeInsets.symmetric(horizontal: 13),
             child: TextField(
               controller: _searchController,
               cursorColor: Colors.black,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Search Folder',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                prefixIcon: Icon(Icons.search),
               ),
             ),
           ),
@@ -141,7 +132,6 @@ class _FolderPageState extends State<FolderPage> {
 
               return Expanded(
                 child: ReorderableListView.builder(
-                  padding: EdgeInsets.zero,
                   itemCount: _folders.length,
                   onReorder: _onReorder,
                   itemBuilder: (context, index) {
@@ -151,9 +141,11 @@ class _FolderPageState extends State<FolderPage> {
                         List<String>.from(folderData['accessUsers'])
                             .contains(widget.userId);
 
-                    return ListTile(
+                    return Container(
                       key: ValueKey(folderDoc.id),
-                      title: FolderModel(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 0.0, horizontal: 16),
+                      child: FolderModel(
                         folderId: folderDoc.id,
                         headerColor: hexToColor(folderData['color']),
                         folderName: folderData['folderName'],

@@ -100,14 +100,8 @@ class _EditFolderWidgetState extends State<EditFolderWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Edit Folder',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'PressStart2P',
-          ),
-        ),
+      appBar: CustomAppBar(
+        title: 'Edit Folder',
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

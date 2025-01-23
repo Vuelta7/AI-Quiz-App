@@ -89,14 +89,8 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Add Folder',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'PressStart2P',
-          ),
-        ),
+      appBar: CustomAppBar(
+        title: 'Add Folder',
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:learn_n/B%20home%20page/home_page_utils.dart';
 
 class Dashboard extends StatefulWidget {
   final String userId;
@@ -26,24 +27,17 @@ class _DashboardState extends State<Dashboard> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'PressStart2P',
-          ),
-        ),
-        automaticallyImplyLeading: false,
+      appBar: const CustomAppBar(
+        title: 'Dashboard',
       ),
       body: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildOptionButton('Shop', 1),
-              _buildOptionButton('Analytics', 0),
-              _buildOptionButton('Leaderboards', 2),
+              Expanded(child: _buildOptionButton('Shop', 1)),
+              Expanded(child: _buildOptionButton('Analytics', 0)),
+              Expanded(child: _buildOptionButton('Rank', 2)),
             ],
           ),
           Expanded(child: body),
@@ -71,11 +65,13 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: _selectedOption == index ? Colors.white : Colors.black,
-            fontWeight: FontWeight.bold,
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              color: _selectedOption == index ? Colors.white : Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
