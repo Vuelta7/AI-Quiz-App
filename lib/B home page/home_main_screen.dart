@@ -44,13 +44,13 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
     if (_selectedIndex == 1) {
       body = Dashboard(userId: widget.userId); // Change to dashboard screen
     } else if (_selectedIndex == 2) {
-      body = HomeBody(userId: widget.userId);
+      body = FolderPage(userId: widget.userId);
     } else if (_selectedIndex == 3) {
       body = ReelsPage(userId: widget.userId);
     } else if (_selectedIndex == 4) {
       body = const NotificationBody();
     } else {
-      body = HomeBody(userId: widget.userId);
+      body = FolderPage(userId: widget.userId);
     }
 
     return Scaffold(

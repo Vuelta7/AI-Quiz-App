@@ -31,3 +31,5 @@ void main() async {
 // enhance the UX of the Answering experience
 // points to change the UI color
 // points to change the background music
+// text regocnition
+// qr code scanner to get folder

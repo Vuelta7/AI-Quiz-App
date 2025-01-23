@@ -10,12 +10,19 @@ class ReelsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Reels',
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'PressStart2P',
+          ),
+        ),
+        automaticallyImplyLeading: false,
+      ),
       backgroundColor: Colors.black,
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('folders')
-            .where('creator', isEqualTo: userId)
-            .snapshots(),
+        stream: FirebaseFirestore.instance.collection('folders').snapshots(),
         builder: (context, folderSnapshot) {
           if (folderSnapshot.connectionState == ConnectionState.waiting) {
             print('Fetching folders...');
@@ -33,8 +40,16 @@ class ReelsPage extends StatelessWidget {
             );
           }
 
+          List<DocumentSnapshot> allFolders =
+              folderSnapshot.data!.docs.where((folderDoc) {
+            final folderData = folderDoc.data() as Map<String, dynamic>;
+            final accessUsers = folderData['accessUsers'] as List<dynamic>;
+            return folderData['creator'] == userId ||
+                accessUsers.contains(userId);
+          }).toList();
+
           List<Stream<QuerySnapshot>> questionStreams =
-              folderSnapshot.data!.docs.map((folderDoc) {
+              allFolders.map((folderDoc) {
             print('Fetching questions for folder: ${folderDoc.id}');
             return FirebaseFirestore.instance
                 .collection('folders')

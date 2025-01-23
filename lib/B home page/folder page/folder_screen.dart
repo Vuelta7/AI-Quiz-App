@@ -4,16 +4,16 @@ import 'package:learn_n/B%20home%20page/folder%20page/folder_model_widget.dart';
 import 'package:learn_n/B%20home%20page/home_page_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeBody extends StatefulWidget {
+class FolderPage extends StatefulWidget {
   final String userId;
 
-  const HomeBody({super.key, required this.userId});
+  const FolderPage({super.key, required this.userId});
 
   @override
-  _HomeBodyState createState() => _HomeBodyState();
+  _FolderPageState createState() => _FolderPageState();
 }
 
-class _HomeBodyState extends State<HomeBody> {
+class _FolderPageState extends State<FolderPage> {
   final TextEditingController _searchController = TextEditingController();
   List<DocumentSnapshot> _folders = [];
   String searchQuery = '';

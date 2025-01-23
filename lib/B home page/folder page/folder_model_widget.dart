@@ -37,7 +37,7 @@ class FolderModel extends StatelessWidget {
             );
           },
           child: Container(
-            width: 310,
+            width: double.infinity,
             margin: const EdgeInsets.only(top: 20),
             decoration: BoxDecoration(
               color: headerColor,
