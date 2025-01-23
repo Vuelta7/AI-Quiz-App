@@ -23,6 +23,9 @@ dependencies:
   audioplayers: ^6.1.0
   permission_handler: ^11.3.1
   intl: ^0.20.1
+  hive: ^4.0.0
+  isar_flutter_libs: ^4.0.0-dev.13
+  path_provider: ^2.1.0
 
 dev_dependencies:
   flutter_test:

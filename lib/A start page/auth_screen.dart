@@ -152,7 +152,9 @@ class _AuthScreenState extends State<AuthScreen> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const StartScreen()),
+              MaterialPageRoute(
+                builder: (context) => const StartScreen(),
+              ),
             );
           },
         ),
