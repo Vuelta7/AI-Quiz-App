@@ -19,7 +19,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isDisposed = false;
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   @override
   void dispose() {

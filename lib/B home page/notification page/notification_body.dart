@@ -314,6 +314,7 @@ class _NotificationBodyState extends State<NotificationBody>
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -334,6 +335,7 @@ class _NotificationBodyState extends State<NotificationBody>
             ),
             const SizedBox(height: 20),
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -354,6 +356,7 @@ class _NotificationBodyState extends State<NotificationBody>
             ),
             const SizedBox(height: 20),
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -372,8 +375,6 @@ class _NotificationBodyState extends State<NotificationBody>
               ),
               child: _buildNotificationDetails(),
             ),
-            const Text(
-                'dipato gumagana sa website pero sa mobile oks na hehehe'),
           ],
         ),
       ),

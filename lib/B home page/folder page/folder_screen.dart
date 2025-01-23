@@ -90,7 +90,7 @@ class _FolderPageState extends State<FolderPage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 0),
             child: TextField(
               controller: _searchController,
               cursorColor: Colors.black,

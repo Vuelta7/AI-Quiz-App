@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/B%20home%20page/home_page_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -164,170 +163,93 @@ class _AddFolderScreenState extends State<AddFolderScreen> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        if (_isAddingFolder) ...[
-                          TextFormField(
-                            controller: folderNameController,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                              hintText: 'Folder Name',
+                    child: buildFolderForm(
+                      isLoading: _isLoading,
+                      isFormValid:
+                          folderNameController.text.trim().isNotEmpty &&
+                              descriptionController.text.trim().isNotEmpty,
+                      folderNameController: folderNameController,
+                      descriptionController: descriptionController,
+                      selectedColor: _selectedColor,
+                      onColorChanged: (Color color) {
+                        setState(() {
+                          _selectedColor = color;
+                        });
+                      },
+                      onSave: () async {
+                        if (folderNameController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please enter a folder name.'),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          TextFormField(
-                            controller: descriptionController,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                              hintText: 'Description',
+                          );
+                          return;
+                        }
+                        if (descriptionController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please enter a description.'),
                             ),
-                            maxLines: 3,
-                          ),
-                          const SizedBox(height: 10),
-                          ColorPicker(
-                            pickersEnabled: const {
-                              ColorPickerType.wheel: true,
-                            },
-                            color: _selectedColor,
-                            onColorChanged: (Color color) {
-                              setState(() {
-                                _selectedColor = color;
-                              });
-                            },
-                            heading: const Text('Select color'),
-                            subheading: const Text('Select a different shade'),
-                          ),
-                          const SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: _isLoading
-                                ? null
-                                : () async {
-                                    if (folderNameController.text
-                                        .trim()
-                                        .isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Please enter a folder name.'),
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    if (descriptionController.text
-                                        .trim()
-                                        .isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Please enter a description.'),
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-                                    try {
-                                      await uploadFolderToDb();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Folder added successfully!'),
-                                        ),
-                                      );
-                                      Navigator.pop(context);
-                                    } catch (e) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(content: Text('Error: $e')),
-                                      );
-                                    } finally {
-                                      setState(() {
-                                        _isLoading = false;
-                                      });
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 12),
+                          );
+                          return;
+                        }
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        try {
+                          await uploadFolderToDb();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Folder added successfully!'),
                             ),
-                            child: const Text(
-                              'SUBMIT',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
+                          );
+                          Navigator.pop(context);
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error: $e')),
+                          );
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
+                      onDelete: () async {
+                        // Add your delete logic here
+                      },
+                      isImported: !_isAddingFolder,
+                      folderIdController: folderIdController,
+                      onImport: () async {
+                        if (folderIdController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please enter a folder ID.'),
                             ),
-                          ),
-                        ] else ...[
-                          TextFormField(
-                            controller: folderIdController,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                              hintText: 'Folder ID',
+                          );
+                          return;
+                        }
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        try {
+                          await importFolder();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Folder imported successfully!'),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: _isLoading
-                                ? null
-                                : () async {
-                                    if (folderIdController.text
-                                        .trim()
-                                        .isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content:
-                                              Text('Please enter a folder ID.'),
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-                                    try {
-                                      await importFolder();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Folder imported successfully!'),
-                                        ),
-                                      );
-                                      Navigator.pop(context);
-                                    } catch (e) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(content: Text('Error: $e')),
-                                      );
-                                    } finally {
-                                      setState(() {
-                                        _isLoading = false;
-                                      });
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 12),
-                            ),
-                            child: const Text(
-                              'IMPORT',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
+                          );
+                          Navigator.pop(context);
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error: $e')),
+                          );
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
+                      isAddScreen: true,
                     ),
                   ),
                 ),
