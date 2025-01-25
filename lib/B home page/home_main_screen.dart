@@ -6,16 +6,16 @@ import 'package:learn_n/B%20home%20page/folder%20page/folder_screen.dart';
 import 'package:learn_n/B%20home%20page/notification%20page/notification_body.dart';
 import 'package:learn_n/B%20home%20page/reels_page/reels_page.dart';
 
-class HomeMainScreen extends StatefulWidget {
+class HomeMain extends StatefulWidget {
   final String userId;
 
-  const HomeMainScreen({super.key, required this.userId});
+  const HomeMain({super.key, required this.userId});
 
   @override
-  _HomeMainScreenState createState() => _HomeMainScreenState();
+  _HomeMainState createState() => _HomeMainState();
 }
 
-class _HomeMainScreenState extends State<HomeMainScreen> {
+class _HomeMainState extends State<HomeMain> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isDisposed = false;
 
@@ -89,7 +89,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
             label: 'Menu',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard, size: 50, color: Colors.black),
+            icon: Icon(Icons.analytics_outlined, size: 50, color: Colors.black),
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(

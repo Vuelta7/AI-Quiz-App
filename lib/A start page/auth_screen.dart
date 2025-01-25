@@ -95,7 +95,7 @@ class _AuthScreenState extends State<AuthScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => HomeMainScreen(userId: firebaseUser.uid),
+        builder: (context) => HomeMain(userId: firebaseUser.uid),
       ),
     );
   }
@@ -122,7 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeMainScreen(userId: userId)),
+        MaterialPageRoute(builder: (context) => HomeMain(userId: userId)),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(

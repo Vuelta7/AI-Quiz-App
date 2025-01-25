@@ -27,12 +27,9 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
 
   void _onItemTapped(int index) async {
     if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AddFlashCardScreen(folderId: widget.folderId),
-        ),
-      );
+      setState(() {
+        _selectedIndex = index;
+      });
     } else if (index == 1) {
       try {
         final questionsSnapshot = await FirebaseFirestore.instance
@@ -74,74 +71,73 @@ class _InsideFolderMainState extends State<InsideFolderMain> {
         );
       }
     } else if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LeaderboardScreen(folderId: widget.folderId),
-        ),
-      );
+      setState(() {
+        _selectedIndex = index;
+      });
     }
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.folderName,
-            style: const TextStyle(
-              color: Colors.black,
-              fontFamily: 'PressStart2P',
-            ),
+      appBar: AppBar(
+        title: Text(
+          widget.folderName,
+          style: const TextStyle(
+            color: Colors.black,
+            fontFamily: 'PressStart2P',
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded,
-                size: 30, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
-          backgroundColor: Colors.white,
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: InsideFolderBody(folderId: widget.folderId),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded,
+              size: 30, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          QuestionsPage(folderId: widget.folderId),
+          Container(),
+          LeaderboardPage(folderId: widget.folderId),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  AddFlashCardScreen(folderId: widget.folderId),
             ),
-          ],
-        ),
-        bottomNavigationBar: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('folders')
-              .doc(widget.folderId)
-              .collection('questions')
-              .snapshots(),
-          builder: (context, snapshot) {
-            return BottomNavigationBar(
-              backgroundColor: Colors.white,
-              currentIndex: _selectedIndex,
-              onTap: _onItemTapped,
-              selectedItemColor: Colors.black,
-              unselectedItemColor: Colors.black,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.add_box_rounded,
-                      size: 50, color: Colors.black),
-                  label: 'Add Flashcard',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.play_circle_fill_rounded,
-                      size: 50, color: Colors.black),
-                  label: 'Play',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.leaderboard, size: 50, color: Colors.black),
-                  label: 'Leaderboard',
-                ),
-              ],
-            );
-          },
-        ));
+          );
+        },
+        backgroundColor: Colors.black,
+        child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true,
+        showUnselectedLabels: false,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.question_answer_rounded, size: 50),
+            label: 'Questions',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.play_circle_fill_rounded, size: 50),
+            label: 'Play',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.leaderboard, size: 50),
+            label: 'Leaderboard',
+          ),
+        ],
+      ),
+    );
   }
 }
