@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/start_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerContent extends StatelessWidget {
   const DrawerContent({super.key});
@@ -87,6 +88,8 @@ class DrawerContent extends StatelessWidget {
           title: const Text('Sign Out'),
           onTap: () async {
             await FirebaseAuth.instance.signOut();
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.remove('userID');
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const StartScreen()),

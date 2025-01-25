@@ -8,7 +8,7 @@ class EditFolderWidget extends StatefulWidget {
   final String initialFolderName;
   final String initialDescription;
   final Color initialColor;
-  final bool isImported; // Add this field
+  final bool isImported;
 
   const EditFolderWidget({
     super.key,
@@ -16,7 +16,7 @@ class EditFolderWidget extends StatefulWidget {
     required this.initialFolderName,
     required this.initialDescription,
     required this.initialColor,
-    this.isImported = false, // Default to false,
+    this.isImported = false,
   });
 
   @override
