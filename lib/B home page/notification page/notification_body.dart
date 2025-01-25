@@ -5,14 +5,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NotificationBody extends StatefulWidget {
-  const NotificationBody({super.key});
+class NotificationPage extends StatefulWidget {
+  const NotificationPage({super.key});
 
   @override
-  State<NotificationBody> createState() => _NotificationBodyState();
+  State<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _NotificationBodyState extends State<NotificationBody>
+class _NotificationPageState extends State<NotificationPage>
     with WidgetsBindingObserver {
   TimeOfDay? selectedTime;
   Timer? _timer;

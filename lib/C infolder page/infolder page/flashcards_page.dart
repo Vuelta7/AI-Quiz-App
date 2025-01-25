@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20folder%20page/flashcard%20widgets/flashcard_model.dart';
+import 'package:learn_n/C%20infolder%20page/flashcard%20widgets/flashcard_model.dart';
 
-class QuestionsPage extends StatelessWidget {
+class FlashcardsPage extends StatelessWidget {
   final String folderId;
 
-  const QuestionsPage({super.key, required this.folderId});
+  const FlashcardsPage({super.key, required this.folderId});
 
   @override
   Widget build(BuildContext context) {

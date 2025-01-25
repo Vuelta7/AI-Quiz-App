@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_textfield.dart';
 import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_utils.dart';
-import 'package:learn_n/A%20start%20page/start_screen.dart';
-import 'package:learn_n/B%20home%20page/home_main_screen.dart';
+import 'package:learn_n/A%20start%20page/start_page.dart';
+import 'package:learn_n/B%20home%20page/home_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthScreen extends StatefulWidget {

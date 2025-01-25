@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/auth_screen.dart';
+import 'package:learn_n/A%20start%20page/auth_page.dart';
 import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:learn_n/A%20start%20page/start%20page%20utils/start_page_utils.dart';
 

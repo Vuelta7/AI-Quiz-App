@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20folder%20page/flashcard%20widgets/add_flashcard.dart';
-import 'package:learn_n/C%20folder%20page/infolder%20page/leaderboards.dart';
-import 'package:learn_n/C%20folder%20page/infolder%20page/questions_page.dart';
+import 'package:learn_n/C%20infolder%20page/flashcard%20widgets/add_flashcard_page.dart';
+import 'package:learn_n/C%20infolder%20page/infolder%20page/flashcards_page.dart';
+import 'package:learn_n/C%20infolder%20page/infolder%20page/leaderboards_page.dart';
 
 import 'play page/choose_mode_dialog.dart';
 
@@ -98,24 +98,30 @@ class _InFolderMainState extends State<InFolderMain> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          QuestionsPage(folderId: widget.folderId),
+          FlashcardsPage(folderId: widget.folderId),
           Container(),
           LeaderboardPage(folderId: widget.folderId),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  AddFlashCardScreen(folderId: widget.folderId),
-            ),
-          );
-        },
-        backgroundColor: Colors.black,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AddFlashCardPage(folderId: widget.folderId),
+                  ),
+                );
+              },
+              backgroundColor: Colors.black,
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.white,
+              ),
+            )
+          : null,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

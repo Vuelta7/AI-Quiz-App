@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:learn_n/B%20home%20page/folder%20page/edit_folder_screen.dart';
-import 'package:learn_n/C%20folder%20page/infolder_main.dart';
+import 'package:learn_n/B%20home%20page/folder%20page/edit_folder_page.dart';
+import 'package:learn_n/C%20infolder%20page/infolder_main.dart';
 
 class FolderModel extends StatelessWidget {
   final String folderId;
@@ -121,7 +121,7 @@ class FolderModel extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditFolderWidget(
+                                    builder: (context) => EditFolderPage(
                                       folderId: folderId,
                                       initialFolderName: folderName,
                                       initialDescription: description,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/B%20home%20page/dashboard%20page/dashboard.dart';
+import 'package:learn_n/B%20home%20page/dashboard%20page/dashboard_main.dart';
 import 'package:learn_n/B%20home%20page/drawer%20page/drawer_contents.dart';
-import 'package:learn_n/B%20home%20page/folder%20page/add_folder_screen.dart';
-import 'package:learn_n/B%20home%20page/folder%20page/folder_screen.dart';
+import 'package:learn_n/B%20home%20page/folder%20page/add_folder_page.dart';
+import 'package:learn_n/B%20home%20page/folder%20page/folder_page.dart';
 import 'package:learn_n/B%20home%20page/notification%20page/notification_body.dart';
 import 'package:learn_n/B%20home%20page/reels_page/reels_page.dart';
 
@@ -48,7 +48,7 @@ class _HomeMainState extends State<HomeMain> {
     } else if (_selectedIndex == 3) {
       body = ReelsPage(userId: widget.userId);
     } else if (_selectedIndex == 4) {
-      body = const NotificationBody();
+      body = const NotificationPage();
     } else {
       body = FolderPage(userId: widget.userId);
     }
@@ -67,7 +67,7 @@ class _HomeMainState extends State<HomeMain> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddFolderScreen()),
+                      builder: (context) => const AddFolderPage()),
                 );
               },
               backgroundColor: Colors.black,

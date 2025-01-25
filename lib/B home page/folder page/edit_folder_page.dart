@@ -5,14 +5,14 @@ import 'package:learn_n/B%20home%20page/home%20page%20util/home_page_form.dart';
 import 'package:learn_n/B%20home%20page/home%20page%20util/home_page_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class EditFolderWidget extends StatefulWidget {
+class EditFolderPage extends StatefulWidget {
   final String folderId;
   final String initialFolderName;
   final String initialDescription;
   final Color initialColor;
   final bool isImported;
 
-  const EditFolderWidget({
+  const EditFolderPage({
     super.key,
     required this.folderId,
     required this.initialFolderName,
@@ -22,10 +22,10 @@ class EditFolderWidget extends StatefulWidget {
   });
 
   @override
-  State<EditFolderWidget> createState() => _EditFolderWidgetState();
+  State<EditFolderPage> createState() => _EditFolderPageState();
 }
 
-class _EditFolderWidgetState extends State<EditFolderWidget> {
+class _EditFolderPageState extends State<EditFolderPage> {
   late TextEditingController folderNameController;
   late TextEditingController descriptionController;
   late Color _selectedColor;

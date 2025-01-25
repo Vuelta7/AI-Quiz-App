@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20folder%20page/play%20page/question_multiple_option_model_widget.dart';
-import 'package:learn_n/C%20folder%20page/play%20page/question_typing_mode_model_widget.dart';
+import 'package:learn_n/C%20infolder%20page/play%20page/question_multiple_option_model_widget.dart';
+import 'package:learn_n/C%20infolder%20page/play%20page/question_typing_mode_model_widget.dart';
 
 class ChooseModeDialog extends StatelessWidget {
   final String folderName;

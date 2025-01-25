@@ -7,14 +7,14 @@ import 'package:learn_n/B%20home%20page/home%20page%20util/home_page_form.dart';
 import 'package:learn_n/B%20home%20page/home%20page%20util/home_page_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AddFolderScreen extends StatefulWidget {
-  const AddFolderScreen({super.key});
+class AddFolderPage extends StatefulWidget {
+  const AddFolderPage({super.key});
 
   @override
-  State<AddFolderScreen> createState() => _AddFolderScreenState();
+  State<AddFolderPage> createState() => _AddFolderPageState();
 }
 
-class _AddFolderScreenState extends State<AddFolderScreen> {
+class _AddFolderPageState extends State<AddFolderPage> {
   final folderNameController = TextEditingController();
   final descriptionController = TextEditingController();
   final folderIdController =

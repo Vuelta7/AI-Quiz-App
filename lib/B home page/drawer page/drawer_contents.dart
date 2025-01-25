@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/A%20start%20page/start_screen.dart';
+import 'package:learn_n/A%20start%20page/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerContent extends StatelessWidget {
@@ -30,21 +30,19 @@ class DrawerContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const DrawerHeader(
-          decoration: BoxDecoration(
+        DrawerHeader(
+          decoration: const BoxDecoration(
             color: Colors.blue,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Replace with your logo
-              Icon(
-                Icons.school,
-                size: 80,
-                color: Colors.white,
+              Image.asset(
+                'assets/logo_icon.png',
+                height: 100,
+                width: 100,
               ),
-              SizedBox(height: 10),
-              Text(
+              const Text(
                 'Learn-N',
                 style: TextStyle(
                   color: Colors.white,
