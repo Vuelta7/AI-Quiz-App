@@ -87,89 +87,120 @@ class FolderModel extends StatelessWidget {
                 const SizedBox(height: 12),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditFolderWidget(
-                                folderId: folderId,
-                                initialFolderName: folderName,
-                                initialDescription: description,
-                                initialColor: headerColor,
-                                isImported: isImported, // Pass the value
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(
-                          Icons.more_horiz_rounded,
-                          size: 30,
-                          color: _getTextColorForBackground(headerColor),
+                  child: IconButton(
+                    onPressed: () {
+                      final RenderBox button =
+                          context.findRenderObject() as RenderBox;
+                      final RenderBox overlay = Overlay.of(context)
+                          .context
+                          .findRenderObject() as RenderBox;
+                      final RelativeRect position = RelativeRect.fromRect(
+                        Rect.fromPoints(
+                          button.localToGlobal(
+                              button.size.bottomRight(Offset.zero),
+                              ancestor: overlay),
+                          button.localToGlobal(
+                              button.size.bottomRight(Offset.zero),
+                              ancestor: overlay),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Share Folder'),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                      'Share this Folder ID with your friend. They can use it to add this folder to their account.',
+                        Offset.zero & overlay.size,
+                      );
+
+                      showMenu(
+                        context: context,
+                        position: position,
+                        items: [
+                          PopupMenuItem(
+                            child: MenuItemButton(
+                              leadingIcon: Icon(Icons.edit,
+                                  color:
+                                      _getTextColorForBackground(headerColor)),
+                              child: const Text('Edit Folder'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditFolderWidget(
+                                      folderId: folderId,
+                                      initialFolderName: folderName,
+                                      initialDescription: description,
+                                      initialColor: headerColor,
+                                      isImported: isImported,
                                     ),
-                                    const SizedBox(height: 10),
-                                    SelectableText(
-                                      folderId,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Clipboard.setData(
-                                          ClipboardData(text: folderId),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              'Folder ID copied to clipboard!',
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          PopupMenuItem(
+                            child: MenuItemButton(
+                              leadingIcon: Icon(Icons.share,
+                                  color:
+                                      _getTextColorForBackground(headerColor)),
+                              child: const Text('Share Folder'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Share Folder'),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            'Share this Folder ID with your friend. They can use it to add this folder to their account.',
+                                          ),
+                                          const SizedBox(height: 10),
+                                          SelectableText(
+                                            folderId,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                        );
-                                      },
-                                      child: const Text('Copy Folder ID'),
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Close'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: Icon(
-                          Icons.share_rounded,
-                          size: 30,
-                          color: _getTextColorForBackground(headerColor),
-                        ),
-                      ),
-                    ],
+                                          const SizedBox(height: 10),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Clipboard.setData(
+                                                ClipboardData(text: folderId),
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    'Folder ID copied to clipboard!',
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: const Text('Copy Folder ID'),
+                                          ),
+                                        ],
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Close'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                    icon: Icon(
+                      Icons.more_horiz_rounded,
+                      size: 30,
+                      color: _getTextColorForBackground(headerColor),
+                    ),
                   ),
                 ),
               ],

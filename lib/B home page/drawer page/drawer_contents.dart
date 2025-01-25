@@ -90,6 +90,7 @@ class DrawerContent extends StatelessWidget {
             await FirebaseAuth.instance.signOut();
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.remove('userID');
+            print('userID deleted');
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const StartScreen()),
