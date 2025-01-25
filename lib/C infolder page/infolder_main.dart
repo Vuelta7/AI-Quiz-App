@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20folder%20page/add_question_screen.dart';
-import 'package:learn_n/C%20folder%20page/leaderboards.dart';
-import 'package:learn_n/C%20folder%20page/questions_page.dart';
+import 'package:learn_n/C%20folder%20page/flashcard%20widgets/add_flashcard.dart';
+import 'package:learn_n/C%20folder%20page/infolder%20page/leaderboards.dart';
+import 'package:learn_n/C%20folder%20page/infolder%20page/questions_page.dart';
 
-import 'choose_mode_dialog.dart';
+import 'play page/choose_mode_dialog.dart';
 
-class InsideFolderMain extends StatefulWidget {
+class InFolderMain extends StatefulWidget {
   final String folderId;
   final String folderName;
   final Color headerColor;
 
-  const InsideFolderMain({
+  const InFolderMain({
     super.key,
     required this.folderId,
     required this.folderName,
@@ -19,10 +19,10 @@ class InsideFolderMain extends StatefulWidget {
   });
 
   @override
-  State<InsideFolderMain> createState() => _InsideFolderMainState();
+  State<InFolderMain> createState() => _InFolderMainState();
 }
 
-class _InsideFolderMainState extends State<InsideFolderMain> {
+class _InFolderMainState extends State<InFolderMain> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) async {

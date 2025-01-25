@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget buildRetroButton(String text, Color color, VoidCallback? onPressed,
     {width = double.infinity}) {
-  return Container(
+  return SizedBox(
     width: width,
     child: ElevatedButton(
       onPressed: onPressed,

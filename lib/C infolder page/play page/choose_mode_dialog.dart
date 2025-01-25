@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'question_multiple_option_model_widget.dart';
-import 'question_typing_mode_model_widget.dart';
+import 'package:learn_n/C%20folder%20page/play%20page/question_multiple_option_model_widget.dart';
+import 'package:learn_n/C%20folder%20page/play%20page/question_typing_mode_model_widget.dart';
 
 class ChooseModeDialog extends StatelessWidget {
   final String folderName;
@@ -10,12 +9,12 @@ class ChooseModeDialog extends StatelessWidget {
   final List<Map<String, String>> questions;
 
   const ChooseModeDialog({
-    Key? key,
+    super.key,
     required this.folderName,
     required this.folderId,
     required this.headerColor,
     required this.questions,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
