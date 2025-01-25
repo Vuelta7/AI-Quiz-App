@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+//instead of being a screen can u make this a body of insidefoldermain instead
 class LeaderboardScreen extends StatelessWidget {
   final String folderId;
 
