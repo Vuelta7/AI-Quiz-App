@@ -74,7 +74,7 @@ class _FlashCardModelState extends State<FlashCardModel>
 
   Widget _buildCard() {
     return Container(
-      width: 310,
+      width: double.infinity,
       height: 180,
       decoration: BoxDecoration(
         color: Colors.white,

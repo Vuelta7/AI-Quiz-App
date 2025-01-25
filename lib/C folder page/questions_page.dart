@@ -44,11 +44,14 @@ class QuestionsPage extends StatelessWidget {
 
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: FlashCardModel(
-                question: questionData['question'],
-                answer: questionData['answer'],
-                questionId: questionDoc.id,
-                folderId: folderId,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: FlashCardModel(
+                  question: questionData['question'],
+                  answer: questionData['answer'],
+                  questionId: questionDoc.id,
+                  folderId: folderId,
+                ),
               ),
             );
           },
