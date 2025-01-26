@@ -49,6 +49,7 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
     "Almost there!"
   ];
   late Stopwatch _stopwatch;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -78,6 +79,7 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
   void dispose() {
     _pageController.dispose();
     _controller.dispose();
+    _focusNode.dispose();
     _stopwatch.stop();
     super.dispose();
   }
@@ -116,7 +118,7 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
     });
     if (!widget.isMultipleOptionMode) {
       _controller.clear();
-      FocusScope.of(context).unfocus();
+      FocusScope.of(context).requestFocus(_focusNode);
     }
   }
 
@@ -477,9 +479,9 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
                 if (widget.isMultipleOptionMode)
                   buildAnswerButtons()
                 else
-                  //can u make the user focusnode to the next textfield after submitting the answer whether it is correct or not
                   TextField(
                     controller: _controller,
+                    focusNode: _focusNode,
                     onSubmitted: checkAnswer,
                     cursorColor: Colors.black,
                     style: const TextStyle(
