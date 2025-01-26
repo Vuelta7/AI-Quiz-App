@@ -42,7 +42,7 @@ class _HomeMainState extends State<HomeMain> {
   Widget build(BuildContext context) {
     Widget body;
     if (_selectedIndex == 1) {
-      body = Dashboard(userId: widget.userId); // Change to dashboard screen
+      body = Dashboard(userId: widget.userId);
     } else if (_selectedIndex == 2) {
       body = FolderPage(userId: widget.userId);
     } else if (_selectedIndex == 3) {

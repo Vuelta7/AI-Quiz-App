@@ -95,44 +95,45 @@ class _FolderPageState extends State<FolderPage> {
               ),
             ),
           ),
-          StreamBuilder<QuerySnapshot>(
-            stream:
-                FirebaseFirestore.instance.collection('folders').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Colors.black),
-                );
-              }
+          Flexible(
+            child: StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection('folders').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: Colors.black),
+                  );
+                }
 
-              _folders = _filterFolders(snapshot.data!.docs.where((folderDoc) {
-                final folderData = folderDoc.data() as Map<String, dynamic>;
-                final accessUsers =
-                    List<String>.from(folderData['accessUsers']);
-                return folderData['creator'] == widget.userId ||
-                    accessUsers.contains(widget.userId);
-              }).toList());
+                _folders =
+                    _filterFolders(snapshot.data!.docs.where((folderDoc) {
+                  final folderData = folderDoc.data() as Map<String, dynamic>;
+                  final accessUsers =
+                      List<String>.from(folderData['accessUsers']);
+                  return folderData['creator'] == widget.userId ||
+                      accessUsers.contains(widget.userId);
+                }).toList());
 
-              _folders.sort((a, b) {
-                final aPos = _folderPositions[a.id] ?? 0;
-                final bPos = _folderPositions[b.id] ?? 0;
-                return aPos.compareTo(bPos);
-              });
+                _folders.sort((a, b) {
+                  final aPos = _folderPositions[a.id] ?? 0;
+                  final bPos = _folderPositions[b.id] ?? 0;
+                  return aPos.compareTo(bPos);
+                });
 
-              if (_folders.isEmpty) {
-                return const Padding(
-                  padding: EdgeInsets.all(40.0),
-                  child: Center(
-                    child: Text(
-                      'No Folder here 🗂️\nCreate one by clicking the Add Folder ➕.',
-                      textAlign: TextAlign.center,
+                if (_folders.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.all(40.0),
+                    child: Center(
+                      child: Text(
+                        'No Folder here 🗂️\nCreate one by clicking the Add Folder ➕.',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              return Expanded(
-                child: ReorderableListView.builder(
+                return ReorderableListView.builder(
                   itemCount: _folders.length,
                   onReorder: _onReorder,
                   itemBuilder: (context, index) {
@@ -142,11 +143,9 @@ class _FolderPageState extends State<FolderPage> {
                         List<String>.from(folderData['accessUsers'])
                             .contains(widget.userId);
 
-                    return Container(
+                    return ListTile(
                       key: ValueKey(folderDoc.id),
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 0.0, horizontal: 16),
-                      child: FolderModel(
+                      title: FolderModel(
                         folderId: folderDoc.id,
                         headerColor: hexToColor(folderData['color']),
                         folderName: folderData['folderName'],
@@ -155,9 +154,9 @@ class _FolderPageState extends State<FolderPage> {
                       ),
                     );
                   },
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ],
       ),
