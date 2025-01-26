@@ -272,10 +272,22 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
           .collection('leaderboard')
           .doc(userId);
 
-      await leaderboardDoc.set({
-        'username': username,
-        'timeSpent': timeSpent,
-      });
+      final leaderboardSnapshot = await leaderboardDoc.get();
+      if (leaderboardSnapshot.exists) {
+        final previousTimeSpent =
+            leaderboardSnapshot.data()?['timeSpent'] ?? double.infinity;
+        if (timeSpent < previousTimeSpent) {
+          await leaderboardDoc.set({
+            'username': username,
+            'timeSpent': timeSpent,
+          });
+        }
+      } else {
+        await leaderboardDoc.set({
+          'username': username,
+          'timeSpent': timeSpent,
+        });
+      }
     }
   }
 
@@ -286,7 +298,10 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
       currentHint = '';
       feedbackMessage = 'Work Smart';
       wrongAnswerCount = List.filled(widget.questions.length, 0);
+      attemptedAnswers.clear();
       _pageController.jumpToPage(0);
+      _stopwatch.reset();
+      _stopwatch.start();
     });
   }
 
@@ -455,7 +470,6 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
               ],
             ),
           ),
-          // answer area
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
@@ -463,6 +477,7 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
                 if (widget.isMultipleOptionMode)
                   buildAnswerButtons()
                 else
+                  //can u make the user focusnode to the next textfield after submitting the answer whether it is correct or not
                   TextField(
                     controller: _controller,
                     onSubmitted: checkAnswer,

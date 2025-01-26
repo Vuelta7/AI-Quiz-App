@@ -17,12 +17,16 @@ class AddFolderPage extends StatefulWidget {
 class _AddFolderPageState extends State<AddFolderPage> {
   final folderNameController = TextEditingController();
   final descriptionController = TextEditingController();
-  final folderIdController =
-      TextEditingController(); // Controller for folder ID
+  final folderIdController = TextEditingController();
   Color _selectedColor = Colors.blue;
   bool _isLoading = false;
-  bool _isAddingFolder = true; // Track whether adding or importing folder
+  bool _isAddingFolder = true;
   final FocusNode descriptionFocusNode = FocusNode();
+
+  bool get isFormValid {
+    return folderNameController.text.trim().isNotEmpty &&
+        descriptionController.text.trim().isNotEmpty;
+  }
 
   @override
   void dispose() {
@@ -164,9 +168,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                     child: buildFolderForm(
                       context: context,
                       isLoading: _isLoading,
-                      isFormValid:
-                          folderNameController.text.trim().isNotEmpty &&
-                              descriptionController.text.trim().isNotEmpty,
+                      isFormValid: isFormValid,
                       folderNameController: folderNameController,
                       descriptionController: descriptionController,
                       selectedColor: _selectedColor,
@@ -213,9 +215,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                           });
                         }
                       },
-                      onDelete: () async {
-                        // Add your delete logic here
-                      },
+                      onDelete: () async {},
                       isImported: !_isAddingFolder,
                       folderIdController: folderIdController,
                       onImport: () async {
@@ -252,8 +252,12 @@ class _AddFolderPageState extends State<AddFolderPage> {
                       onFieldSubmitted: (_) {
                         FocusScope.of(context)
                             .requestFocus(descriptionFocusNode);
+                        setState(() {});
                       },
                       descriptionFocusNode: descriptionFocusNode,
+                      onChanged: (value) {
+                        setState(() {}); // Update form validation state
+                      },
                     ),
                   ),
                 ),

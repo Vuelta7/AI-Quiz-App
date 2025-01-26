@@ -10,12 +10,14 @@ class InFolderMain extends StatefulWidget {
   final String folderId;
   final String folderName;
   final Color headerColor;
+  final bool isImported; // Add this line
 
   const InFolderMain({
     super.key,
     required this.folderId,
     required this.folderName,
     required this.headerColor,
+    required this.isImported, // Add this line
   });
 
   @override
@@ -103,7 +105,7 @@ class _InFolderMainState extends State<InFolderMain> {
           LeaderboardPage(folderId: widget.folderId),
         ],
       ),
-      floatingActionButton: _selectedIndex == 0
+      floatingActionButton: _selectedIndex == 0 && !widget.isImported
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.push(

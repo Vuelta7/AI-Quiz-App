@@ -32,6 +32,7 @@ class FolderModel extends StatelessWidget {
                   headerColor: headerColor,
                   folderId: folderId,
                   folderName: folderName,
+                  isImported: isImported,
                 ),
               ),
             );

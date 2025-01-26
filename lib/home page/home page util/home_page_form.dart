@@ -11,13 +11,15 @@ Widget buildFolderForm({
   required Function(Color) onColorChanged,
   required Function() onSave,
   required Function() onDelete,
+  required Function(String) onChanged,
   bool isImported = false,
   TextEditingController? folderIdController,
   Function()? onImport,
   bool isAddScreen = false,
-  void Function(String)? onFieldSubmitted, // Add onFieldSubmitted parameter
-  FocusNode? descriptionFocusNode, // Add FocusNode parameter
+  void Function(String)? onFieldSubmitted,
+  FocusNode? descriptionFocusNode,
 }) {
+  selectedColor = selectedColor;
   return Column(
     children: [
       const SizedBox(height: 10),
@@ -27,11 +29,8 @@ Widget buildFolderForm({
           decoration: const InputDecoration(
             hintText: 'Folder Name',
           ),
-          onChanged: (value) {
-            // Handle form validation state change
-          },
-          onFieldSubmitted:
-              onFieldSubmitted, // Use the onFieldSubmitted parameter
+          onChanged: onChanged,
+          onFieldSubmitted: onFieldSubmitted,
         ),
         const SizedBox(height: 10),
         TextFormField(
@@ -40,10 +39,8 @@ Widget buildFolderForm({
             hintText: 'Description',
           ),
           maxLines: 3,
-          onChanged: (value) {
-            // Handle form validation state change
-          },
-          focusNode: descriptionFocusNode, // Use the FocusNode parameter
+          onChanged: onChanged,
+          focusNode: descriptionFocusNode,
         ),
         const SizedBox(height: 10),
         ColorPicker(

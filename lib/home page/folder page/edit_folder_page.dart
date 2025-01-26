@@ -222,6 +222,7 @@ class _EditFolderPageState extends State<EditFolderPage> {
                   FocusScope.of(context).requestFocus(descriptionFocusNode);
                 },
                 descriptionFocusNode: descriptionFocusNode,
+                onChanged: (String) {},
               ),
             ),
           ),

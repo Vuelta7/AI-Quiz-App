@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:learn_n/App%20Components/firebase_options.dart';
-import 'package:learn_n/App%20Components/my_app.dart';
+import 'package:learn_n/components/firebase_options.dart';
+import 'package:learn_n/components/my_app.dart';
 import 'package:learn_n/home%20page/notification%20page/notification_body.dart';
 
 void main() async {
@@ -34,3 +34,4 @@ void main() async {
 // points to change the background music
 // text regocnition
 // qr code scanner to get folder
+// put the edit button in flashcard in other place
