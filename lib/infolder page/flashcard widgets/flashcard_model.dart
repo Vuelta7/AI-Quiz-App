@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20infolder%20page/flashcard%20widgets/edit_folder_page.dart';
+import 'package:learn_n/infolder%20page/flashcard%20widgets/edit_folder_page.dart';
 
 class FlashCardModel extends StatefulWidget {
   final String question;

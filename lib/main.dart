@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:learn_n/B%20home%20page/notification%20page/notification_body.dart';
-import 'package:learn_n/firebase_options.dart';
-import 'package:learn_n/my_app.dart';
+import 'package:learn_n/App%20Components/firebase_options.dart';
+import 'package:learn_n/App%20Components/my_app.dart';
+import 'package:learn_n/home%20page/notification%20page/notification_body.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

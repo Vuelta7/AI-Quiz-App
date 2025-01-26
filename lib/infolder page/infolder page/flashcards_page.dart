@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20infolder%20page/flashcard%20widgets/flashcard_model.dart';
+import 'package:learn_n/infolder%20page/flashcard%20widgets/flashcard_model.dart';
 
 class FlashcardsPage extends StatelessWidget {
   final String folderId;

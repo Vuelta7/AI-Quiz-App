@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/C%20infolder%20page/flashcard%20widgets/add_flashcard_page.dart';
-import 'package:learn_n/C%20infolder%20page/infolder%20page/flashcards_page.dart';
-import 'package:learn_n/C%20infolder%20page/infolder%20page/leaderboards_page.dart';
+import 'package:learn_n/infolder%20page/flashcard%20widgets/add_flashcard_page.dart';
+import 'package:learn_n/infolder%20page/infolder%20page/flashcards_page.dart';
+import 'package:learn_n/infolder%20page/infolder%20page/leaderboards_page.dart';
 
 import 'play page/choose_mode_dialog.dart';
 

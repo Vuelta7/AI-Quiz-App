@@ -3,35 +3,51 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class QuestionIdentificationModeModelWidget extends StatefulWidget {
+class QuestionModeModelWidget extends StatefulWidget {
   final List<Map<String, String>> questions;
   final String folderName;
   final String folderId;
   final Color headerColor;
+  final bool isMultipleOptionMode;
 
-  const QuestionIdentificationModeModelWidget({
+  const QuestionModeModelWidget({
     super.key,
     required this.questions,
     required this.folderName,
     required this.folderId,
     required this.headerColor,
+    required this.isMultipleOptionMode,
   });
 
   @override
-  State<QuestionIdentificationModeModelWidget> createState() =>
-      _QuestionIdentificationModeModelWidgetState();
+  State<QuestionModeModelWidget> createState() =>
+      _QuestionModeModelWidgetState();
 }
 
-class _QuestionIdentificationModeModelWidgetState
-    extends State<QuestionIdentificationModeModelWidget> {
+class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
   late PageController _pageController;
   int currentIndex = 0;
   int wrongAnswers = 0;
   String currentHint = '';
   List<int> wrongAnswerCount = [];
+  List<String> attemptedAnswers = [];
   String feedbackMessage = 'Work Smart';
   final TextEditingController _controller = TextEditingController();
   final AudioPlayer _audioPlayer = AudioPlayer();
+  List<List<String>> cachedAnswers = [];
+  List<String> positiveFeedback = [
+    "Great Job!",
+    "Well Done!",
+    "Excellent!",
+    "Keep it up!"
+  ];
+
+  List<String> negativeFeedback = [
+    "Try Again!",
+    "Oops, not quite!",
+    "Incorrect, give it another shot!",
+    "Almost there!"
+  ];
   late Stopwatch _stopwatch;
 
   @override
@@ -40,6 +56,21 @@ class _QuestionIdentificationModeModelWidgetState
     widget.questions.shuffle();
     _pageController = PageController();
     wrongAnswerCount = List.filled(widget.questions.length, 0);
+    if (widget.isMultipleOptionMode) {
+      for (var question in widget.questions) {
+        String correctAnswer = question['answer']!;
+        List<String> incorrectAnswers = widget.questions
+            .where((q) => q['answer'] != correctAnswer)
+            .map((q) => q['answer']!)
+            .toSet()
+            .toList();
+
+        incorrectAnswers.shuffle();
+        List<String> answers = [correctAnswer, ...incorrectAnswers.take(3)];
+        answers.shuffle();
+        cachedAnswers.add(answers);
+      }
+    }
     _stopwatch = Stopwatch()..start();
   }
 
@@ -53,47 +84,47 @@ class _QuestionIdentificationModeModelWidgetState
 
   void checkAnswer(String userAnswer) {
     final correctAnswer = widget.questions[currentIndex]['answer']!;
+
+    if (widget.isMultipleOptionMode && attemptedAnswers.contains(userAnswer)) {
+      return;
+    }
+
     setState(() {
       if (userAnswer.trim().toLowerCase() ==
           correctAnswer.trim().toLowerCase()) {
         currentHint = '';
         _audioPlayer.play(AssetSource('correct_sf.mp3'));
-
-        final positiveFeedback = [
-          'Awesome!',
-          'Great Job!',
-          'Keep it up!',
-          'You got it!',
-          'Excellent!'
-        ];
         feedbackMessage =
             positiveFeedback[currentIndex % positiveFeedback.length];
         _nextQuestion();
       } else {
         wrongAnswers++;
         wrongAnswerCount[currentIndex]++;
+        if (widget.isMultipleOptionMode) {
+          attemptedAnswers.add(userAnswer);
+        }
         _audioPlayer.play(AssetSource('wrong_sf.mp3'));
 
-        final negativeFeedback = [
-          'Not quite!',
-          'Try Again!',
-          'Oops, wrong one!',
-          'Don’t give up!',
-          'Keep trying!'
-        ];
-        feedbackMessage =
-            negativeFeedback[currentIndex % negativeFeedback.length];
+        feedbackMessage = negativeFeedback[
+            wrongAnswerCount[currentIndex] % negativeFeedback.length];
+
+        if (widget.isMultipleOptionMode && attemptedAnswers.length == 3) {
+          feedbackMessage = 'Wrong, next question...';
+          _nextQuestion();
+        }
       }
     });
-    _controller.clear();
-    FocusScope.of(context).unfocus();
+    if (!widget.isMultipleOptionMode) {
+      _controller.clear();
+      FocusScope.of(context).unfocus();
+    }
   }
 
   void _nextQuestion() {
     if (currentIndex < widget.questions.length - 1) {
       setState(() {
         currentIndex++;
-        currentHint = 'Work Smart';
+        attemptedAnswers.clear();
         currentHint = '';
       });
       _pageController.jumpToPage(currentIndex);
@@ -163,7 +194,7 @@ class _QuestionIdentificationModeModelWidgetState
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () async {
-                    await _addPointsToUser(7);
+                    await _addPointsToUser(5);
                     await _updateLeaderboard(timeSpent);
                     _restartQuiz();
                     Navigator.pop(context);
@@ -182,7 +213,7 @@ class _QuestionIdentificationModeModelWidgetState
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () async {
-                    await _addPointsToUser(7);
+                    await _addPointsToUser(5);
                     await _updateLeaderboard(timeSpent);
                     _finishQuiz();
                     Navigator.pop(context);
@@ -261,6 +292,41 @@ class _QuestionIdentificationModeModelWidgetState
 
   void _finishQuiz() {
     Navigator.pop(context);
+  }
+
+  Widget buildAnswerButtons() {
+    List<String> answers = cachedAnswers[currentIndex];
+
+    return Column(
+      children: answers.map((answer) {
+        Color buttonColor = attemptedAnswers.contains(answer)
+            ? Colors.grey
+            : widget.headerColor;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
+            onPressed: () => checkAnswer(answer),
+            child: Text(
+              answer,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: _getTextColorForBackground(buttonColor),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Color _getTextColorForBackground(Color backgroundColor) {
+    return backgroundColor.computeLuminance() > 0.5
+        ? Colors.black
+        : Colors.white;
   }
 
   @override
@@ -390,62 +456,57 @@ class _QuestionIdentificationModeModelWidgetState
             ),
           ),
           // answer area
-          const Divider(
-            thickness: 4,
-            color: Colors.black,
-            height: 0,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
-                TextField(
-                  controller: _controller,
-                  onSubmitted: checkAnswer,
-                  cursorColor: Colors.black,
-                  style: const TextStyle(
-                    fontFamily: 'Arial',
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 14,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Type Answer',
-                    hintStyle: const TextStyle(
-                      fontFamily: 'PressStart2P',
-                      color: Color.fromARGB(150, 0, 0, 0),
-                    ),
-                    labelStyle: const TextStyle(
-                      fontFamily: 'PressStart2P',
+                if (widget.isMultipleOptionMode)
+                  buildAnswerButtons()
+                else
+                  TextField(
+                    controller: _controller,
+                    onSubmitted: checkAnswer,
+                    cursorColor: Colors.black,
+                    style: const TextStyle(
+                      fontFamily: 'Arial',
                       color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 14,
                     ),
-                    filled: true,
-                    fillColor: const Color.fromARGB(255, 255, 255, 255),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
+                    decoration: InputDecoration(
+                      hintText: 'Type Answer',
+                      hintStyle: const TextStyle(
+                        fontFamily: 'PressStart2P',
+                        color: Color.fromARGB(150, 0, 0, 0),
+                      ),
+                      labelStyle: const TextStyle(
+                        fontFamily: 'PressStart2P',
                         color: Color.fromARGB(255, 0, 0, 0),
-                        width: 3,
                       ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.black,
-                        width: 3,
+                      filled: true,
+                      fillColor: const Color.fromARGB(255, 255, 255, 255),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          width: 3,
+                        ),
                       ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.black,
-                        width: 3,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Colors.black,
+                          width: 3,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Colors.black,
+                          width: 3,
+                        ),
                       ),
                     ),
                   ),
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

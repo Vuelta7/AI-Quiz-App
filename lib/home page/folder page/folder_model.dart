@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:learn_n/B%20home%20page/folder%20page/edit_folder_page.dart';
-import 'package:learn_n/C%20infolder%20page/infolder_main.dart';
+import 'package:learn_n/home%20page/folder%20page/edit_folder_page.dart';
+import 'package:learn_n/infolder%20page/infolder_main.dart';
 
 class FolderModel extends StatelessWidget {
   final String folderId;
