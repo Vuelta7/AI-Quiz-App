@@ -3,14 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class QuestionModeModelWidget extends StatefulWidget {
+class PlayPage extends StatefulWidget {
   final List<Map<String, String>> questions;
   final String folderName;
   final String folderId;
   final Color headerColor;
   final bool isMultipleOptionMode;
 
-  const QuestionModeModelWidget({
+  const PlayPage({
     super.key,
     required this.questions,
     required this.folderName,
@@ -20,11 +20,10 @@ class QuestionModeModelWidget extends StatefulWidget {
   });
 
   @override
-  State<QuestionModeModelWidget> createState() =>
-      _QuestionModeModelWidgetState();
+  State<PlayPage> createState() => _PlayPageState();
 }
 
-class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
+class _PlayPageState extends State<PlayPage> {
   late PageController _pageController;
   int currentIndex = 0;
   int wrongAnswers = 0;

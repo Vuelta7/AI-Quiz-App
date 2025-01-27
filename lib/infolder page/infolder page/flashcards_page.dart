@@ -4,12 +4,12 @@ import 'package:learn_n/infolder%20page/flashcard%20widgets/flashcard_model.dart
 
 class FlashcardsPage extends StatelessWidget {
   final String folderId;
-  final bool isImported;
+  final bool isEditing;
 
   const FlashcardsPage({
     super.key,
     required this.folderId,
-    required this.isImported,
+    this.isEditing = false,
   });
 
   @override
@@ -48,16 +48,14 @@ class FlashcardsPage extends StatelessWidget {
             final questionData = questionDoc.data() as Map<String, dynamic>;
 
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: FlashCardModel(
-                  question: questionData['question'],
-                  answer: questionData['answer'],
-                  questionId: questionDoc.id,
-                  folderId: folderId,
-                  isImported: isImported,
-                ),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+              child: FlashCardModel(
+                question: questionData['question'],
+                answer: questionData['answer'],
+                questionId: questionDoc.id,
+                folderId: folderId,
+                isEditing: isEditing,
               ),
             );
           },

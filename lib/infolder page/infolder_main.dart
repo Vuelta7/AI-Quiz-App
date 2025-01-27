@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/infolder%20page/flashcard%20widgets/add_flashcard_page.dart';
 import 'package:learn_n/infolder%20page/infolder%20page/flashcards_page.dart';
 import 'package:learn_n/infolder%20page/infolder%20page/leaderboards_page.dart';
-import 'package:learn_n/infolder%20page/play%20page/question_mode_model_widget.dart';
+import 'package:learn_n/infolder%20page/play%20page/play_page.dart';
 
 class InFolderMain extends StatefulWidget {
   final String folderId;
@@ -23,12 +23,41 @@ class InFolderMain extends StatefulWidget {
   State<InFolderMain> createState() => _InFolderMainState();
 }
 
-class _InFolderMainState extends State<InFolderMain> {
+class _InFolderMainState extends State<InFolderMain>
+    with TickerProviderStateMixin {
   int _selectedIndex = 0;
+  bool _isEditing = false;
+  late AnimationController _wiggleController;
+
+  @override
+  void initState() {
+    super.initState();
+    _wiggleController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _wiggleController.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _toggleEditMode() {
+    setState(() {
+      _isEditing = !_isEditing;
+      if (_isEditing) {
+        _wiggleController.repeat(reverse: true);
+      } else {
+        _wiggleController.stop();
+      }
     });
   }
 
@@ -50,21 +79,25 @@ class _InFolderMainState extends State<InFolderMain> {
       }).toList();
 
       if (questions.isNotEmpty) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return QuestionModeModelWidget(
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => PlayPage(
               folderName: widget.folderName,
               folderId: widget.folderId,
               headerColor: widget.headerColor,
               questions: questions,
-            );
-          },
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No questions available to play.')),
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return Align(
+                child: SizeTransition(
+                  sizeFactor: animation,
+                  child: child,
+                ),
+              );
+            },
+          ),
         );
       }
     } catch (e) {
@@ -94,16 +127,12 @@ class _InFolderMainState extends State<InFolderMain> {
         actions: [
           if (_selectedIndex == 0 && !widget.isImported)
             IconButton(
-              icon: const Icon(Icons.add, size: 30, color: Colors.black),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AddFlashCardPage(folderId: widget.folderId),
-                  ),
-                );
-              },
+              icon: Icon(
+                _isEditing ? Icons.play_circle_fill_rounded : Icons.edit,
+                size: 40,
+                color: Colors.black,
+              ),
+              onPressed: _toggleEditMode,
             ),
         ],
       ),
@@ -111,19 +140,41 @@ class _InFolderMainState extends State<InFolderMain> {
         index: _selectedIndex,
         children: [
           FlashcardsPage(
-              folderId: widget.folderId, isImported: widget.isImported),
+            folderId: widget.folderId,
+            isEditing: _isEditing,
+          ),
           LeaderboardPage(folderId: widget.folderId),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _startQuiz,
-        backgroundColor: Colors.black,
-        child: const Icon(
-          Icons.play_arrow,
-          size: 30,
-          color: Colors.white,
-        ),
-      ),
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton(
+              onPressed: _isEditing
+                  ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AddFlashCardPage(folderId: widget.folderId),
+                        ),
+                      );
+                    }
+                  : _startQuiz,
+              backgroundColor: Colors.black,
+              child: AnimatedBuilder(
+                animation: _wiggleController,
+                builder: (context, child) {
+                  return Transform.rotate(
+                    angle: 0.2 * _wiggleController.value,
+                    child: Icon(
+                      _isEditing ? Icons.add : Icons.play_arrow_rounded,
+                      size: 45,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+              ),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

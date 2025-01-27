@@ -6,7 +6,7 @@ class FlashCardModel extends StatefulWidget {
   final String answer;
   final String questionId;
   final String folderId;
-  final bool isImported;
+  final bool isEditing;
 
   const FlashCardModel({
     super.key,
@@ -14,7 +14,7 @@ class FlashCardModel extends StatefulWidget {
     required this.answer,
     required this.questionId,
     required this.folderId,
-    required this.isImported,
+    this.isEditing = false,
   });
 
   @override
@@ -25,6 +25,7 @@ class _FlashCardModelState extends State<FlashCardModel>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late AnimationController _wiggleController;
 
   @override
   void initState() {
@@ -36,11 +37,16 @@ class _FlashCardModelState extends State<FlashCardModel>
     _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
+    _wiggleController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    )..repeat(reverse: true);
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _wiggleController.dispose();
     super.dispose();
   }
 
@@ -68,38 +74,47 @@ class _FlashCardModelState extends State<FlashCardModel>
               );
             },
           ),
-          const SizedBox(height: 15),
         ],
       ),
     );
   }
 
   Widget _buildCard() {
-    return Container(
-      width: double.infinity,
-      height: 180,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(
-          width: 4,
-          color: const Color.fromARGB(255, 0, 0, 0),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            offset: const Offset(0, 5),
-            blurRadius: 10,
-            spreadRadius: 0,
+    return AnimatedBuilder(
+      animation: _wiggleController,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: widget.isEditing
+              ? Offset(5 * _wiggleController.value, 0)
+              : Offset.zero,
+          child: Container(
+            width: double.infinity,
+            height: 180,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(
+                width: 4,
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: const Offset(0, 5),
+                  blurRadius: 10,
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                _buildFront(),
+                _buildBack(),
+              ],
+            ),
           ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          _buildFront(),
-          _buildBack(),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -109,16 +124,42 @@ class _FlashCardModelState extends State<FlashCardModel>
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          child: Text(
-            widget.question,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.question,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              if (widget.isEditing)
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit,
+                    size: 20,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditFlashCardPage(
+                          folderId: widget.folderId,
+                          flashCardId: widget.questionId,
+                          initialQuestion: widget.question,
+                          initialAnswer: widget.answer,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+            ],
           ),
         ),
       ),
@@ -145,7 +186,7 @@ class _FlashCardModelState extends State<FlashCardModel>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
-              if (!widget.isImported)
+              if (widget.isEditing)
                 IconButton(
                   icon: const Icon(
                     Icons.edit,
