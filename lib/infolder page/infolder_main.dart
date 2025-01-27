@@ -3,21 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/infolder%20page/flashcard%20widgets/add_flashcard_page.dart';
 import 'package:learn_n/infolder%20page/infolder%20page/flashcards_page.dart';
 import 'package:learn_n/infolder%20page/infolder%20page/leaderboards_page.dart';
-
-import 'play page/choose_mode_dialog.dart';
+import 'package:learn_n/infolder%20page/play%20page/question_mode_model_widget.dart';
 
 class InFolderMain extends StatefulWidget {
   final String folderId;
   final String folderName;
   final Color headerColor;
-  final bool isImported; // Add this line
+  final bool isImported;
 
   const InFolderMain({
     super.key,
     required this.folderId,
     required this.folderName,
     required this.headerColor,
-    required this.isImported, // Add this line
+    this.isImported = true,
   });
 
   @override
@@ -27,55 +26,51 @@ class InFolderMain extends StatefulWidget {
 class _InFolderMainState extends State<InFolderMain> {
   int _selectedIndex = 0;
 
-  void _onItemTapped(int index) async {
-    if (index == 0) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    } else if (index == 1) {
-      try {
-        final questionsSnapshot = await FirebaseFirestore.instance
-            .collection('folders')
-            .doc(widget.folderId)
-            .collection('questions')
-            .get();
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
-        final questions = questionsSnapshot.docs.map((doc) {
-          final data = doc.data();
-          return {
-            "id": doc.id,
-            "question": data['question']?.toString() ?? '',
-            "answer": data['answer']?.toString() ?? '',
-          };
-        }).toList();
+  Future<void> _startQuiz() async {
+    try {
+      final questionsSnapshot = await FirebaseFirestore.instance
+          .collection('folders')
+          .doc(widget.folderId)
+          .collection('questions')
+          .get();
 
-        if (questions.isNotEmpty) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return ChooseModeDialog(
-                folderName: widget.folderName,
-                folderId: widget.folderId,
-                headerColor: widget.headerColor,
-                questions: questions,
-              );
-            },
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No questions available to play.')),
-          );
-        }
-      } catch (e) {
+      final questions = questionsSnapshot.docs.map((doc) {
+        final data = doc.data();
+        return {
+          "id": doc.id,
+          "question": data['question']?.toString() ?? '',
+          "answer": data['answer']?.toString() ?? '',
+        };
+      }).toList();
+
+      if (questions.isNotEmpty) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return QuestionModeModelWidget(
+              folderName: widget.folderName,
+              folderId: widget.folderId,
+              headerColor: widget.headerColor,
+              questions: questions,
+            );
+          },
+        );
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load questions: $e')),
+          const SnackBar(content: Text('No questions available to play.')),
         );
       }
-    } else if (index == 2) {
-      setState(() {
-        _selectedIndex = index;
-      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load questions: $e')),
+      );
     }
   }
 
@@ -96,17 +91,10 @@ class _InFolderMainState extends State<InFolderMain> {
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: Colors.white,
-      ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          FlashcardsPage(folderId: widget.folderId),
-          Container(),
-          LeaderboardPage(folderId: widget.folderId),
-        ],
-      ),
-      floatingActionButton: _selectedIndex == 0 && !widget.isImported
-          ? FloatingActionButton(
+        actions: [
+          if (_selectedIndex == 0 && !widget.isImported)
+            IconButton(
+              icon: const Icon(Icons.add, size: 30, color: Colors.black),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -116,14 +104,27 @@ class _InFolderMainState extends State<InFolderMain> {
                   ),
                 );
               },
-              backgroundColor: Colors.black,
-              child: const Icon(
-                Icons.add,
-                size: 30,
-                color: Colors.white,
-              ),
-            )
-          : null,
+            ),
+        ],
+      ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          FlashcardsPage(
+              folderId: widget.folderId, isImported: widget.isImported),
+          LeaderboardPage(folderId: widget.folderId),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _startQuiz,
+        backgroundColor: Colors.black,
+        child: const Icon(
+          Icons.play_arrow,
+          size: 30,
+          color: Colors.white,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -135,10 +136,6 @@ class _InFolderMainState extends State<InFolderMain> {
           BottomNavigationBarItem(
             icon: Icon(Icons.question_answer_rounded, size: 50),
             label: 'Questions',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.play_circle_fill_rounded, size: 50),
-            label: 'Play',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.leaderboard, size: 50),

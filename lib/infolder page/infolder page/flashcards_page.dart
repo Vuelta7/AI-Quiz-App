@@ -4,8 +4,13 @@ import 'package:learn_n/infolder%20page/flashcard%20widgets/flashcard_model.dart
 
 class FlashcardsPage extends StatelessWidget {
   final String folderId;
+  final bool isImported;
 
-  const FlashcardsPage({super.key, required this.folderId});
+  const FlashcardsPage({
+    super.key,
+    required this.folderId,
+    required this.isImported,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +56,7 @@ class FlashcardsPage extends StatelessWidget {
                   answer: questionData['answer'],
                   questionId: questionDoc.id,
                   folderId: folderId,
+                  isImported: isImported,
                 ),
               ),
             );

@@ -6,6 +6,7 @@ class FlashCardModel extends StatefulWidget {
   final String answer;
   final String questionId;
   final String folderId;
+  final bool isImported;
 
   const FlashCardModel({
     super.key,
@@ -13,6 +14,7 @@ class FlashCardModel extends StatefulWidget {
     required this.answer,
     required this.questionId,
     required this.folderId,
+    required this.isImported,
   });
 
   @override
@@ -107,42 +109,16 @@ class _FlashCardModelState extends State<FlashCardModel>
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                widget.question,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 10),
-              IconButton(
-                icon: const Icon(
-                  Icons.edit,
-                  size: 20,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditFlashCardPage(
-                        folderId: widget.folderId,
-                        flashCardId: widget.questionId,
-                        initialQuestion: widget.question,
-                        initialAnswer: widget.answer,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
+          child: Text(
+            widget.question,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),
@@ -169,26 +145,27 @@ class _FlashCardModelState extends State<FlashCardModel>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
-              IconButton(
-                icon: const Icon(
-                  Icons.edit,
-                  size: 20,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditFlashCardPage(
-                        folderId: widget.folderId,
-                        flashCardId: widget.questionId,
-                        initialQuestion: widget.question,
-                        initialAnswer: widget.answer,
+              if (!widget.isImported)
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit,
+                    size: 20,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditFlashCardPage(
+                          folderId: widget.folderId,
+                          flashCardId: widget.questionId,
+                          initialQuestion: widget.question,
+                          initialAnswer: widget.answer,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
             ],
           ),
         ),

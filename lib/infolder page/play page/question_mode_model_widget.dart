@@ -16,7 +16,7 @@ class QuestionModeModelWidget extends StatefulWidget {
     required this.folderName,
     required this.folderId,
     required this.headerColor,
-    required this.isMultipleOptionMode,
+    this.isMultipleOptionMode = true,
   });
 
   @override
@@ -51,6 +51,7 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
   late Stopwatch _stopwatch;
   final FocusNode _focusNode = FocusNode();
   int hintCount = 0;
+  bool isMultipleOptionMode = false;
 
   @override
   void initState() {
@@ -75,6 +76,7 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
     }
     _stopwatch = Stopwatch()..start();
     _fetchHintCount();
+    isMultipleOptionMode = widget.isMultipleOptionMode;
   }
 
   Future<void> _fetchHintCount() async {
@@ -342,6 +344,12 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
     Navigator.pop(context);
   }
 
+  void _toggleMode() {
+    setState(() {
+      isMultipleOptionMode = !isMultipleOptionMode;
+    });
+  }
+
   Widget buildAnswerButtons() {
     List<String> answers = cachedAnswers[currentIndex];
 
@@ -396,6 +404,16 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
           color: Colors.black,
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isMultipleOptionMode ? Icons.text_fields : Icons.list,
+              size: 30,
+            ),
+            color: Colors.black,
+            onPressed: _toggleMode,
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: Column(
@@ -531,7 +549,7 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
-                if (widget.isMultipleOptionMode)
+                if (isMultipleOptionMode)
                   buildAnswerButtons()
                 else
                   TextField(
