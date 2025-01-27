@@ -149,8 +149,76 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildShop() {
-    return const Center(
-      child: Text('dipa nagagawa'),
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.black),
+          );
+        }
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const Center(
+            child: Text('User data not found.'),
+          );
+        }
+
+        final userData = snapshot.data!.data() as Map<String, dynamic>;
+        final currencyPoints = userData['currencypoints'] ?? 0;
+        final hints = userData['hints'] ?? 0;
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Currency Points: $currencyPoints'),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: currencyPoints >= 50
+                  ? () async {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(widget.userId)
+                          .update({
+                        'currencypoints': currencyPoints - 50,
+                        'hints': hints + 1,
+                      });
+                    }
+                  : null,
+              child: const Text('Buy Hint (50 points)'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: currencyPoints >= 500
+                  ? () {
+                      // Implement color change functionality
+                    }
+                  : null,
+              child: const Text('Change App Color (500 points)'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: currencyPoints >= 500
+                  ? () {
+                      // Implement correct sound change functionality
+                    }
+                  : null,
+              child: const Text('Change Correct Sound (500 points)'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: currencyPoints >= 500
+                  ? () {
+                      // Implement wrong sound change functionality
+                    }
+                  : null,
+              child: const Text('Change Wrong Sound (500 points)'),
+            ),
+          ],
+        );
+      },
     );
   }
 

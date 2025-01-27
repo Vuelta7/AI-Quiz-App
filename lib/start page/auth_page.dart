@@ -85,6 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
       'password': password,
       'currencypoints': 0,
       'rankpoints': 0,
+      'hints': 0,
     });
 
     // Save user ID to SharedPreferences
