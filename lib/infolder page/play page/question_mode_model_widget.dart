@@ -50,6 +50,7 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
   ];
   late Stopwatch _stopwatch;
   final FocusNode _focusNode = FocusNode();
+  int hintCount = 0;
 
   @override
   void initState() {
@@ -73,6 +74,20 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
       }
     }
     _stopwatch = Stopwatch()..start();
+    _fetchHintCount();
+  }
+
+  Future<void> _fetchHintCount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    if (userId != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      final userSnapshot = await userDoc.get();
+      setState(() {
+        hintCount = userSnapshot.data()?['hints'] ?? 0;
+      });
+    }
   }
 
   @override
@@ -147,16 +162,32 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
     }
   }
 
-  void _showHint() {
-    final answer = widget.questions[currentIndex]['answer']!;
-    setState(() {
-      int hintLength = (answer.length / 2).ceil();
-      if (currentHint.length < hintLength) {
-        currentHint = answer.substring(0, currentHint.length + 1);
+  void _showHint() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    if (userId != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      final userSnapshot = await userDoc.get();
+      int hintCount = userSnapshot.data()?['hints'] ?? 0;
+
+      if (hintCount > 0) {
+        final answer = widget.questions[currentIndex]['answer']!;
+        setState(() {
+          if (currentHint.length < answer.length) {
+            currentHint = answer.substring(0, currentHint.length + 1);
+            userDoc.update({'hints': hintCount - 1});
+            _fetchHintCount();
+          } else {
+            feedbackMessage = 'Hint maxed out';
+          }
+        });
       } else {
-        feedbackMessage = 'Hint maxed out';
+        setState(() {
+          feedbackMessage = 'No hints left';
+        });
       }
-    });
+    }
   }
 
   void _showCompletionDialog() {
@@ -384,15 +415,39 @@ class _QuestionModeModelWidgetState extends State<QuestionModeModelWidget> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Center(
-                    child: Text(
-                      feedbackMessage,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: feedbackMessage == 'Try Again!'
-                            ? Colors.red
-                            : Colors.green,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          feedbackMessage,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: feedbackMessage == 'Try Again!'
+                                ? Colors.red
+                                : Colors.green,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.lightbulb,
+                              color: Colors.black,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              '$hintCount',
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
