@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/infolder%20page/flashcard%20widgets/add_flashcard_page.dart';
@@ -61,50 +62,28 @@ class _InFolderMainState extends State<InFolderMain>
     });
   }
 
-  Future<void> _startQuiz() async {
-    try {
-      final questionsSnapshot = await FirebaseFirestore.instance
-          .collection('folders')
-          .doc(widget.folderId)
-          .collection('questions')
-          .get();
+  Future<List<Map<String, String>>> getQuestions() async {
+    final questionsSnapshot = await FirebaseFirestore.instance
+        .collection('folders')
+        .doc(widget.folderId)
+        .collection('questions')
+        .get();
 
-      final questions = questionsSnapshot.docs.map((doc) {
-        final data = doc.data();
-        return {
-          "id": doc.id,
-          "question": data['question']?.toString() ?? '',
-          "answer": data['answer']?.toString() ?? '',
-        };
-      }).toList();
+    final questions = questionsSnapshot.docs.map((doc) {
+      final data = doc.data();
+      return {
+        "id": doc.id,
+        "question": data['question']?.toString() ?? '',
+        "answer": data['answer']?.toString() ?? '',
+      };
+    }).toList();
 
-      if (questions.isNotEmpty) {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => PlayPage(
-              folderName: widget.folderName,
-              folderId: widget.folderId,
-              headerColor: widget.headerColor,
-              questions: questions,
-            ),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return Align(
-                child: SizeTransition(
-                  sizeFactor: animation,
-                  child: child,
-                ),
-              );
-            },
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load questions: $e')),
-      );
-    }
+    return questions;
+  }
+
+  Future<bool> hasQuestions() async {
+    final questions = await getQuestions();
+    return questions.isNotEmpty;
   }
 
   @override
@@ -126,13 +105,24 @@ class _InFolderMainState extends State<InFolderMain>
         backgroundColor: Colors.white,
         actions: [
           if (_selectedIndex == 0 && !widget.isImported)
-            IconButton(
-              icon: Icon(
-                _isEditing ? Icons.play_circle_fill_rounded : Icons.edit,
-                size: 40,
-                color: Colors.black,
-              ),
-              onPressed: _toggleEditMode,
+            FutureBuilder<bool>(
+              future: hasQuestions(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container();
+                } else if (snapshot.hasData && snapshot.data!) {
+                  return IconButton(
+                    icon: Icon(
+                      _isEditing ? Icons.play_circle_fill_rounded : Icons.edit,
+                      size: 40,
+                      color: Colors.black,
+                    ),
+                    onPressed: _toggleEditMode,
+                  );
+                } else {
+                  return Container();
+                }
+              },
             ),
         ],
       ),
@@ -147,32 +137,114 @@ class _InFolderMainState extends State<InFolderMain>
         ],
       ),
       floatingActionButton: _selectedIndex == 0
-          ? FloatingActionButton(
-              onPressed: _isEditing
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              AddFlashCardPage(folderId: widget.folderId),
+          ? FutureBuilder<bool>(
+              future: hasQuestions(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError ||
+                    !snapshot.hasData ||
+                    !snapshot.data!) {
+                  return OpenContainer(
+                    transitionType: ContainerTransitionType.fadeThrough,
+                    openBuilder: (BuildContext context, VoidCallback _) {
+                      return AddFlashCardPage(folderId: widget.folderId);
+                    },
+                    closedElevation: 6.0,
+                    closedShape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(28.0),
+                      ),
+                    ),
+                    closedColor: Colors.black,
+                    closedBuilder:
+                        (BuildContext context, VoidCallback openContainer) {
+                      return SizedBox(
+                        height: 56.0,
+                        width: 56.0,
+                        child: Center(
+                          child: AnimatedBuilder(
+                            animation: _wiggleController,
+                            builder: (context, child) {
+                              return Transform.rotate(
+                                angle: 0.2 * _wiggleController.value,
+                                child: const Icon(
+                                  Icons.add,
+                                  size: 45,
+                                  color: Colors.white,
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       );
-                    }
-                  : _startQuiz,
-              backgroundColor: Colors.black,
-              child: AnimatedBuilder(
-                animation: _wiggleController,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: 0.2 * _wiggleController.value,
-                    child: Icon(
-                      _isEditing ? Icons.add : Icons.play_arrow_rounded,
-                      size: 45,
-                      color: Colors.white,
-                    ),
+                    },
                   );
-                },
-              ),
+                } else {
+                  return OpenContainer(
+                    transitionType: ContainerTransitionType.fadeThrough,
+                    openBuilder: (BuildContext context, VoidCallback _) {
+                      if (_isEditing) {
+                        return AddFlashCardPage(folderId: widget.folderId);
+                      } else {
+                        return FutureBuilder<List<Map<String, String>>>(
+                          future: getQuestions(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator(
+                                color: Colors.black,
+                              ));
+                            } else if (snapshot.hasError || !snapshot.hasData) {
+                              return const Center(
+                                  child: Text('Error loading questions'));
+                            } else {
+                              return PlayPage(
+                                folderName: widget.folderName,
+                                folderId: widget.folderId,
+                                headerColor: widget.headerColor,
+                                questions: snapshot.data!,
+                              );
+                            }
+                          },
+                        );
+                      }
+                    },
+                    closedElevation: 6.0,
+                    closedShape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(28.0),
+                      ),
+                    ),
+                    closedColor: Colors.black,
+                    closedBuilder:
+                        (BuildContext context, VoidCallback openContainer) {
+                      return SizedBox(
+                        height: 56.0,
+                        width: 56.0,
+                        child: Center(
+                          child: AnimatedBuilder(
+                            animation: _wiggleController,
+                            builder: (context, child) {
+                              return Transform.rotate(
+                                angle: 0.2 * _wiggleController.value,
+                                child: Icon(
+                                  _isEditing
+                                      ? Icons.add
+                                      : Icons.play_arrow_rounded,
+                                  size: 45,
+                                  color: Colors.white,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
             )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

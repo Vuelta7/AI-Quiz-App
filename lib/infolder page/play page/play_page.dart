@@ -44,7 +44,7 @@ class _PlayPageState extends State<PlayPage> {
   List<String> negativeFeedback = [
     "Try Again!",
     "Oops, not quite!",
-    "Incorrect, give it another shot!",
+    "give it another shot!",
     "Almost there!"
   ];
   late Stopwatch _stopwatch;
