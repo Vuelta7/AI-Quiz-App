@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:learn_n/home%20page/dashboard%20page/streak.dart';
 import 'package:learn_n/home%20page/home%20page%20util/home_page_appbar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -19,7 +20,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     Widget body;
     if (_selectedOption == 0) {
-      body = _buildAnalytics();
+      body = const StreakPage();
     } else if (_selectedOption == 1) {
       body = _buildShop();
     } else {
@@ -198,33 +199,9 @@ class _DashboardState extends State<Dashboard> {
                   : null,
               child: const Text('Change App Color (500 points)'),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: currencyPoints >= 500
-                  ? () {
-                      // Implement correct sound change functionality
-                    }
-                  : null,
-              child: const Text('Change Correct Sound (500 points)'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: currencyPoints >= 500
-                  ? () {
-                      // Implement wrong sound change functionality
-                    }
-                  : null,
-              child: const Text('Change Wrong Sound (500 points)'),
-            ),
           ],
         );
       },
-    );
-  }
-
-  Widget _buildAnalytics() {
-    return const Center(
-      child: Text('dipa nagagawa'),
     );
   }
 }

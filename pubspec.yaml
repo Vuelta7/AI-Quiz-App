@@ -23,6 +23,7 @@ dependencies:
   audioplayers: ^6.1.0
   permission_handler: ^11.3.1
   intl: ^0.20.1
+  lottie: ^3.3.1
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +43,14 @@ flutter:
     - assets/logo_icon.png
     - assets/wrong_sf.mp3
     - assets/correct_sf.mp3
+    - assets/rank1.json
+    - assets/rank2.json
+    - assets/rank3.json
+    - assets/rank4.json
+    - assets/streakpet1.json
+    - assets/streakpet2.json
+    - assets/streakpet3.json
+   
 
 flutter_icons:
   android: true
