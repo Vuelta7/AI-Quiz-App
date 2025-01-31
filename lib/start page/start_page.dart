@@ -3,13 +3,21 @@ import 'package:learn_n/start%20page/auth_page.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_utils.dart';
 
-class StartScreen extends StatelessWidget {
-  const StartScreen({super.key});
+class StartPage extends StatelessWidget {
+  const StartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),

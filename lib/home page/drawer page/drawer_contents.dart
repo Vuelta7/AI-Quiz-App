@@ -91,7 +91,7 @@ class DrawerContent extends StatelessWidget {
             print('userID deleted');
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const StartScreen()),
+              MaterialPageRoute(builder: (context) => const StartPage()),
             );
           },
         ),

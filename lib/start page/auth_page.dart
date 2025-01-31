@@ -160,7 +160,7 @@ class _AuthScreenState extends State<AuthScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const StartScreen(),
+                builder: (context) => const StartPage(),
               ),
             );
           },

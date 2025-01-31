@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/home_main.dart';
+import 'package:learn_n/start%20page/introduction/liquid_swipe.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_utils.dart';
-import 'package:learn_n/start%20page/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -49,8 +49,6 @@ class SplashScreenState extends State<SplashScreen>
   Future<void> _checkAuthState() async {
     if (!mounted) return;
 
-    print("Checking Firebase Authentication State...");
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
 
@@ -62,7 +60,7 @@ class SplashScreenState extends State<SplashScreen>
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const StartScreen()),
+        MaterialPageRoute(builder: (context) => const LiquidSwipeIntro()),
       );
     }
   }
