@@ -20,7 +20,9 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     Widget body;
     if (_selectedOption == 0) {
-      body = const StreakPage();
+      body = StreakPage(
+        userId: widget.userId,
+      );
     } else if (_selectedOption == 1) {
       body = _buildShop();
     } else {
@@ -41,7 +43,7 @@ class _DashboardState extends State<Dashboard> {
               Expanded(child: _buildOptionButton('Rank', 2)),
             ],
           ),
-          Expanded(child: body),
+          body,
         ],
       ),
     );

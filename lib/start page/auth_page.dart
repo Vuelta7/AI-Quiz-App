@@ -86,6 +86,7 @@ class _AuthScreenState extends State<AuthScreen> {
       'currencypoints': 0,
       'rankpoints': 0,
       'hints': 0,
+      'heatmap': {},
     });
 
     // Save user ID to SharedPreferences

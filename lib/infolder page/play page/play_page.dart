@@ -230,6 +230,7 @@ class _PlayPageState extends State<PlayPage> {
                   onPressed: () async {
                     await _addPointsToUser(5);
                     await _updateLeaderboard(timeSpent);
+                    await _updateHeatmapData();
                     _restartQuiz();
                     Navigator.pop(context);
                   },
@@ -249,6 +250,7 @@ class _PlayPageState extends State<PlayPage> {
                   onPressed: () async {
                     await _addPointsToUser(5);
                     await _updateLeaderboard(timeSpent);
+                    await _updateHeatmapData();
                     _finishQuiz();
                     Navigator.pop(context);
                   },
@@ -322,6 +324,25 @@ class _PlayPageState extends State<PlayPage> {
           'timeSpent': timeSpent,
         });
       }
+    }
+  }
+
+  Future<void> _updateHeatmapData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    if (userId != null) {
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      final userSnapshot = await userDoc.get();
+      final heatmapData = userSnapshot.data()?['heatmap'] ?? {};
+
+      final today = DateTime.now();
+      final todayKey = '${today.year}-${today.month}-${today.day}';
+      final playCount = (heatmapData[todayKey] ?? 0) + 1;
+
+      heatmapData[todayKey] = playCount;
+
+      await userDoc.update({'heatmap': heatmapData});
     }
   }
 

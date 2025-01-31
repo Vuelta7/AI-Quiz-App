@@ -25,13 +25,11 @@ void main() async {
 }
 
 //Mighty Creation of Uriel
-//fix
+// TODO:
 // add a notification permission handler
 // Fullscreen for DnD and stopping students from distraction (Can manually turn off and on)
 // UX redesign
 // enhance the UX of the Answering experience
 // points to change the UI color
-// points to change the background music
 // text regocnition
 // qr code scanner to get folder
-// put the edit button in flashcard in other place
