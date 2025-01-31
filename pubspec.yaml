@@ -24,6 +24,9 @@ dependencies:
   permission_handler: ^11.3.1
   intl: ^0.20.1
   lottie: ^3.3.1
+  animations: ^2.0.11
+  
+  
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +53,10 @@ flutter:
     - assets/streakpet1.json
     - assets/streakpet2.json
     - assets/streakpet3.json
+    - assets/makequiz.json
+    - assets/leaderboard.json
+    - assets/digitalizequiz.json
+    - assets/folders.json
    
 
 flutter_icons:

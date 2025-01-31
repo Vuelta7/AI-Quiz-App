@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/infolder%20page/flashcard%20widgets/flashcard_model.dart';
+import 'package:lottie/lottie.dart';
 
 class FlashcardsPage extends StatelessWidget {
   final String folderId;
@@ -29,12 +30,20 @@ class FlashcardsPage extends StatelessWidget {
           );
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(40.0),
+          return Padding(
+            padding: const EdgeInsets.all(40.0),
             child: Center(
-              child: Text(
-                'No Flashcards here 🗂️\nCreate one by clicking the Add Flashcards.',
-                textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/makequiz.json',
+                  ),
+                  const Text(
+                    'No Flashcards here 🗂️\nCreate one by clicking the Add Flashcards.',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           );

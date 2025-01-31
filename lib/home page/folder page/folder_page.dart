@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/folder%20page/folder_model.dart';
 import 'package:learn_n/home%20page/home%20page%20util/home_page_appbar.dart';
 import 'package:learn_n/home%20page/home%20page%20util/home_page_utils.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FolderPage extends StatefulWidget {
@@ -122,12 +123,17 @@ class _FolderPageState extends State<FolderPage> {
                 });
 
                 if (_folders.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.all(40.0),
+                  return Padding(
+                    padding: const EdgeInsets.all(40.0),
                     child: Center(
-                      child: Text(
-                        'No Folder here 🗂️\nCreate one by clicking the Add Folder ➕.',
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        children: [
+                          Lottie.asset('assets/folders.json'),
+                          const Text(
+                            'No Folder here 🗂️\nCreate one by clicking the Add Folder ➕.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
                   );
