@@ -69,8 +69,7 @@ class _DoNotDisturbPageState extends State<DoNotDisturbPage> {
                 await Future.delayed(const Duration(milliseconds: 50));
                 if (!_notifPolicyAccess) {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: const Text(
-                          'Notification Policy Access not granted')));
+                      content: Text('Notification Policy Access not granted')));
                   return;
                 }
                 if (_isDndEnabled) {

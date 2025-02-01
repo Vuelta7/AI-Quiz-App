@@ -60,8 +60,7 @@ flutter:
     - assets/leaderboard.json
     - assets/digitalizequiz.json
     - assets/folders.json
-
-
+    - assets/notification.mp3
 
 flutter_icons:
   android: true
