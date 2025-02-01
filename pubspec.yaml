@@ -27,7 +27,7 @@ dependencies:
   animations: ^2.0.11
   liquid_swipe: ^3.1.0
   flutter_heatmap_calendar: ^1.0.5
-  
+  do_not_disturb: ^1.0.3
   
 
 dev_dependencies:
@@ -37,6 +37,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.1
 
 flutter:
+
   fonts:
     - family: PressStart2P
       fonts:
@@ -59,7 +60,8 @@ flutter:
     - assets/leaderboard.json
     - assets/digitalizequiz.json
     - assets/folders.json
-   
+
+
 
 flutter_icons:
   android: true

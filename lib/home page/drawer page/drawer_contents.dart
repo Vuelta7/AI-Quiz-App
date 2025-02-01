@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/home%20page/drawer%20page/dnd_page.dart';
 import 'package:learn_n/start%20page/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -76,6 +77,18 @@ class DrawerContent extends StatelessWidget {
                 title: const Text('Feedback and Question'),
                 onTap: () {
                   _showDialog(context, 'Feedback and Question');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.do_not_disturb_alt_rounded),
+                title: const Text('Do not Disturb Settings'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DoNotDisturbPage(),
+                    ),
+                  );
                 },
               ),
             ],
