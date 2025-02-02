@@ -43,7 +43,7 @@ class _DashboardState extends State<Dashboard> {
               Expanded(child: _buildOptionButton('Rank', 2)),
             ],
           ),
-          body,
+          Expanded(child: body),
         ],
       ),
     );

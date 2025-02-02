@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:learn_n/start%20page/introduction/master_intro_page.dart';
-import 'package:learn_n/start%20page/start_page.dart';
+import 'package:learn_n/start%20page/introduction/start_page.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 
 class LiquidSwipeIntro extends StatefulWidget {
@@ -42,6 +42,7 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
       text2: 'Learn N is a quiz app that helps you learn new things',
       text3: 'Let\'s get started',
     ),
+    const StartPage(),
   ];
 
   @override
@@ -83,12 +84,14 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
           LiquidSwipe(
             pages: pages,
             positionSlideIcon: 0.8,
-            slideIconWidget: const Icon(Icons.arrow_back_ios),
+            slideIconWidget: page == pages.length - 1
+                ? null
+                : const Icon(Icons.arrow_back_ios),
             onPageChangeCallback: pageChangeCallback,
             waveType: WaveType.liquidReveal,
             liquidController: liquidController,
             fullTransitionValue: 500,
-            enableSideReveal: true,
+            enableSideReveal: false,
             preferDragFromRevealedArea: true,
             ignoreUserGestureWhileAnimating: true,
           ),
@@ -110,53 +113,48 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: const EdgeInsets.all(25),
-              child: TextButton(
-                onPressed: () {
-                  liquidController.animateToPage(
-                      page: pages.length - 1, duration: 700);
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.white.withValues(alpha: 0.1),
-                  foregroundColor: Colors.black,
-                ),
-                child: const Text(
-                  'Skip',
-                ),
-              ),
+              child: page == pages.length - 1
+                  ? const SizedBox.shrink()
+                  : TextButton(
+                      onPressed: () {
+                        liquidController.animateToPage(
+                            page: pages.length - 1, duration: 700);
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                        foregroundColor: Colors.black,
+                      ),
+                      child: const Text(
+                        'Skip',
+                      ),
+                    ),
             ),
           ),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
               padding: const EdgeInsets.all(25),
-              child: TextButton(
-                onPressed: () {
-                  liquidController.animateToPage(
-                    page: liquidController.currentPage + 1 > pages.length - 1
-                        ? 0
-                        : liquidController.currentPage + 1,
-                  );
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.white.withValues(alpha: 0.1),
-                  foregroundColor: Colors.black,
-                ),
-                child: const Text(
-                  'next',
-                ),
-              ),
+              child: page == pages.length - 1
+                  ? const SizedBox.shrink()
+                  : TextButton(
+                      onPressed: () {
+                        liquidController.animateToPage(
+                          page: liquidController.currentPage + 1 >
+                                  pages.length - 1
+                              ? 0
+                              : liquidController.currentPage + 1,
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                        foregroundColor: Colors.black,
+                      ),
+                      child: const Text(
+                        'next',
+                      ),
+                    ),
             ),
           ),
-          // Todo: Add a function to go to start page
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const StartPage()),
-              );
-            },
-            child: const Text('TODO'),
-          )
         ],
       ),
     );

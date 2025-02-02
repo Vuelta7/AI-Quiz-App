@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:learn_n/home%20page/notes%20page/notification_init.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -58,6 +59,11 @@ class _NotificationPageState extends State<NotificationPage>
       }
       timeText = prefs.getString('timeText');
       isNotificationSet = prefs.getBool('isNotificationSet') ?? false;
+      final hour = prefs.getInt('selectedTimeHour');
+      final minute = prefs.getInt('selectedTimeMinute');
+      if (hour != null && minute != null) {
+        selectedTime = TimeOfDay(hour: hour, minute: minute);
+      }
     });
 
     if (isNotificationSet) {
@@ -73,6 +79,13 @@ class _NotificationPageState extends State<NotificationPage>
     await prefs.setInt('selectedInterval', selectedInterval ?? 0);
     await prefs.setString('timeText', timeText ?? '');
     await prefs.setBool('isNotificationSet', isNotificationSet);
+    if (selectedTime != null) {
+      await prefs.setInt('selectedTimeHour', selectedTime!.hour);
+      await prefs.setInt('selectedTimeMinute', selectedTime!.minute);
+    } else {
+      await prefs.remove('selectedTimeHour');
+      await prefs.remove('selectedTimeMinute');
+    }
     if (_timer != null && _timer!.isActive) {
       final remainingTime = _timer!.tick;
       await prefs.setInt('remainingTime', remainingTime);
@@ -313,26 +326,12 @@ class _NotificationPageState extends State<NotificationPage>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 4,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 3,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: _buildTimeIntervalSelector(),
+            Lottie.asset(
+              'assets/notification.json',
+              width: 200,
+              height: 200,
             ),
+            _buildNotificationDetails(),
             const SizedBox(height: 20),
             Container(
               width: double.infinity,
@@ -367,79 +366,17 @@ class _NotificationPageState extends State<NotificationPage>
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
                   BoxShadow(
-                    color: Colors.black,
+                    color: Colors.grey,
                     blurRadius: 3,
                     offset: Offset(0, 2),
                   ),
                 ],
               ),
-              child: _buildNotificationDetails(),
+              child: _buildTimeIntervalSelector(),
             ),
           ],
         ),
       ),
     );
-  }
-}
-
-class NotificationService {
-  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  static const String customChannelId = 'custom_sound_channel_id';
-
-  static Future<void> init() async {
-    const androidSettings = AndroidInitializationSettings('logo');
-
-    const initializationSettings = InitializationSettings(
-      android: androidSettings,
-    );
-
-    try {
-      await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-      const customSoundChannel = AndroidNotificationChannel(
-        customChannelId,
-        'Custom Sound Notifications',
-        description: 'Channel for custom sound notifications',
-        importance: Importance.max,
-        sound: RawResourceAndroidNotificationSound('notification'),
-      );
-
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(customSoundChannel);
-
-      print("Notifications initialized successfully!");
-    } catch (e) {
-      print("Notification initialization error: $e");
-    }
-  }
-
-  static Future<void> showInstantNotification(String title, String body) async {
-    try {
-      const platformChannelSpecifics = NotificationDetails(
-        android: AndroidNotificationDetails(
-          customChannelId,
-          'Custom Sound Notifications',
-          importance: Importance.max,
-          priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound('notification'),
-        ),
-      );
-
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        title,
-        body,
-        platformChannelSpecifics,
-        payload: 'instant_notification',
-      );
-
-      print("Notification sent!");
-    } catch (e) {
-      print("Failed to show notification: $e");
-    }
   }
 }

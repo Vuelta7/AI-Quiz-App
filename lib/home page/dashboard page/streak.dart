@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
+import 'package:lottie/lottie.dart';
 
 class StreakPage extends StatelessWidget {
   final String userId;
@@ -30,37 +31,46 @@ class StreakPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<DateTime, int>>(
-      future: _fetchHeatmapData(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Error loading heatmap data'));
-        } else {
-          final heatmapData = snapshot.data;
-          return Container(
-            color: Colors.grey[800],
-            child: HeatMap(
-              datasets: heatmapData,
-              endDate: DateTime.now().add(
-                const Duration(days: 40),
-              ),
-              startDate: DateTime.now(),
-              size: 30.0,
-              colorMode: ColorMode.color,
-              showText: false,
-              scrollable: true,
-              colorsets: const {
-                1: Color.fromARGB(40, 2, 179, 8),
-                5: Color.fromARGB(80, 2, 179, 8),
-                10: Color.fromARGB(150, 2, 179, 8),
-                20: Color.fromARGB(250, 2, 179, 8),
-              },
-            ),
-          );
-        }
-      },
+    return Column(
+      children: [
+        Lottie.asset('assets/streakpet2.json', height: 200),
+        const Padding(
+          padding: EdgeInsets.all(16),
+          child: Text('Augy chan'),
+        ),
+        FutureBuilder<Map<DateTime, int>>(
+          future: _fetchHeatmapData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return const Center(child: Text('Error loading heatmap data'));
+            } else {
+              final heatmapData = snapshot.data;
+              return Container(
+                color: Colors.grey[800],
+                child: HeatMap(
+                  datasets: heatmapData,
+                  endDate: DateTime.now().add(
+                    const Duration(days: 40),
+                  ),
+                  size: 30.0,
+                  colorMode: ColorMode.color,
+                  showText: false,
+                  scrollable: true,
+                  colorsets: const {
+                    0: Color.fromARGB(0, 2, 179, 8),
+                    1: Color.fromARGB(40, 2, 179, 8),
+                    5: Color.fromARGB(80, 2, 179, 8),
+                    10: Color.fromARGB(150, 2, 179, 8),
+                    20: Color.fromARGB(250, 2, 179, 8),
+                  },
+                ),
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 }

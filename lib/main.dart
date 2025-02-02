@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:learn_n/components/firebase_options.dart';
 import 'package:learn_n/components/my_app.dart';
-import 'package:learn_n/home%20page/notification%20page/notification_body.dart';
+import 'package:learn_n/home%20page/notes%20page/notification_init.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,9 +27,7 @@ void main() async {
 //Mighty Creation of Uriel
 // TODO:
 // add a notification permission handler
-// Fullscreen for DnD and stopping students from distraction (Can manually turn off and on)
 // UX redesign
 // enhance the UX of the Answering experience
 // points to change the UI color
 // text regocnition
-// qr code scanner to get folder
