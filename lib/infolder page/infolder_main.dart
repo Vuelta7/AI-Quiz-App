@@ -143,30 +143,9 @@ class _InFolderMainState extends State<InFolderMain>
     return false;
   }
 
-  Color getShade(Color color, int shade) {
-    assert(shade >= 100 && shade <= 900 && shade % 100 == 0);
-    final int r = color.red;
-    final int g = color.green;
-    final int b = color.blue;
-    final double factor = (shade / 1000).clamp(0.0, 1.0);
-    return Color.fromRGBO(
-      (r * factor).toInt(),
-      (g * factor).toInt(),
-      (b * factor).toInt(),
-      1,
-    );
-  }
-
-  Color _getTextColorForBackground(Color backgroundColor) {
-    return backgroundColor.computeLuminance() > 0.5
-        ? Colors.black
-        : Colors.white;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final textColor =
-        _getTextColorForBackground(getShade(widget.headerColor, 500));
+    final textColor = Colors.white; // Manually specified color
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -180,7 +159,7 @@ class _InFolderMainState extends State<InFolderMain>
           icon: Icon(Icons.arrow_back_rounded, size: 30, color: textColor),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: getShade(widget.headerColor, 500),
+        backgroundColor: widget.headerColor, // Manually specified color
         actions: [
           if (_selectedIndex == 0 && !widget.isImported)
             FutureBuilder<bool>(
@@ -204,7 +183,8 @@ class _InFolderMainState extends State<InFolderMain>
             ),
         ],
       ),
-      backgroundColor: getShade(widget.headerColor, 300),
+      backgroundColor:
+          widget.headerColor.withOpacity(0.7), // Manually specified color
       body: NotificationListener<ScrollNotification>(
         onNotification: onScrollNotification,
         child: IndexedStack(
@@ -238,7 +218,8 @@ class _InFolderMainState extends State<InFolderMain>
                         Radius.circular(28.0),
                       ),
                     ),
-                    closedColor: getShade(widget.headerColor, 900),
+                    closedColor: widget.headerColor
+                        .withOpacity(0.9), // Manually specified color
                     closedBuilder:
                         (BuildContext context, VoidCallback openContainer) {
                       return SizedBox(
@@ -299,7 +280,8 @@ class _InFolderMainState extends State<InFolderMain>
                         Radius.circular(28.0),
                       ),
                     ),
-                    closedColor: getShade(widget.headerColor, 900),
+                    closedColor: widget.headerColor
+                        .withOpacity(0.9), // Manually specified color
                     closedBuilder:
                         (BuildContext context, VoidCallback openContainer) {
                       return SizedBox(
@@ -333,9 +315,7 @@ class _InFolderMainState extends State<InFolderMain>
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: 2,
         tabBuilder: (int index, bool isActive) {
-          final color = isActive
-              ? getShade(widget.headerColor, 900)
-              : getShade(widget.headerColor, 200);
+          final color = isActive ? Colors.white : Colors.black;
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -353,7 +333,7 @@ class _InFolderMainState extends State<InFolderMain>
           );
         },
         height: 70,
-        backgroundColor: getShade(widget.headerColor, 500),
+        backgroundColor: widget.headerColor, // Manually specified color
         activeIndex: _selectedIndex,
         splashColor: widget.headerColor,
         notchAndCornersAnimation: borderRadiusAnimation,

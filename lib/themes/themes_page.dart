@@ -1,19 +1,7 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-
-class ThemeNotifier extends ChangeNotifier {
-  ThemeData _themeData;
-
-  ThemeNotifier(this._themeData);
-
-  getTheme() => _themeData;
-
-  setTheme(Color color) {
-    _themeData = ThemeData(primaryColor: color);
-    notifyListeners();
-  }
-}
 
 class ThemesPage extends StatefulWidget {
   const ThemesPage({super.key});
@@ -77,9 +65,56 @@ class _ThemesPageState extends State<ThemesPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Use the provider to change the theme of the app
-                Provider.of<ThemeNotifier>(context, listen: false)
-                    .setTheme(selectedColor);
+                ThemeData systemColor = ThemeData(
+                  colorScheme: ColorScheme(
+                    brightness: Theme.of(context).brightness,
+                    primary: getShade(selectedColor, 500),
+                    onPrimary: _getTextColorForBackground(
+                        getShade(selectedColor, 500)),
+                    secondary: getShade(selectedColor, 200),
+                    onSecondary: _getTextColorForBackground(
+                        getShade(selectedColor, 200)),
+                    surface: getShade(selectedColor, 300),
+                    onSurface: _getTextColorForBackground(
+                        getShade(selectedColor, 300)),
+                    error: Colors.red,
+                    onError: Colors.white,
+                    tertiary: selectedColor,
+                    inversePrimary: getShade(selectedColor, 900),
+                  ),
+                  elevatedButtonTheme: ElevatedButtonThemeData(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      minimumSize: const Size(double.infinity, 60),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  inputDecorationTheme: InputDecorationTheme(
+                    contentPadding: const EdgeInsets.all(27),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Colors.black,
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  textSelectionTheme: TextSelectionThemeData(
+                    selectionColor: Colors.red[100],
+                    selectionHandleColor: Colors.black,
+                    cursorColor: Colors.black,
+                  ),
+                );
+                Provider.of<ThemeProvider>(context, listen: false)
+                    .updateTheme(systemColor);
               },
               child: const Text('Change Theme Color'),
             ),

@@ -1,3 +1,4 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/dashboard%20page/dashboard_main.dart';
 import 'package:learn_n/home%20page/drawer%20page/drawer_contents.dart';
@@ -15,15 +16,49 @@ class HomeMain extends StatefulWidget {
   _HomeMainState createState() => _HomeMainState();
 }
 
-class _HomeMainState extends State<HomeMain> {
+class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isDisposed = false;
 
   int _selectedIndex = 2;
 
+  late AnimationController _borderRadiusAnimationController;
+  late Animation<double> borderRadiusAnimation;
+  late CurvedAnimation borderRadiusCurve;
+  late AnimationController _hideBottomBarAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _borderRadiusAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    borderRadiusCurve = CurvedAnimation(
+      parent: _borderRadiusAnimationController,
+      curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+    );
+
+    borderRadiusAnimation = Tween<double>(begin: 0, end: 1).animate(
+      borderRadiusCurve,
+    );
+
+    _hideBottomBarAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    Future.delayed(
+      const Duration(milliseconds: 100),
+      () => _borderRadiusAnimationController.forward(),
+    );
+  }
+
   @override
   void dispose() {
     _isDisposed = true;
+    _borderRadiusAnimationController.dispose();
+    _hideBottomBarAnimationController.dispose();
     super.dispose();
   }
 
@@ -78,33 +113,53 @@ class _HomeMainState extends State<HomeMain> {
               ),
             )
           : null,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
+      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+        itemCount: 5,
+        tabBuilder: (int index, bool isActive) {
+          final color = isActive ? Colors.black : Colors.grey;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                index == 0
+                    ? Icons.menu_rounded
+                    : index == 1
+                        ? Icons.analytics_outlined
+                        : index == 2
+                            ? Icons.folder
+                            : index == 3
+                                ? Icons.video_library
+                                : Icons.notifications,
+                size: 45,
+                color: color,
+              ),
+              Text(
+                index == 0
+                    ? 'Menu'
+                    : index == 1
+                        ? 'Dashboard'
+                        : index == 2
+                            ? 'Folders'
+                            : index == 3
+                                ? 'Reels'
+                                : 'Notifications',
+                style: TextStyle(color: color, fontSize: 12),
+              )
+            ],
+          );
+        },
+        height: 70,
+        activeIndex: _selectedIndex,
+        splashColor: Colors.black,
+        notchAndCornersAnimation: borderRadiusAnimation,
+        splashSpeedInMilliseconds: 100,
+        notchSmoothness: NotchSmoothness.defaultEdge,
+        gapLocation: GapLocation.none,
+        leftCornerRadius: 32,
+        rightCornerRadius: 32,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_rounded, size: 50, color: Colors.black),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics_outlined, size: 50, color: Colors.black),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.folder, size: 50, color: Colors.black),
-            label: 'Folders',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.video_library, size: 50, color: Colors.black),
-            label: 'Reels',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications, size: 50, color: Colors.black),
-            label: 'Notifications',
-          ),
-        ],
+        hideAnimationController: _hideBottomBarAnimationController,
       ),
     );
   }
