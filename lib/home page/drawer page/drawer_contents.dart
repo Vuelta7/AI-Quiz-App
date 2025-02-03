@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/drawer%20page/dnd_page.dart';
 import 'package:learn_n/start%20page/introduction/start_page.dart';
+import 'package:learn_n/themes/themes_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerContent extends StatelessWidget {
@@ -91,6 +92,18 @@ class DrawerContent extends StatelessWidget {
                   );
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.color_lens),
+                title: const Text('Themes'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ThemesPage(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -108,6 +121,7 @@ class DrawerContent extends StatelessWidget {
             );
           },
         ),
+        //add a ThemesPage button here
       ],
     );
   }

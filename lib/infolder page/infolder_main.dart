@@ -1,6 +1,8 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:learn_n/infolder%20page/flashcard%20widgets/add_flashcard_page.dart';
 import 'package:learn_n/infolder%20page/infolder%20page/flashcards_page.dart';
 import 'package:learn_n/infolder%20page/infolder%20page/leaderboards_page.dart';
@@ -29,6 +31,13 @@ class _InFolderMainState extends State<InFolderMain>
   int _selectedIndex = 0;
   bool _isEditing = false;
   late AnimationController _wiggleController;
+  late AnimationController _fabAnimationController;
+  late AnimationController _borderRadiusAnimationController;
+  late Animation<double> fabAnimation;
+  late Animation<double> borderRadiusAnimation;
+  late CurvedAnimation fabCurve;
+  late CurvedAnimation borderRadiusCurve;
+  late AnimationController _hideBottomBarAnimationController;
 
   @override
   void initState() {
@@ -37,18 +46,47 @@ class _InFolderMainState extends State<InFolderMain>
       duration: const Duration(milliseconds: 500),
       vsync: this,
     )..repeat(reverse: true);
+    _fabAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _borderRadiusAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    fabCurve = CurvedAnimation(
+      parent: _fabAnimationController,
+      curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+    );
+    borderRadiusCurve = CurvedAnimation(
+      parent: _borderRadiusAnimationController,
+      curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+    );
+
+    fabAnimation = Tween<double>(begin: 0, end: 1).animate(fabCurve);
+    borderRadiusAnimation = Tween<double>(begin: 0, end: 1).animate(
+      borderRadiusCurve,
+    );
+
+    _hideBottomBarAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    Future.delayed(
+      const Duration(seconds: 1),
+      () => _fabAnimationController.forward(),
+    );
+    Future.delayed(
+      const Duration(milliseconds: 100),
+      () => _borderRadiusAnimationController.forward(),
+    );
   }
 
   @override
   void dispose() {
     _wiggleController.dispose();
     super.dispose();
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   void _toggleEditMode() {
@@ -86,23 +124,63 @@ class _InFolderMainState extends State<InFolderMain>
     return questions.isNotEmpty;
   }
 
+  bool onScrollNotification(ScrollNotification notification) {
+    if (notification is UserScrollNotification &&
+        notification.metrics.axis == Axis.vertical) {
+      switch (notification.direction) {
+        case ScrollDirection.forward:
+          _hideBottomBarAnimationController.reverse();
+          _fabAnimationController.forward(from: 0);
+          break;
+        case ScrollDirection.reverse:
+          _hideBottomBarAnimationController.forward();
+          _fabAnimationController.reverse(from: 1);
+          break;
+        case ScrollDirection.idle:
+          break;
+      }
+    }
+    return false;
+  }
+
+  Color getShade(Color color, int shade) {
+    assert(shade >= 100 && shade <= 900 && shade % 100 == 0);
+    final int r = color.red;
+    final int g = color.green;
+    final int b = color.blue;
+    final double factor = (shade / 1000).clamp(0.0, 1.0);
+    return Color.fromRGBO(
+      (r * factor).toInt(),
+      (g * factor).toInt(),
+      (b * factor).toInt(),
+      1,
+    );
+  }
+
+  Color _getTextColorForBackground(Color backgroundColor) {
+    return backgroundColor.computeLuminance() > 0.5
+        ? Colors.black
+        : Colors.white;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final textColor =
+        _getTextColorForBackground(getShade(widget.headerColor, 500));
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.folderName,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: textColor,
             fontFamily: 'PressStart2P',
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded,
-              size: 30, color: Colors.black),
+          icon: Icon(Icons.arrow_back_rounded, size: 30, color: textColor),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: getShade(widget.headerColor, 500),
         actions: [
           if (_selectedIndex == 0 && !widget.isImported)
             FutureBuilder<bool>(
@@ -115,7 +193,7 @@ class _InFolderMainState extends State<InFolderMain>
                     icon: Icon(
                       _isEditing ? Icons.play_circle_fill_rounded : Icons.edit,
                       size: 40,
-                      color: Colors.black,
+                      color: textColor,
                     ),
                     onPressed: _toggleEditMode,
                   );
@@ -126,15 +204,19 @@ class _InFolderMainState extends State<InFolderMain>
             ),
         ],
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          FlashcardsPage(
-            folderId: widget.folderId,
-            isEditing: _isEditing,
-          ),
-          LeaderboardPage(folderId: widget.folderId),
-        ],
+      backgroundColor: getShade(widget.headerColor, 300),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: onScrollNotification,
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            FlashcardsPage(
+              folderId: widget.folderId,
+              isEditing: _isEditing,
+            ),
+            LeaderboardPage(folderId: widget.folderId),
+          ],
+        ),
       ),
       floatingActionButton: _selectedIndex == 0
           ? FutureBuilder<bool>(
@@ -156,7 +238,7 @@ class _InFolderMainState extends State<InFolderMain>
                         Radius.circular(28.0),
                       ),
                     ),
-                    closedColor: Colors.black,
+                    closedColor: getShade(widget.headerColor, 900),
                     closedBuilder:
                         (BuildContext context, VoidCallback openContainer) {
                       return SizedBox(
@@ -217,7 +299,7 @@ class _InFolderMainState extends State<InFolderMain>
                         Radius.circular(28.0),
                       ),
                     ),
-                    closedColor: Colors.black,
+                    closedColor: getShade(widget.headerColor, 900),
                     closedBuilder:
                         (BuildContext context, VoidCallback openContainer) {
                       return SizedBox(
@@ -248,23 +330,40 @@ class _InFolderMainState extends State<InFolderMain>
             )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: false,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.question_answer_rounded, size: 50),
-            label: 'Questions',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.leaderboard, size: 50),
-            label: 'Leaderboard',
-          ),
-        ],
+      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+        itemCount: 2,
+        tabBuilder: (int index, bool isActive) {
+          final color = isActive
+              ? getShade(widget.headerColor, 900)
+              : getShade(widget.headerColor, 200);
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                index == 0 ? Icons.question_answer_rounded : Icons.leaderboard,
+                size: 45,
+                color: color,
+              ),
+              Text(
+                index == 0 ? 'Questions' : 'Leaderboard',
+                style: TextStyle(color: color, fontSize: 12),
+              )
+            ],
+          );
+        },
+        height: 70,
+        backgroundColor: getShade(widget.headerColor, 500),
+        activeIndex: _selectedIndex,
+        splashColor: widget.headerColor,
+        notchAndCornersAnimation: borderRadiusAnimation,
+        splashSpeedInMilliseconds: 100,
+        notchSmoothness: NotchSmoothness.defaultEdge,
+        gapLocation: GapLocation.center,
+        leftCornerRadius: 32,
+        rightCornerRadius: 32,
+        onTap: (index) => setState(() => _selectedIndex = index),
+        hideAnimationController: _hideBottomBarAnimationController,
       ),
     );
   }
