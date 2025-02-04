@@ -171,28 +171,6 @@ class _EditFolderPageState extends State<EditFolderPage> {
                     });
                   }
                 },
-                onDelete: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  try {
-                    await deleteFolderFromDb();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Folder deleted successfully!'),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error: $e')),
-                    );
-                  } finally {
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  }
-                },
                 isImported: widget.isImported,
                 onImport: () async {
                   setState(() {

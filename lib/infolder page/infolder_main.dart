@@ -145,21 +145,22 @@ class _InFolderMainState extends State<InFolderMain>
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Colors.white; // Manually specified color
+    const textColor = Colors.white;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.folderName,
-          style: TextStyle(
+          style: const TextStyle(
             color: textColor,
             fontFamily: 'PressStart2P',
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded, size: 30, color: textColor),
+          icon:
+              const Icon(Icons.arrow_back_rounded, size: 30, color: textColor),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: widget.headerColor, // Manually specified color
+        backgroundColor: widget.headerColor,
         actions: [
           if (_selectedIndex == 0 && !widget.isImported)
             FutureBuilder<bool>(

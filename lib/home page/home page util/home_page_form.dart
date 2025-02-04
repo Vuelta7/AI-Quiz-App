@@ -10,7 +10,6 @@ Widget buildFolderForm({
   required Color selectedColor,
   required Function(Color) onColorChanged,
   required Function() onSave,
-  required Function() onDelete,
   required Function(String) onChanged,
   bool isImported = false,
   TextEditingController? folderIdController,
@@ -19,7 +18,6 @@ Widget buildFolderForm({
   void Function(String)? onFieldSubmitted,
   FocusNode? descriptionFocusNode,
 }) {
-  selectedColor = selectedColor;
   return Column(
     children: [
       const SizedBox(height: 10),
@@ -67,42 +65,24 @@ Widget buildFolderForm({
             ),
           ),
         ),
-        if (!isAddScreen) ...[
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: isLoading || !isFormValid ? null : onDelete,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isFormValid ? Colors.red : Colors.grey,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-            child: const Text(
-              'Delete Folder',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ],
       ] else ...[
-        const Text(
-          'This folder is imported. Only the creator can edit this folder.',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.red,
+        TextFormField(
+          controller: folderIdController,
+          decoration: const InputDecoration(
+            hintText: 'Folder ID',
           ),
-          textAlign: TextAlign.center,
+          onChanged: onChanged,
         ),
         const SizedBox(height: 10),
         ElevatedButton(
-          onPressed: isLoading ? null : onImport,
+          onPressed: isLoading || !isFormValid ? null : onImport,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
+            backgroundColor: isFormValid ? Colors.black : Colors.grey,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
           child: const Text(
-            'Remove Folder',
+            'IMPORT',
             style: TextStyle(
               fontSize: 16,
             ),

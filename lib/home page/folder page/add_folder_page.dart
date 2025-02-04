@@ -165,100 +165,123 @@ class _AddFolderPageState extends State<AddFolderPage> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    child: buildFolderForm(
-                      context: context,
-                      isLoading: _isLoading,
-                      isFormValid: isFormValid,
-                      folderNameController: folderNameController,
-                      descriptionController: descriptionController,
-                      selectedColor: _selectedColor,
-                      onColorChanged: (Color color) {
-                        setState(() {
-                          _selectedColor = color;
-                        });
-                      },
-                      onSave: () async {
-                        if (folderNameController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please enter a folder name.'),
-                            ),
-                          );
-                          return;
-                        }
-                        if (descriptionController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please enter a description.'),
-                            ),
-                          );
-                          return;
-                        }
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        try {
-                          await uploadFolderToDb();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Folder added successfully!'),
-                            ),
-                          );
-                          Navigator.pop(context);
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: $e')),
-                          );
-                        } finally {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      },
-                      onDelete: () async {},
-                      isImported: !_isAddingFolder,
-                      folderIdController: folderIdController,
-                      onImport: () async {
-                        if (folderIdController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please enter a folder ID.'),
-                            ),
-                          );
-                          return;
-                        }
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        try {
-                          await importFolder();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Folder imported successfully!'),
-                            ),
-                          );
-                          Navigator.pop(context);
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: $e')),
-                          );
-                        } finally {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      },
-                      isAddScreen: true,
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context)
-                            .requestFocus(descriptionFocusNode);
-                        setState(() {});
-                      },
-                      descriptionFocusNode: descriptionFocusNode,
-                      onChanged: (value) {
-                        setState(() {}); // Update form validation state
-                      },
-                    ),
+                    child: _isAddingFolder
+                        ? buildFolderForm(
+                            context: context,
+                            isLoading: _isLoading,
+                            isFormValid: isFormValid,
+                            folderNameController: folderNameController,
+                            descriptionController: descriptionController,
+                            selectedColor: _selectedColor,
+                            onColorChanged: (Color color) {
+                              setState(() {
+                                _selectedColor = color;
+                              });
+                            },
+                            onSave: () async {
+                              if (folderNameController.text.trim().isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Please enter a folder name.'),
+                                  ),
+                                );
+                                return;
+                              }
+                              if (descriptionController.text.trim().isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Please enter a description.'),
+                                  ),
+                                );
+                                return;
+                              }
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              try {
+                                await uploadFolderToDb();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Folder added successfully!'),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error: $e')),
+                                );
+                              } finally {
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
+                            },
+                            isImported: false,
+                            folderIdController: folderIdController,
+                            onImport: () async {},
+                            isAddScreen: true,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context)
+                                  .requestFocus(descriptionFocusNode);
+                              setState(() {});
+                            },
+                            descriptionFocusNode: descriptionFocusNode,
+                            onChanged: (value) {
+                              setState(() {}); // Update form validation state
+                            },
+                          )
+                        : buildFolderForm(
+                            context: context,
+                            isLoading: _isLoading,
+                            isFormValid:
+                                folderIdController.text.trim().isNotEmpty,
+                            folderNameController: folderNameController,
+                            descriptionController: descriptionController,
+                            selectedColor: _selectedColor,
+                            onColorChanged: (Color color) {},
+                            onSave: () async {},
+                            isImported: true,
+                            folderIdController: folderIdController,
+                            onImport: () async {
+                              if (folderIdController.text.trim().isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Please enter a folder ID.'),
+                                  ),
+                                );
+                                return;
+                              }
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              try {
+                                await importFolder();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Folder imported successfully!'),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error: $e')),
+                                );
+                              } finally {
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
+                            },
+                            isAddScreen: false,
+                            onFieldSubmitted: (_) {},
+                            descriptionFocusNode: descriptionFocusNode,
+                            onChanged: (value) {
+                              setState(() {}); // Update form validation state
+                            },
+                          ),
                   ),
                 ),
               ),

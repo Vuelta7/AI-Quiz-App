@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:learn_n/home%20page/folder%20page/edit_folder_page.dart';
@@ -113,6 +114,15 @@ class FolderModel extends StatelessWidget {
                           child: const Text('Edit Folder'),
                           onPressed: () {
                             Navigator.pop(context);
+                            if (isImported) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      'This folder is imported. Only the creator can edit it.'),
+                                ),
+                              );
+                              return;
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -124,6 +134,60 @@ class FolderModel extends StatelessWidget {
                                   isImported: isImported,
                                 ),
                               ),
+                            );
+                          },
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: MenuItemButton(
+                          leadingIcon: Icon(Icons.delete,
+                              color: _getTextColorForBackground(headerColor)),
+                          child: const Text('Delete Folder'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Confirm Deletion'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this folder?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        // Call the delete function here
+                                        try {
+                                          await FirebaseFirestore.instance
+                                              .collection("folders")
+                                              .doc(folderId)
+                                              .delete();
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Folder deleted successfully!'),
+                                            ),
+                                          );
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text('Error: $e')),
+                                          );
+                                        }
+                                      },
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
                         ),
