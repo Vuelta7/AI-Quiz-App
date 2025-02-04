@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/drawer%20page/dnd_page.dart';
-import 'package:learn_n/start%20page/introduction/start_page.dart';
+import 'package:learn_n/start%20page/introduction/liquid_swipe.dart';
 import 'package:learn_n/themes/themes_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -117,7 +117,7 @@ class DrawerContent extends StatelessWidget {
             print('userID deleted');
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const StartPage()),
+              MaterialPageRoute(builder: (context) => const LiquidSwipeIntro()),
             );
           },
         ),

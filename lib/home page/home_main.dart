@@ -1,14 +1,13 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/dashboard%20page/dashboard_main.dart';
 import 'package:learn_n/home%20page/drawer%20page/drawer_contents.dart';
 import 'package:learn_n/home%20page/folder%20page/add_folder_page.dart';
 import 'package:learn_n/home%20page/folder%20page/folder_page.dart';
-import 'package:learn_n/home%20page/home%20page%20util/home_page_utils.dart'; // Import the utility functions
 import 'package:learn_n/home%20page/notes%20page/notification_body.dart';
 import 'package:learn_n/home%20page/reels_page/reels_page.dart';
-import 'package:learn_n/themes/themes_page.dart';
 
 class HomeMain extends StatefulWidget {
   final String userId;
@@ -106,21 +105,20 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
     Widget body;
     if (_selectedIndex == 1) {
-      body = Dashboard(userId: widget.userId);
+      body = Dashboard(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 2) {
-      body = FolderPage(userId: widget.userId);
+      body = FolderPage(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 3) {
       body = ReelsPage(userId: widget.userId);
     } else if (_selectedIndex == 4) {
-      body = const NotificationPage();
+      body = NotificationPage(color: _selectedColor!,);
     } else {
-      body = FolderPage(userId: widget.userId);
+      body = FolderPage(userId: widget.userId, color: _selectedColor!);
     }
 
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
-      backgroundColor: ColorUtils.getShade(primaryColor, 800),
       drawer: const Drawer(
         child: DrawerContent(),
       ),
@@ -145,7 +143,11 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: 5,
         tabBuilder: (int index, bool isActive) {
-          final color = isActive ? Colors.black : Colors.grey;
+          final isLightColor = primaryColor.computeLuminance() > 0.5;
+          final activeColor = isLightColor ? Colors.black : Colors.white;
+          final inactiveColor = isLightColor ? Colors.white : Colors.black;
+          final color = isActive ? activeColor : inactiveColor;
+
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +180,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
             ],
           );
         },
-        backgroundColor: ColorUtils.getShade(primaryColor, 800),
+        backgroundColor: getShade(primaryColor, 800),
         height: 70,
         activeIndex: _selectedIndex,
         splashColor: Colors.black,

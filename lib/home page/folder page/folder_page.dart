@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/folder%20page/folder_model.dart';
 import 'package:learn_n/home%20page/home%20page%20util/home_page_appbar.dart';
-import 'package:learn_n/home%20page/home%20page%20util/home_page_utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FolderPage extends StatefulWidget {
   final String userId;
+  final Color color;
 
-  const FolderPage({super.key, required this.userId});
+  const FolderPage({super.key, required this.userId, required this.color});
 
   @override
   _FolderPageState createState() => _FolderPageState();

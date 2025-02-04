@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:learn_n/components/firebase_options.dart';
 import 'package:learn_n/components/my_app.dart';
 import 'package:learn_n/home%20page/notes%20page/notification_init.dart';
-import 'package:learn_n/providers/theme_provider.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,12 +27,7 @@ void main() async {
   ]);
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-      ],
-      child: const MyApp(),
-    ),
+    const MyApp(),
   );
 }
 

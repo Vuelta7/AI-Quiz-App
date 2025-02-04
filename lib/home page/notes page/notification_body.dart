@@ -7,7 +7,8 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({super.key});
+  final Color color;
+  const NotificationPage({super.key, required this.color});
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();

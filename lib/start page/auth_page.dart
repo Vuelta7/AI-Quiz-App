@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/home%20page/home%20page%20util/home_page_utils.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/home_main.dart';
 import 'package:learn_n/start%20page/introduction/liquid_swipe.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';

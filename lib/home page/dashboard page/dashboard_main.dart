@@ -6,8 +6,9 @@ import 'package:learn_n/home%20page/home%20page%20util/home_page_appbar.dart';
 
 class Dashboard extends StatefulWidget {
   final String userId;
+  final Color color;
 
-  const Dashboard({super.key, required this.userId});
+  const Dashboard({super.key, required this.userId, required this.color});
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -59,11 +60,11 @@ class _DashboardState extends State<Dashboard> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         decoration: BoxDecoration(
-          color: _selectedOption == index ? Colors.black : Colors.white,
+          color: _selectedOption == index ? widget.color : Colors.white,
           border: Border(
             bottom: BorderSide(
               color:
-                  _selectedOption == index ? Colors.black : Colors.transparent,
+                  _selectedOption == index ? widget.color : Colors.transparent,
               width: 3,
             ),
           ),

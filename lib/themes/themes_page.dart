@@ -1,23 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/home_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class ColorUtils {
-  static Color getShade(Color color, int shade) {
-    assert(shade >= 100 && shade <= 900 && shade % 100 == 0);
-    final int r = color.red;
-    final int g = color.green;
-    final int b = color.blue;
-    final double factor = (shade / 1000).clamp(0.0, 1.0);
-    return Color.fromRGBO(
-      (r * factor).toInt(),
-      (g * factor).toInt(),
-      (b * factor).toInt(),
-      1,
-    );
-  }
-}
 
 class ThemesPage extends StatefulWidget {
   const ThemesPage({super.key});
@@ -29,16 +15,21 @@ class ThemesPage extends StatefulWidget {
 class _ThemesPageState extends State<ThemesPage> {
   Color selectedColor = Colors.blue;
 
+  Future<void> updateUserColor(String userId, String colorHex) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update({'selectedColor': colorHex});
+    } catch (e) {
+      print('Error updating user color: $e');
+    }
+  }
+
   void onColorChanged(Color color) {
     setState(() {
       selectedColor = color;
     });
-  }
-
-  Color _getTextColorForBackground(Color backgroundColor) {
-    return backgroundColor.computeLuminance() > 0.5
-        ? Colors.black
-        : Colors.white;
   }
 
   @override
@@ -68,7 +59,9 @@ class _ThemesPageState extends State<ThemesPage> {
             ElevatedButton(
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                String userId = prefs.getString('user_id') ?? 'default_user_id';
+                String userId = prefs.getString('userId') ?? '';
+                String colorHex = rgbToHex(selectedColor);
+                await updateUserColor(userId, colorHex);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -85,14 +78,14 @@ class _ThemesPageState extends State<ThemesPage> {
               child: ListView(
                 children: List.generate(9, (index) {
                   final shade = (index + 1) * 100;
-                  final color = ColorUtils.getShade(selectedColor, shade);
+                  final color = getShade(selectedColor, shade);
                   return ListTile(
                     leading: CircleAvatar(
                       backgroundColor: color,
                     ),
                     title: Text('Shade $shade'),
                     subtitle: Text(
-                      'Text color: ${_getTextColorForBackground(color) == Colors.black ? 'Black' : 'White'}',
+                      'Text color: ${getTextColorForBackground(color) == Colors.black ? 'Black' : 'White'}',
                     ),
                   );
                 }),

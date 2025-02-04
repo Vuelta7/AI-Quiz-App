@@ -14,3 +14,21 @@ String rgbToHex(Color color) {
 Color hexToColor(String hex) {
   return Color(int.parse(hex, radix: 16) + 0xFF000000);
 }
+
+Color getShade(Color color, int shade) {
+  assert(shade >= 100 && shade <= 900 && shade % 100 == 0);
+  final int r = color.red;
+  final int g = color.green;
+  final int b = color.blue;
+  final double factor = (shade / 1000).clamp(0.0, 1.0);
+  return Color.fromRGBO(
+    (r * factor).toInt(),
+    (g * factor).toInt(),
+    (b * factor).toInt(),
+    1,
+  );
+}
+
+Color getTextColorForBackground(Color backgroundColor) {
+  return backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+}
