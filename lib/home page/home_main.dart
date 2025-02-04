@@ -1,11 +1,14 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/dashboard%20page/dashboard_main.dart';
 import 'package:learn_n/home%20page/drawer%20page/drawer_contents.dart';
 import 'package:learn_n/home%20page/folder%20page/add_folder_page.dart';
 import 'package:learn_n/home%20page/folder%20page/folder_page.dart';
+import 'package:learn_n/home%20page/home%20page%20util/home_page_utils.dart'; // Import the utility functions
 import 'package:learn_n/home%20page/notes%20page/notification_body.dart';
 import 'package:learn_n/home%20page/reels_page/reels_page.dart';
+import 'package:learn_n/themes/themes_page.dart';
 
 class HomeMain extends StatefulWidget {
   final String userId;
@@ -19,13 +22,12 @@ class HomeMain extends StatefulWidget {
 class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isDisposed = false;
-
   int _selectedIndex = 2;
-
   late AnimationController _borderRadiusAnimationController;
   late Animation<double> borderRadiusAnimation;
   late CurvedAnimation borderRadiusCurve;
   late AnimationController _hideBottomBarAnimationController;
+  Color? _selectedColor;
 
   @override
   void initState() {
@@ -52,6 +54,27 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       const Duration(milliseconds: 100),
       () => _borderRadiusAnimationController.forward(),
     );
+
+    _fetchSelectedColor();
+  }
+
+  Future<void> _fetchSelectedColor() async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userId)
+        .get();
+
+    if (userDoc.exists) {
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      setState(() {
+        _selectedColor =
+            hexToColor(userData['selectedColor'] ?? rgbToHex(Colors.blue));
+      });
+    } else {
+      setState(() {
+        _selectedColor = Colors.blue;
+      });
+    }
   }
 
   @override
@@ -75,6 +98,12 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (_selectedColor == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final primaryColor = _selectedColor!;
+
     Widget body;
     if (_selectedIndex == 1) {
       body = Dashboard(userId: widget.userId);
@@ -91,7 +120,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
+      backgroundColor: ColorUtils.getShade(primaryColor, 800),
       drawer: const Drawer(
         child: DrawerContent(),
       ),
@@ -149,6 +178,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
             ],
           );
         },
+        backgroundColor: ColorUtils.getShade(primaryColor, 800),
         height: 70,
         activeIndex: _selectedIndex,
         splashColor: Colors.black,

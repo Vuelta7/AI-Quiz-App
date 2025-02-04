@@ -184,8 +184,7 @@ class _InFolderMainState extends State<InFolderMain>
             ),
         ],
       ),
-      backgroundColor:
-          widget.headerColor.withOpacity(0.7), // Manually specified color
+      backgroundColor: widget.headerColor.withOpacity(0.7),
       body: NotificationListener<ScrollNotification>(
         onNotification: onScrollNotification,
         child: IndexedStack(

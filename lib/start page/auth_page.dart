@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/home%20page/home%20page%20util/home_page_utils.dart';
 import 'package:learn_n/home%20page/home_main.dart';
 import 'package:learn_n/start%20page/introduction/liquid_swipe.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
@@ -87,6 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
       'rankpoints': 0,
       'hints': 0,
       'heatmap': {},
+      'selectedColor': rgbToHex(Colors.blue),
     });
 
     // Save user ID to SharedPreferences
@@ -97,7 +99,9 @@ class _AuthScreenState extends State<AuthScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => HomeMain(userId: firebaseUser.uid),
+        builder: (context) => HomeMain(
+          userId: firebaseUser.uid,
+        ), // Default color
       ),
     );
   }
@@ -117,6 +121,7 @@ class _AuthScreenState extends State<AuthScreen> {
       // User found, use the Firestore database ID
       final userDoc = querySnapshot.docs.first;
       final userId = userDoc.id;
+      userDoc.data();
 
       // Save user ID to SharedPreferences
       final prefs = await SharedPreferences.getInstance();
@@ -124,7 +129,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeMain(userId: userId)),
+        MaterialPageRoute(
+            builder: (context) => HomeMain(
+                  userId: userId,
+                )),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
