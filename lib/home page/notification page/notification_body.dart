@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:learn_n/home%20page/notes%20page/notification_init.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationPage extends StatefulWidget {
   final Color color;
@@ -17,11 +16,9 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage>
     with WidgetsBindingObserver {
   TimeOfDay? selectedTime;
-  Timer? _timer;
   String? timeText;
   bool isNotificationSet = false;
   bool _isDisposed = false;
-
   List<int> timeIntervals = [5, 10, 15, 20, 25, 30];
   int? selectedInterval;
 
@@ -37,21 +34,36 @@ class _NotificationPageState extends State<NotificationPage>
   void dispose() {
     _isDisposed = true;
     WidgetsBinding.instance.removeObserver(this);
-    _cancelNotification();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
-      _cancelNotification();
+    if (state == AppLifecycleState.resumed) {
+      _loadPreferences();
     }
   }
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    if (_isDisposed) return; // Check if the widget is disposed
+    if (_isDisposed) return;
+
+    // Check if a scheduled time was stored and if it has passed.
+    final int? scheduledEpoch = prefs.getInt('scheduledEpoch');
+    if (scheduledEpoch != null) {
+      DateTime scheduledTime =
+          DateTime.fromMillisecondsSinceEpoch(scheduledEpoch);
+      if (DateTime.now().isAfter(scheduledTime)) {
+        // Scheduled time has passed, so reset the notification state.
+        setState(() {
+          isNotificationSet = false;
+          timeText = "Please choose a time interval or select a time.";
+          selectedTime = null;
+        });
+        await prefs.remove('scheduledEpoch');
+      }
+    }
+
     setState(() {
       selectedInterval = prefs.getInt('selectedInterval');
       if (selectedInterval != null &&
@@ -66,13 +78,6 @@ class _NotificationPageState extends State<NotificationPage>
         selectedTime = TimeOfDay(hour: hour, minute: minute);
       }
     });
-
-    if (isNotificationSet) {
-      final int? remainingTime = prefs.getInt('remainingTime');
-      if (remainingTime != null && remainingTime > 0) {
-        _timer = Timer(Duration(seconds: remainingTime), _sendNotification);
-      }
-    }
   }
 
   Future<void> _savePreferences() async {
@@ -86,12 +91,6 @@ class _NotificationPageState extends State<NotificationPage>
     } else {
       await prefs.remove('selectedTimeHour');
       await prefs.remove('selectedTimeMinute');
-    }
-    if (_timer != null && _timer!.isActive) {
-      final remainingTime = _timer!.tick;
-      await prefs.setInt('remainingTime', remainingTime);
-    } else {
-      await prefs.remove('remainingTime');
     }
   }
 
@@ -127,9 +126,9 @@ class _NotificationPageState extends State<NotificationPage>
     }
   }
 
-  void _scheduleNotification(TimeOfDay time) {
+  void _scheduleNotification(TimeOfDay time) async {
     final now = DateTime.now();
-    final notificationTime = DateTime(
+    final scheduledDateTime = DateTime(
       now.year,
       now.month,
       now.day,
@@ -137,10 +136,21 @@ class _NotificationPageState extends State<NotificationPage>
       time.minute,
     );
 
-    final delay = notificationTime.difference(now).inSeconds;
+    if (scheduledDateTime.isAfter(now)) {
+      await NotificationService.scheduleNotification(
+        scheduledDateTime,
+        'Time to Study!',
+        'Keep pushing forward — your future self will thank you!',
+      );
 
-    if (delay > 0) {
-      _timer = Timer(Duration(seconds: delay), _sendNotification);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(
+          'scheduledEpoch', scheduledDateTime.millisecondsSinceEpoch);
+
+      setState(() {
+        timeText = "Notification set for ${time.format(context)}.";
+        isNotificationSet = true;
+      });
       _savePreferences();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -149,40 +159,39 @@ class _NotificationPageState extends State<NotificationPage>
     }
   }
 
-  void _sendNotification() {
-    NotificationService.showInstantNotification(
+  void _scheduleIntervalNotification(int interval) async {
+    final now = DateTime.now();
+    final scheduledDateTime = now.add(Duration(minutes: interval));
+
+    await NotificationService.scheduleNotification(
+      scheduledDateTime,
       'Time to Study!',
       'Keep pushing forward — your future self will thank you!',
     );
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(
+        'scheduledEpoch', scheduledDateTime.millisecondsSinceEpoch);
 
+    setState(() {
+      timeText = "Notification set for $interval minutes from now.";
+      isNotificationSet = true;
+    });
+    _savePreferences();
+  }
+
+  void _cancelNotification() async {
+    await NotificationService.cancelNotification();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('scheduledEpoch');
     setState(() {
       isNotificationSet = false;
       timeText = "Please choose a time interval or select a time.";
       selectedTime = null;
     });
     _savePreferences();
-  }
-
-  void _cancelNotification() {
-    if (_timer != null && _timer!.isActive) {
-      _timer!.cancel();
-      if (_isDisposed) return;
-      setState(() {
-        isNotificationSet = false;
-        timeText = "Please choose a time interval or select a time.";
-        selectedTime = null;
-      });
-      _savePreferences();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Notification cancelled.")),
-      );
-    } else {
-      if (_isDisposed) return;
-      setState(() {
-        timeText = "Please choose a time interval or select a time.";
-        isNotificationSet = false;
-      });
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Notification cancelled.")),
+    );
   }
 
   Widget _buildTimeIntervalSelector() {
@@ -251,22 +260,6 @@ class _NotificationPageState extends State<NotificationPage>
         ),
       ],
     );
-  }
-
-  void _scheduleIntervalNotification(int interval) {
-    final now = DateTime.now();
-    final notificationTime = now.add(Duration(minutes: interval));
-
-    final delay = notificationTime.difference(now).inSeconds;
-
-    if (delay > 0) {
-      _timer = Timer(Duration(seconds: delay), _sendNotification);
-      setState(() {
-        timeText = "Notification set for $interval minutes from now.";
-        isNotificationSet = true;
-      });
-      _savePreferences();
-    }
   }
 
   Widget _buildNotificationSettings() {
@@ -379,5 +372,64 @@ class _NotificationPageState extends State<NotificationPage>
         ),
       ),
     );
+  }
+}
+
+class NotificationService {
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  static const String customChannelId = 'custom_sound_channel_id';
+
+  static Future<void> init() async {
+    const androidSettings = AndroidInitializationSettings('logo');
+    const initializationSettings = InitializationSettings(
+      android: androidSettings,
+    );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        // Handle notification tap if needed.
+      },
+    );
+
+    const customSoundChannel = AndroidNotificationChannel(
+      customChannelId,
+      'Custom Sound Notifications',
+      description: 'Channel for custom sound notifications',
+      importance: Importance.max,
+      sound: RawResourceAndroidNotificationSound('notification'),
+    );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(customSoundChannel);
+  }
+
+  static Future<void> scheduleNotification(
+      DateTime scheduledTime, String title, String body) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          customChannelId,
+          'Custom Sound Notifications',
+          channelDescription: 'Channel for custom sound notifications',
+          importance: Importance.max,
+          priority: Priority.high,
+          sound: RawResourceAndroidNotificationSound('notification'),
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
+  }
+
+  static Future<void> cancelNotification() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 }

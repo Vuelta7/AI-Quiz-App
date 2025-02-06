@@ -6,7 +6,7 @@ import 'package:learn_n/home%20page/dashboard%20page/dashboard_main.dart';
 import 'package:learn_n/home%20page/drawer%20page/drawer_contents.dart';
 import 'package:learn_n/home%20page/folder%20page/add_folder_page.dart';
 import 'package:learn_n/home%20page/folder%20page/folder_page.dart';
-import 'package:learn_n/home%20page/notes%20page/notification_body.dart';
+import 'package:learn_n/home%20page/notification%20page/notification_body.dart';
 import 'package:learn_n/home%20page/reels_page/reels_page.dart';
 
 class HomeMain extends StatefulWidget {
@@ -111,7 +111,9 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     } else if (_selectedIndex == 3) {
       body = ReelsPage(userId: widget.userId);
     } else if (_selectedIndex == 4) {
-      body = NotificationPage(color: _selectedColor!,);
+      body = NotificationPage(
+        color: _selectedColor!,
+      );
     } else {
       body = FolderPage(userId: widget.userId, color: _selectedColor!);
     }

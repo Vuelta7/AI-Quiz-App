@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:learn_n/components/firebase_options.dart';
 import 'package:learn_n/components/my_app.dart';
-import 'package:learn_n/home%20page/notes%20page/notification_init.dart';
+import 'package:learn_n/home%20page/notification%20page/notification_body.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +12,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  tz.initializeTimeZones();
   await NotificationService.init();
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
