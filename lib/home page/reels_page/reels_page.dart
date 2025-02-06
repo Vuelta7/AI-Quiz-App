@@ -10,16 +10,6 @@ class ReelsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Reels',
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'PressStart2P',
-          ),
-        ),
-        automaticallyImplyLeading: false,
-      ),
       backgroundColor: Colors.black,
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('folders').snapshots(),

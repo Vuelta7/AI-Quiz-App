@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/folder%20page/folder_model.dart';
-import 'package:learn_n/home%20page/home%20page%20util/home_page_appbar.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -80,20 +79,51 @@ class _FolderPageState extends State<FolderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Folders',
-        automaticallyImplyLeading: false,
-      ),
+      backgroundColor: getShade(widget.color, 600),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 13),
-            child: TextField(
-              controller: _searchController,
+            padding: const EdgeInsets.fromLTRB(13, 10, 13, 0),
+            child: TextFormField(
               cursorColor: Colors.black,
-              decoration: const InputDecoration(
+              style: const TextStyle(
+                fontFamily: 'Arial',
+                color: Color.fromARGB(255, 0, 0, 0),
+                fontSize: 14,
+              ),
+              decoration: InputDecoration(
                 hintText: 'Search Folder',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(
+                  Icons.search,
+                ),
+                labelText: 'Seacrh folder',
+                labelStyle: const TextStyle(
+                  fontFamily: 'PressStart2P',
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
+                filled: true,
+                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    width: 2,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    width: 2,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    width: 3,
+                  ),
+                ),
               ),
             ),
           ),

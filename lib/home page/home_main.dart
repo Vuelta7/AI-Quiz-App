@@ -1,5 +1,4 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/dashboard%20page/dashboard_main.dart';
@@ -8,6 +7,7 @@ import 'package:learn_n/home%20page/folder%20page/add_folder_page.dart';
 import 'package:learn_n/home%20page/folder%20page/folder_page.dart';
 import 'package:learn_n/home%20page/notification%20page/notification_body.dart';
 import 'package:learn_n/home%20page/reels_page/reels_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeMain extends StatefulWidget {
   final String userId;
@@ -54,26 +54,15 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       () => _borderRadiusAnimationController.forward(),
     );
 
-    _fetchSelectedColor();
+    _loadSelectedColor();
   }
 
-  Future<void> _fetchSelectedColor() async {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.userId)
-        .get();
-
-    if (userDoc.exists) {
-      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
-      setState(() {
-        _selectedColor =
-            hexToColor(userData['selectedColor'] ?? rgbToHex(Colors.blue));
-      });
-    } else {
-      setState(() {
-        _selectedColor = Colors.blue;
-      });
-    }
+  Future<void> _loadSelectedColor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? colorHex = prefs.getString('selectedColor');
+    setState(() {
+      _selectedColor = colorHex != null ? hexToColor(colorHex) : Colors.blue;
+    });
   }
 
   @override
@@ -119,6 +108,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     }
 
     return Scaffold(
+      extendBody: true,
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       drawer: const Drawer(

@@ -121,11 +121,12 @@ class _AuthScreenState extends State<AuthScreen> {
       // User found, use the Firestore database ID
       final userDoc = querySnapshot.docs.first;
       final userId = userDoc.id;
-      userDoc.data();
+      final userData = userDoc.data();
 
-      // Save user ID to SharedPreferences
+      // Save user ID and selected color to SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userId', userId);
+      await prefs.setString('selectedColor', userData['selectedColor']);
 
       Navigator.pushReplacement(
         context,

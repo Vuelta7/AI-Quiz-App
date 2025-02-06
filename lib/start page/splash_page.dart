@@ -19,6 +19,7 @@ class SplashScreenState extends State<SplashScreen>
   late Animation<double> _progress;
   late Timer _dotTimer;
   String loadingText = 'Loading';
+  Color? selectedColor;
 
   @override
   void initState() {
@@ -44,6 +45,17 @@ class SplashScreenState extends State<SplashScreen>
     });
 
     Future.delayed(const Duration(seconds: 3), _checkAuthState);
+    _loadSelectedColor();
+  }
+
+  Future<void> _loadSelectedColor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? colorValue = prefs.getInt('selectedColor');
+    if (colorValue != null) {
+      setState(() {
+        selectedColor = Color(colorValue);
+      });
+    }
   }
 
   Future<void> _checkAuthState() async {
@@ -75,7 +87,7 @@ class SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: selectedColor ?? Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

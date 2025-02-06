@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -314,61 +315,64 @@ class _NotificationPageState extends State<NotificationPage>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Lottie.asset(
-              'assets/notification.json',
-              width: 200,
-              height: 200,
-            ),
-            _buildNotificationDetails(),
-            const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 4,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
+    return Scaffold(
+      backgroundColor: getShade(widget.color, 600),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                'assets/notification.json',
+                width: 200,
+                height: 200,
+              ),
+              _buildNotificationDetails(),
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: getShade(widget.color, 800),
+                  border: Border.all(
                     color: Colors.black,
-                    blurRadius: 3,
-                    offset: Offset(0, 2),
+                    width: 4,
                   ),
-                ],
-              ),
-              child: _buildNotificationSettings(),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 4,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 3,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 3,
-                    offset: Offset(0, 2),
-                  ),
-                ],
+                child: _buildNotificationSettings(),
               ),
-              child: _buildTimeIntervalSelector(),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: getShade(widget.color, 800),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 4,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 3,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: _buildTimeIntervalSelector(),
+              ),
+            ],
+          ),
         ),
       ),
     );

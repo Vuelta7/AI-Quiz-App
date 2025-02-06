@@ -21,6 +21,8 @@ class _ThemesPageState extends State<ThemesPage> {
           .collection('users')
           .doc(userId)
           .update({'selectedColor': colorHex});
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('selectedColor', colorHex);
     } catch (e) {
       print('Error updating user color: $e');
     }
