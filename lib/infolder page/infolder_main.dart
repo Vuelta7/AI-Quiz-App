@@ -147,6 +147,7 @@ class _InFolderMainState extends State<InFolderMain>
   Widget build(BuildContext context) {
     const textColor = Colors.white;
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Text(
           widget.folderName,

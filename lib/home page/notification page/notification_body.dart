@@ -49,30 +49,33 @@ class _NotificationPageState extends State<NotificationPage>
     final prefs = await SharedPreferences.getInstance();
     if (_isDisposed) return;
 
-    // Check if a scheduled time was stored and if it has passed.
     final int? scheduledEpoch = prefs.getInt('scheduledEpoch');
     if (scheduledEpoch != null) {
       DateTime scheduledTime =
           DateTime.fromMillisecondsSinceEpoch(scheduledEpoch);
       if (DateTime.now().isAfter(scheduledTime)) {
-        // Scheduled time has passed, so reset the notification state.
+        // Reset notification settings if the scheduled time has passed
         setState(() {
           isNotificationSet = false;
           timeText = "Please choose a time interval or select a time.";
           selectedTime = null;
         });
         await prefs.remove('scheduledEpoch');
+        await prefs.setBool('isNotificationSet', false);
       }
     }
 
+    // Load other preferences
     setState(() {
       selectedInterval = prefs.getInt('selectedInterval');
       if (selectedInterval != null &&
           !timeIntervals.contains(selectedInterval)) {
         selectedInterval = null;
       }
-      timeText = prefs.getString('timeText');
+      timeText ??=
+          "Please choose a time interval or select a time."; // Ensure default text is set
       isNotificationSet = prefs.getBool('isNotificationSet') ?? false;
+
       final hour = prefs.getInt('selectedTimeHour');
       final minute = prefs.getInt('selectedTimeMinute');
       if (hour != null && minute != null) {
