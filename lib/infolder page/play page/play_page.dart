@@ -51,6 +51,7 @@ class _PlayPageState extends State<PlayPage> {
   final FocusNode _focusNode = FocusNode();
   int hintCount = 0;
   bool isMultipleOptionMode = false;
+  Color selectedColor = Colors.white;
 
   @override
   void initState() {
@@ -75,6 +76,7 @@ class _PlayPageState extends State<PlayPage> {
     }
     _stopwatch = Stopwatch()..start();
     _fetchHintCount();
+    _loadSelectedColor();
     isMultipleOptionMode = widget.isMultipleOptionMode;
   }
 
@@ -89,6 +91,14 @@ class _PlayPageState extends State<PlayPage> {
         hintCount = userSnapshot.data()?['hints'] ?? 0;
       });
     }
+  }
+
+  Future<void> _loadSelectedColor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? colorValue = prefs.getInt('selectedColor');
+    setState(() {
+      selectedColor = Color(colorValue!);
+    });
   }
 
   @override
@@ -379,11 +389,11 @@ class _PlayPageState extends State<PlayPage> {
             ? Colors.grey
             : widget.headerColor;
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
-            onPressed: () => checkAnswer(answer),
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
+          onPressed: () => checkAnswer(answer),
+          child: SizedBox(
+            width: double.infinity,
             child: Text(
               answer,
               textAlign: TextAlign.center,
@@ -411,12 +421,12 @@ class _PlayPageState extends State<PlayPage> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: selectedColor,
         title: Text(
           widget.folderName,
           style: const TextStyle(
             color: Colors.black,
-            fontFamily: 'PressStart2P',
+            fontWeight: FontWeight.bold,
           ),
         ),
         leading: IconButton(
@@ -435,7 +445,7 @@ class _PlayPageState extends State<PlayPage> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: selectedColor,
       body: Column(
         children: [
           SizedBox(

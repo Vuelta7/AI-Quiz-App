@@ -40,8 +40,11 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
-// add a notification permission handler
-// UX redesign
 // enhance the UX of the Answering experience
-// points to change the UI color
-// text recognition
+// add a notification handler for the notification page
+// add a privacy policy terms and conditions page
+// create the dnd mechanics
+// introduction page
+// Not important:
+// WebPage fix
+// add automatic qna

@@ -17,7 +17,6 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage>
     with WidgetsBindingObserver {
   TimeOfDay? selectedTime;
-  String? timeText;
   bool isNotificationSet = false;
   bool _isDisposed = false;
   List<int> timeIntervals = [5, 10, 15, 20, 25, 30];
@@ -54,26 +53,22 @@ class _NotificationPageState extends State<NotificationPage>
       DateTime scheduledTime =
           DateTime.fromMillisecondsSinceEpoch(scheduledEpoch);
       if (DateTime.now().isAfter(scheduledTime)) {
-        // Reset notification settings if the scheduled time has passed
         setState(() {
           isNotificationSet = false;
-          timeText = "Please choose a time interval or select a time.";
           selectedTime = null;
+          selectedInterval = null;
         });
         await prefs.remove('scheduledEpoch');
         await prefs.setBool('isNotificationSet', false);
       }
     }
 
-    // Load other preferences
     setState(() {
       selectedInterval = prefs.getInt('selectedInterval');
       if (selectedInterval != null &&
           !timeIntervals.contains(selectedInterval)) {
         selectedInterval = null;
       }
-      timeText ??=
-          "Please choose a time interval or select a time."; // Ensure default text is set
       isNotificationSet = prefs.getBool('isNotificationSet') ?? false;
 
       final hour = prefs.getInt('selectedTimeHour');
@@ -87,7 +82,6 @@ class _NotificationPageState extends State<NotificationPage>
   Future<void> _savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('selectedInterval', selectedInterval ?? 0);
-    await prefs.setString('timeText', timeText ?? '');
     await prefs.setBool('isNotificationSet', isNotificationSet);
     if (selectedTime != null) {
       await prefs.setInt('selectedTimeHour', selectedTime!.hour);
@@ -117,8 +111,8 @@ class _NotificationPageState extends State<NotificationPage>
       if (notificationTime.isAfter(now)) {
         setState(() {
           selectedTime = picked;
-          timeText = "Time selected: ${picked.format(context)}";
           isNotificationSet = true;
+          selectedInterval = null;
         });
         _savePreferences();
         _scheduleNotification(picked);
@@ -152,7 +146,6 @@ class _NotificationPageState extends State<NotificationPage>
           'scheduledEpoch', scheduledDateTime.millisecondsSinceEpoch);
 
       setState(() {
-        timeText = "Notification set for ${time.format(context)}.";
         isNotificationSet = true;
       });
       _savePreferences();
@@ -177,8 +170,8 @@ class _NotificationPageState extends State<NotificationPage>
         'scheduledEpoch', scheduledDateTime.millisecondsSinceEpoch);
 
     setState(() {
-      timeText = "Notification set for $interval minutes from now.";
       isNotificationSet = true;
+      selectedTime = null;
     });
     _savePreferences();
   }
@@ -189,8 +182,8 @@ class _NotificationPageState extends State<NotificationPage>
     await prefs.remove('scheduledEpoch');
     setState(() {
       isNotificationSet = false;
-      timeText = "Please choose a time interval or select a time.";
       selectedTime = null;
+      selectedInterval = null;
     });
     _savePreferences();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -223,6 +216,7 @@ class _NotificationPageState extends State<NotificationPage>
             borderRadius: BorderRadius.circular(12),
           ),
           child: DropdownButtonFormField<int>(
+            dropdownColor: widget.color,
             value: selectedInterval,
             hint: const Text(
               "Select Interval",
@@ -254,6 +248,8 @@ class _NotificationPageState extends State<NotificationPage>
             onChanged: (int? newValue) {
               setState(() {
                 selectedInterval = newValue;
+                selectedTime = null;
+                isNotificationSet = true;
               });
               if (newValue != null) {
                 _scheduleIntervalNotification(newValue);
@@ -293,10 +289,23 @@ class _NotificationPageState extends State<NotificationPage>
   }
 
   Widget _buildNotificationDetails() {
+    String message;
+    if (isNotificationSet) {
+      if (selectedTime != null) {
+        message = "Notification set for ${selectedTime!.format(context)}";
+      } else if (selectedInterval != null) {
+        message = "Notification set for $selectedInterval minutes from now.";
+      } else {
+        message = "Please choose a time interval or select a time.";
+      }
+    } else {
+      message = "Please choose a time interval or select a time.";
+    }
+
     return Column(
       children: [
         Text(
-          timeText ?? "Please choose a time interval or select a time.",
+          message,
           style: const TextStyle(
             fontFamily: 'PressStart2P',
             fontSize: 14,
