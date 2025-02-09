@@ -121,7 +121,6 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
                             page: pages.length - 1, duration: 700);
                       },
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.1),
                         foregroundColor: Colors.black,
                       ),
                       child: const Text(
@@ -146,7 +145,6 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
                         );
                       },
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.1),
                         foregroundColor: Colors.black,
                       ),
                       child: const Text(

@@ -135,10 +135,8 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: 5,
         tabBuilder: (int index, bool isActive) {
-          final isLightColor = primaryColor.computeLuminance() > 0.5;
-          final activeColor = isLightColor ? Colors.black : Colors.white;
-          final inactiveColor = isLightColor ? Colors.white : Colors.black;
-          final color = isActive ? activeColor : inactiveColor;
+          const color = Colors.white;
+          final showLabel = isActive || _selectedIndex == index;
 
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -157,18 +155,19 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                 size: 45,
                 color: color,
               ),
-              Text(
-                index == 0
-                    ? 'Menu'
-                    : index == 1
-                        ? 'Dashboard'
-                        : index == 2
-                            ? 'Folders'
-                            : index == 3
-                                ? 'Reels'
-                                : 'Notifications',
-                style: TextStyle(color: color, fontSize: 12),
-              )
+              if (showLabel)
+                Text(
+                  index == 0
+                      ? 'Menu'
+                      : index == 1
+                          ? 'Dashboard'
+                          : index == 2
+                              ? 'Folders'
+                              : index == 3
+                                  ? 'Reels'
+                                  : 'Notifications',
+                  style: const TextStyle(color: color, fontSize: 12),
+                )
             ],
           );
         },

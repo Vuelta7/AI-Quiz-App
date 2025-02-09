@@ -23,6 +23,7 @@ class MasterIntroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(20),
       color: backgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -33,18 +34,17 @@ class MasterIntroPage extends StatelessWidget {
             'assets/digitalizequiz.json',
             fit: BoxFit.cover,
           ),
-          const Padding(
-            padding: EdgeInsets.all(24),
-          ),
           Column(
             children: [
               Text(
                 text1,
                 style: style,
               ),
-              Text(
-                text2,
-                style: style,
+              Center(
+                child: Text(
+                  text2,
+                  style: style,
+                ),
               ),
               Text(
                 text3,

@@ -88,39 +88,40 @@ class _FolderPageState extends State<FolderPage> {
               cursorColor: Colors.black,
               style: const TextStyle(
                 fontFamily: 'Arial',
-                color: Color.fromARGB(255, 0, 0, 0),
+                color: Colors.white,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
                 hintText: 'Search Folder',
                 prefixIcon: const Icon(
                   Icons.search,
+                  color: Colors.white,
                 ),
                 labelText: 'Seacrh folder',
                 labelStyle: const TextStyle(
                   fontFamily: 'PressStart2P',
-                  color: Color.fromARGB(255, 0, 0, 0),
+                  color: Colors.white,
                 ),
                 filled: true,
-                fillColor: const Color.fromARGB(255, 255, 255, 255),
+                fillColor: getShade(widget.color, 600),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 0, 0, 0),
+                    color: Colors.white,
                     width: 2,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 0, 0, 0),
+                    color: Colors.white,
                     width: 2,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 0, 0, 0),
+                    color: Colors.white,
                     width: 3,
                   ),
                 ),

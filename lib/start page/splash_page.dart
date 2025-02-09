@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/home_main.dart';
 import 'package:learn_n/start%20page/introduction/liquid_swipe.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_utils.dart';
@@ -19,7 +20,7 @@ class SplashScreenState extends State<SplashScreen>
   late Animation<double> _progress;
   late Timer _dotTimer;
   String loadingText = 'Loading';
-  Color? selectedColor;
+  Color? _selectedColor;
 
   @override
   void initState() {
@@ -50,12 +51,10 @@ class SplashScreenState extends State<SplashScreen>
 
   Future<void> _loadSelectedColor() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? colorValue = prefs.getInt('selectedColor');
-    if (colorValue != null) {
-      setState(() {
-        selectedColor = Color(colorValue);
-      });
-    }
+    String? colorHex = prefs.getString('selectedColor');
+    setState(() {
+      _selectedColor = colorHex != null ? hexToColor(colorHex) : Colors.blue;
+    });
   }
 
   Future<void> _checkAuthState() async {
@@ -87,7 +86,7 @@ class SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: selectedColor ?? Colors.white,
+      backgroundColor: _selectedColor ?? Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

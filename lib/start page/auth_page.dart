@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/home_main.dart';
-import 'package:learn_n/start%20page/introduction/liquid_swipe.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_textfield.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_utils.dart';
@@ -29,6 +28,7 @@ class _AuthScreenState extends State<AuthScreen> {
   String? errorMessage;
   bool isLoading = false;
   final FocusNode passwordFocusNode = FocusNode();
+  Color selectedColor = Colors.blue; // Default color
 
   @override
   void dispose() {
@@ -40,6 +40,16 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
+    _loadSelectedColor();
+  }
+
+  Future<void> _loadSelectedColor() async {
+    final prefs = await SharedPreferences.getInstance();
+    final colorString =
+        prefs.getString('selectedColor') ?? rgbToHex(Colors.blue);
+    setState(() {
+      selectedColor = hexToColor(colorString);
+    });
   }
 
   Future<void> authenticateUser() async {
@@ -161,95 +171,82 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LiquidSwipeIntro(),
-              ),
-            );
-          },
-        ),
-      ),
-      backgroundColor: Colors.white,
+      backgroundColor: selectedColor, // change this to the selected color
       resizeToAvoidBottomInset: true,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              buildLogo(),
-              buildTitleText('Learn-N'),
-              const SizedBox(height: 20),
-              Text(
-                widget.isLogin ? 'Login' : 'Register',
-                style: const TextStyle(
-                  fontFamily: 'PressStart2P',
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                buildLogo(),
+                buildTitleText('Learn-N'),
+                const SizedBox(height: 20),
+                Text(
+                  widget.isLogin ? 'Login' : 'Register',
+                  style: const TextStyle(
+                    fontFamily: 'PressStart2P',
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    buildRetroTextField('Username',
-                        controller: usernameController, validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Username is required';
-                      }
-                      return null;
-                    }, onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(passwordFocusNode);
-                    }),
-                    const SizedBox(height: 10),
-                    buildRetroTextField('Password',
-                        isPassword: true,
-                        controller: passwordController,
-                        focusNode: passwordFocusNode, validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Password is required';
-                      } else if (!widget.isLogin && value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    }, onFieldSubmitted: (_) {
-                      authenticateUser();
-                    }),
-                    const SizedBox(height: 20),
-                    if (errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          errorMessage!,
-                          style:
-                              const TextStyle(color: Colors.red, fontSize: 14),
+                const SizedBox(height: 20),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      buildRetroTextField('Username',
+                          controller: usernameController, validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Username is required';
+                        }
+                        return null;
+                      }, onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(passwordFocusNode);
+                      }),
+                      const SizedBox(height: 10),
+                      buildRetroTextField('Password',
+                          isPassword: true,
+                          controller: passwordController,
+                          focusNode: passwordFocusNode, validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password is required';
+                        } else if (!widget.isLogin && value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      }, onFieldSubmitted: (_) {
+                        authenticateUser();
+                      }),
+                      const SizedBox(height: 20),
+                      if (errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            errorMessage!,
+                            style: const TextStyle(
+                                color: Colors.red, fontSize: 14),
+                          ),
                         ),
+                      buildRetroButton(
+                        isLoading
+                            ? 'Loading...'
+                            : widget.isLogin
+                                ? 'Login'
+                                : 'Register',
+                        const Color.fromARGB(255, 0, 0, 0),
+                        isLoading ? null : authenticateUser,
                       ),
-                    buildRetroButton(
-                      isLoading
-                          ? 'Loading...'
-                          : widget.isLogin
-                              ? 'Login'
-                              : 'Register',
-                      const Color.fromARGB(255, 0, 0, 0),
-                      isLoading ? null : authenticateUser,
-                    ),
-                    const SizedBox(height: 20),
-                    buildGestureDetector(context, isLogin: widget.isLogin),
-                  ],
+                      const SizedBox(height: 20),
+                      buildGestureDetector(context, isLogin: widget.isLogin),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

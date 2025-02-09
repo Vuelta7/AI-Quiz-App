@@ -73,6 +73,7 @@ flutter:
     - assets/folders.json
     - assets/notification.json
     - assets/notification.mp3
+    - assets/logo.png
 
 flutter_icons:
   android: true
