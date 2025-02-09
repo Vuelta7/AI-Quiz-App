@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:learn_n/components/loading.dart';
 
 class LeaderboardPage extends StatelessWidget {
   final String folderId;
@@ -17,9 +19,7 @@ class LeaderboardPage extends StatelessWidget {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(color: Colors.black),
-          );
+          return const Loading();
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(
@@ -28,19 +28,77 @@ class LeaderboardPage extends StatelessWidget {
         }
 
         final leaderboardEntries = snapshot.data!.docs;
+        int userRank = -1;
+        for (int i = 0; i < leaderboardEntries.length; i++) {
+          if (leaderboardEntries[i].id == folderId) {
+            userRank = i + 1;
+            break;
+          }
+        }
 
         return ListView.builder(
-          itemCount: leaderboardEntries.length,
+          itemCount:
+              leaderboardEntries.length > 10 ? 11 : leaderboardEntries.length,
           itemBuilder: (context, index) {
-            final entry = leaderboardEntries[index];
-            final data = entry.data() as Map<String, dynamic>;
-            final username = data['username'] as String;
-            final timeSpent = data['timeSpent'] as int;
+            if (index < 10) {
+              final entry = leaderboardEntries[index];
+              final data = entry.data() as Map<String, dynamic>;
+              final username = data['username'] as String;
+              final timeSpent = data['timeSpent'] as int;
 
-            return ListTile(
-              title: Text(username),
-              subtitle: Text('Time Spent: ${timeSpent}s'),
-            );
+              return ListTile(
+                leading: Icon(
+                  index == 0
+                      ? Icons.looks_one
+                      : index == 1
+                          ? Icons.looks_two
+                          : index == 2
+                              ? Icons.looks_3
+                              : Icons.person,
+                  color: Colors.white,
+                ),
+                title: Text(
+                  username,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  'Time Spent: ${NumberFormat.decimalPattern().format(timeSpent)}s',
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            } else if (userRank > 10) {
+              final entry = leaderboardEntries[userRank - 1];
+              final data = entry.data() as Map<String, dynamic>;
+              final username = data['username'] as String;
+              final timeSpent = data['timeSpent'] as int;
+
+              return ListTile(
+                leading: const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
+                title: Text(username),
+                subtitle: Text(
+                  'Time Spent: ${NumberFormat.decimalPattern().format(timeSpent)}s',
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                trailing: Text(
+                  'Rank: $userRank',
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
           },
         );
       },

@@ -40,8 +40,8 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
+// textfield fix color
 // enhance the UX of the Answering experience
-// add a notification handler for the notification page
 // add a privacy policy terms and conditions page
 // create the dnd mechanics
 // introduction page

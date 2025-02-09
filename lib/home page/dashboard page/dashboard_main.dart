@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:learn_n/components/loading.dart';
 import 'package:learn_n/home%20page/dashboard%20page/streak.dart';
+import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
+import 'package:lottie/lottie.dart';
 
 class Dashboard extends StatefulWidget {
   final String userId;
@@ -22,6 +25,7 @@ class _DashboardState extends State<Dashboard> {
     if (_selectedOption == 0) {
       body = StreakPage(
         userId: widget.userId,
+        color: widget.color,
       );
     } else if (_selectedOption == 1) {
       body = _buildShop();
@@ -35,9 +39,9 @@ class _DashboardState extends State<Dashboard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(child: _buildOptionButton('Shop', 1)),
+              Expanded(child: _buildOptionButton('Store', 1)),
               Expanded(child: _buildOptionButton('Analytics', 0)),
-              Expanded(child: _buildOptionButton('Rank', 2)),
+              Expanded(child: _buildOptionButton('Ranking', 2)),
             ],
           ),
           Expanded(child: body),
@@ -79,128 +83,155 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildLeaderboards() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('users')
-          .orderBy('rankpoints', descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(color: Colors.black),
-          );
-        }
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Text('No users found.'),
-          );
-        }
-
-        final users = snapshot.data!.docs;
-        int userRank = -1;
-        for (int i = 0; i < users.length; i++) {
-          if (users[i].id == widget.userId) {
-            userRank = i + 1;
-            break;
+    return Container(
+      color: widget.color,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .orderBy('rankpoints', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Loading();
           }
-        }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text('No users found.'),
+            );
+          }
 
-        return ListView.builder(
-          itemCount: users.length > 10 ? 11 : users.length,
-          itemBuilder: (context, index) {
-            if (index < 10) {
-              final user = users[index];
-              return ListTile(
-                leading: Icon(
-                  index == 0
-                      ? Icons.looks_one
-                      : index == 1
-                          ? Icons.looks_two
-                          : index == 2
-                              ? Icons.looks_3
-                              : Icons.person,
-                  color: Colors.black,
-                ),
-                title: Text(user['username']),
-                subtitle: Text(
-                  'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
-                ),
-              );
-            } else if (userRank > 10) {
-              final user = users[userRank - 1];
-              return ListTile(
-                leading: const Icon(
-                  Icons.person,
-                  color: Colors.black,
-                ),
-                title: Text(user['username']),
-                subtitle: Text(
-                  'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
-                ),
-                trailing: Text('Rank: $userRank'),
-              );
-            } else {
-              return const SizedBox.shrink();
+          final users = snapshot.data!.docs;
+          int userRank = -1;
+          for (int i = 0; i < users.length; i++) {
+            if (users[i].id == widget.userId) {
+              userRank = i + 1;
+              break;
             }
-          },
-        );
-      },
+          }
+
+          return ListView.builder(
+            itemCount: users.length > 10 ? 11 : users.length,
+            itemBuilder: (context, index) {
+              if (index < 10) {
+                final user = users[index];
+                return ListTile(
+                  leading: Icon(
+                    index == 0
+                        ? Icons.looks_one
+                        : index == 1
+                            ? Icons.looks_two
+                            : index == 2
+                                ? Icons.looks_3
+                                : Icons.person,
+                    color: Colors.white,
+                  ),
+                  title: Text(
+                    user['username'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              } else if (userRank > 10) {
+                final user = users[userRank - 1];
+                return ListTile(
+                  leading: const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                  ),
+                  title: Text(
+                    user['username'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  trailing: Text(
+                    'Rank: $userRank',
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          );
+        },
+      ),
     );
   }
 
   Widget _buildShop() {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.userId)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(color: Colors.black),
-          );
-        }
-        if (!snapshot.hasData || !snapshot.data!.exists) {
-          return const Center(
-            child: Text('User data not found.'),
-          );
-        }
+    return Column(
+      children: [
+        Lottie.asset('assets/hints.json'),
+        StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(widget.userId)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Loading();
+            }
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return const Center(
+                child: Text('User data not found.'),
+              );
+            }
 
-        final userData = snapshot.data!.data() as Map<String, dynamic>;
-        final currencyPoints = userData['currencypoints'] ?? 0;
-        final hints = userData['hints'] ?? 0;
+            final userData = snapshot.data!.data() as Map<String, dynamic>;
+            final currencyPoints = userData['currencypoints'] ?? 0;
+            final hints = userData['hints'] ?? 0;
 
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Currency Points: $currencyPoints'),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: currencyPoints >= 50
-                  ? () async {
-                      await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(widget.userId)
-                          .update({
-                        'currencypoints': currencyPoints - 50,
-                        'hints': hints + 1,
-                      });
-                    }
-                  : null,
-              child: const Text('Buy Hint (50 points)'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: currencyPoints >= 500
-                  ? () {
-                      // Implement color change functionality
-                    }
-                  : null,
-              child: const Text('Change App Color (500 points)'),
-            ),
-          ],
-        );
-      },
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Currency Points: $currencyPoints',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 20),
+                  buildRetroButton(
+                    'Buy Hint (50 points)',
+                    widget.color,
+                    currencyPoints >= 50
+                        ? () async {
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(widget.userId)
+                                .update({
+                              'currencypoints': currencyPoints - 50,
+                              'hints': hints + 1,
+                            });
+                          }
+                        : null,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

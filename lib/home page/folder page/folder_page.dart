@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/color_utils.dart';
+import 'package:learn_n/components/loading.dart';
 import 'package:learn_n/home%20page/folder%20page/folder_model.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -134,9 +135,7 @@ class _FolderPageState extends State<FolderPage> {
                   FirebaseFirestore.instance.collection('folders').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: Colors.black),
-                  );
+                  return const Loading();
                 }
 
                 _folders =

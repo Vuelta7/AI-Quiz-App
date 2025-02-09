@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayPage extends StatefulWidget {
@@ -51,7 +52,7 @@ class _PlayPageState extends State<PlayPage> {
   final FocusNode _focusNode = FocusNode();
   int hintCount = 0;
   bool isMultipleOptionMode = false;
-  Color selectedColor = Colors.white;
+  Color? selectedColor;
 
   @override
   void initState() {
@@ -94,10 +95,11 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   Future<void> _loadSelectedColor() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? colorValue = prefs.getInt('selectedColor');
+    final prefs = await SharedPreferences.getInstance();
+    final colorString =
+        prefs.getString('selectedColor') ?? rgbToHex(Colors.blue);
     setState(() {
-      selectedColor = Color(colorValue!);
+      selectedColor = hexToColor(colorString);
     });
   }
 
@@ -387,7 +389,7 @@ class _PlayPageState extends State<PlayPage> {
       children: answers.map((answer) {
         Color buttonColor = attemptedAnswers.contains(answer)
             ? Colors.grey
-            : widget.headerColor;
+            : selectedColor ?? widget.headerColor;
 
         return ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
@@ -421,17 +423,19 @@ class _PlayPageState extends State<PlayPage> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: selectedColor,
+        backgroundColor: widget.headerColor,
         title: Text(
           widget.folderName,
           style: const TextStyle(
-            color: Colors.black,
+            fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontFamily: "PressStart2P",
           ),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded, size: 30),
-          color: Colors.black,
+          color: Colors.white,
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -440,20 +444,20 @@ class _PlayPageState extends State<PlayPage> {
               isMultipleOptionMode ? Icons.text_fields : Icons.list,
               size: 30,
             ),
-            color: Colors.black,
+            color: Colors.white,
             onPressed: _toggleMode,
           ),
         ],
       ),
-      backgroundColor: selectedColor,
+      backgroundColor: widget.headerColor,
       body: Column(
         children: [
           SizedBox(
             height: 10,
             child: LinearProgressIndicator(
               value: (currentIndex + 1) / widget.questions.length,
-              color: widget.headerColor,
-              backgroundColor: Colors.grey,
+              color: selectedColor ?? widget.headerColor,
+              backgroundColor: Colors.white,
             ),
           ),
           Flexible(
@@ -464,7 +468,7 @@ class _PlayPageState extends State<PlayPage> {
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Center(
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
                           feedbackMessage,
@@ -473,7 +477,7 @@ class _PlayPageState extends State<PlayPage> {
                             fontWeight: FontWeight.bold,
                             color: feedbackMessage == 'Try Again!'
                                 ? Colors.red
-                                : Colors.green,
+                                : Colors.white,
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -481,7 +485,7 @@ class _PlayPageState extends State<PlayPage> {
                           children: [
                             const Icon(
                               Icons.lightbulb,
-                              color: Colors.black,
+                              color: Colors.white,
                               size: 22,
                             ),
                             const SizedBox(width: 5),
@@ -490,7 +494,7 @@ class _PlayPageState extends State<PlayPage> {
                               style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -514,15 +518,15 @@ class _PlayPageState extends State<PlayPage> {
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: selectedColor,
                                   borderRadius: BorderRadius.circular(9),
                                   border: Border.all(
                                     width: 3,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.5),
+                                      color: Colors.white.withOpacity(0.5),
                                       offset: const Offset(0, 5),
                                       blurRadius: 10,
                                       spreadRadius: 0,
@@ -539,13 +543,13 @@ class _PlayPageState extends State<PlayPage> {
                                       style: const TextStyle(
                                         fontSize: 30,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
                                     const Divider(
                                       thickness: 3,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -554,7 +558,7 @@ class _PlayPageState extends State<PlayPage> {
                                         question['question']!,
                                         style: const TextStyle(
                                           fontSize: 20,
-                                          color: Colors.black,
+                                          color: Colors.white,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -606,22 +610,22 @@ class _PlayPageState extends State<PlayPage> {
                       fillColor: const Color.fromARGB(255, 255, 255, 255),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 0, 0, 0),
+                        borderSide: BorderSide(
+                          color: selectedColor ?? widget.headerColor,
                           width: 3,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Colors.black,
+                        borderSide: BorderSide(
+                          color: selectedColor ?? widget.headerColor,
                           width: 3,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Colors.black,
+                        borderSide: BorderSide(
+                          color: selectedColor ?? widget.headerColor,
                           width: 3,
                         ),
                       ),
@@ -633,14 +637,14 @@ class _PlayPageState extends State<PlayPage> {
                     IconButton(
                       icon: const Icon(Icons.arrow_back_rounded),
                       iconSize: 45,
-                      color: Colors.black,
+                      color: Colors.white,
                       onPressed: _previousQuestion,
                     ),
                     IconButton(
                       icon: const Icon(
                         Icons.lightbulb,
                         size: 30,
-                        color: Colors.black,
+                        color: Colors.white,
                       ),
                       onPressed: _showHint,
                     ),
@@ -648,7 +652,7 @@ class _PlayPageState extends State<PlayPage> {
                       icon: const Icon(
                         Icons.arrow_forward_rounded,
                         size: 45,
-                        color: Colors.black,
+                        color: Colors.white,
                       ),
                       onPressed: _nextQuestion,
                     ),

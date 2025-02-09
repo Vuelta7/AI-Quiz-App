@@ -75,6 +75,8 @@ flutter:
     - assets/notification.mp3
     - assets/logo.png
     - assets/tiktok.json
+    - assets/hints.json
+    - assets/effectbg.json
 
 flutter_icons:
   android: true

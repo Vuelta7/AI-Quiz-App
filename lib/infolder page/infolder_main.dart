@@ -154,6 +154,7 @@ class _InFolderMainState extends State<InFolderMain>
           style: const TextStyle(
             color: textColor,
             fontFamily: 'PressStart2P',
+            fontSize: 16,
           ),
         ),
         leading: IconButton(
