@@ -162,8 +162,13 @@ class _FolderPageState extends State<FolderPage> {
                         children: [
                           Lottie.asset('assets/folders.json'),
                           const Text(
-                            'No Folder here 🗂️\nCreate one by clicking the Add Folder ➕.',
+                            'No Folder here\nCreate one by clicking the Add Folder.',
                             textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),

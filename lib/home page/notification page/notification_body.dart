@@ -202,7 +202,7 @@ class _NotificationPageState extends State<NotificationPage>
             style: TextStyle(
               fontFamily: 'PressStart2P',
               fontSize: 16,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
@@ -210,7 +210,7 @@ class _NotificationPageState extends State<NotificationPage>
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.black,
+              color: Colors.white,
               width: 3,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -221,17 +221,17 @@ class _NotificationPageState extends State<NotificationPage>
             hint: const Text(
               "Select Interval",
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
             icon: const Icon(
               Icons.access_time,
-              color: Colors.black,
+              color: Colors.white,
             ),
             style: const TextStyle(
               fontFamily: 'PressStart2P',
               fontSize: 11,
-              color: Colors.black,
+              color: Colors.white,
             ),
             decoration: const InputDecoration(
               border: InputBorder.none,
@@ -273,14 +273,14 @@ class _NotificationPageState extends State<NotificationPage>
             style: TextStyle(
               fontFamily: 'PressStart2P',
               fontSize: 16,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
         Center(
           child: buildRetroButton(
             "Select Time",
-            Colors.black,
+            getShade(widget.color, 300),
             _pickTime,
           ),
         ),
@@ -309,7 +309,7 @@ class _NotificationPageState extends State<NotificationPage>
           style: const TextStyle(
             fontFamily: 'PressStart2P',
             fontSize: 14,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         if (isNotificationSet)
@@ -348,13 +348,13 @@ class _NotificationPageState extends State<NotificationPage>
                 decoration: BoxDecoration(
                   color: getShade(widget.color, 800),
                   border: Border.all(
-                    color: Colors.black,
+                    color: Colors.white,
                     width: 4,
                   ),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
                     BoxShadow(
-                      color: Colors.black,
+                      color: Colors.white,
                       blurRadius: 3,
                       offset: Offset(0, 2),
                     ),
@@ -369,13 +369,13 @@ class _NotificationPageState extends State<NotificationPage>
                 decoration: BoxDecoration(
                   color: getShade(widget.color, 800),
                   border: Border.all(
-                    color: Colors.black,
+                    color: Colors.white,
                     width: 4,
                   ),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
                     BoxShadow(
-                      color: Colors.black,
+                      color: Colors.white,
                       blurRadius: 3,
                       offset: Offset(0, 2),
                     ),

@@ -5,9 +5,15 @@ import 'package:learn_n/home%20page/drawer%20page/themes_page.dart';
 import 'package:learn_n/start%20page/introduction/liquid_swipe.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DrawerContent extends StatelessWidget {
-  const DrawerContent({super.key});
+class DrawerContent extends StatefulWidget {
+  const DrawerContent({super.key, required this.selectedColor});
+  final Color? selectedColor;
 
+  @override
+  State<DrawerContent> createState() => _DrawerContentState();
+}
+
+class _DrawerContentState extends State<DrawerContent> {
   void _showDialog(BuildContext context, String title) {
     showDialog(
       context: context,
@@ -33,8 +39,8 @@ class DrawerContent extends StatelessWidget {
     return Column(
       children: [
         DrawerHeader(
-          decoration: const BoxDecoration(
-            color: Colors.blue,
+          decoration: BoxDecoration(
+            color: widget.selectedColor,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

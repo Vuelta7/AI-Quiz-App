@@ -98,7 +98,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     } else if (_selectedIndex == 2) {
       body = FolderPage(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 3) {
-      body = ReelsPage(userId: widget.userId);
+      body = ReelsPage(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 4) {
       body = NotificationPage(
         color: _selectedColor!,
@@ -111,8 +111,10 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       extendBody: true,
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
-      drawer: const Drawer(
-        child: DrawerContent(),
+      drawer: Drawer(
+        child: DrawerContent(
+          selectedColor: _selectedColor,
+        ),
       ),
       body: body,
       floatingActionButton: _selectedIndex == 2 || _selectedIndex == 0
@@ -124,10 +126,10 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                       builder: (context) => const AddFolderPage()),
                 );
               },
-              backgroundColor: Colors.black,
-              child: const Icon(
+              backgroundColor: Colors.white,
+              child: Icon(
                 Icons.add_rounded,
-                color: Colors.white,
+                color: getShade(primaryColor, 800),
                 size: 30,
               ),
             )
@@ -165,7 +167,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                               ? 'Folders'
                               : index == 3
                                   ? 'Reels'
-                                  : 'Notifications',
+                                  : 'Notify',
                   style: const TextStyle(color: color, fontSize: 12),
                 )
             ],

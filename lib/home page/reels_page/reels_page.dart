@@ -1,11 +1,14 @@
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/start page/start page utils/start_page_button.dart';
+import 'package:lottie/lottie.dart';
 
 class ReelsPage extends StatelessWidget {
   final String userId;
+  final Color color;
 
-  const ReelsPage({super.key, required this.userId});
+  const ReelsPage({super.key, required this.userId, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +24,7 @@ class ReelsPage extends StatelessWidget {
             );
           }
           if (!folderSnapshot.hasData || folderSnapshot.data!.docs.isEmpty) {
-            print('No folders found.');
-            return const Center(
-              child: Text(
-                'No questions available.',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
+            return const EmptyFoldersWidget();
           }
 
           List<DocumentSnapshot> allFolders =
@@ -40,48 +37,32 @@ class ReelsPage extends StatelessWidget {
 
           List<Stream<QuerySnapshot>> questionStreams =
               allFolders.map((folderDoc) {
-            print('Fetching questions for folder: ${folderDoc.id}');
             return FirebaseFirestore.instance
                 .collection('folders')
                 .doc(folderDoc.id)
                 .collection('questions')
                 .snapshots();
           }).toList();
-          print('Total folders: ${questionStreams.length}');
 
           return StreamBuilder<List<QuerySnapshot>>(
             stream: StreamZip(questionStreams),
             builder: (context, questionSnapshot) {
               if (questionSnapshot.connectionState == ConnectionState.waiting) {
-                print('Fetching questions...');
                 return const Center(
                   child: CircularProgressIndicator(color: Colors.white),
                 );
               }
               if (!questionSnapshot.hasData || questionSnapshot.data!.isEmpty) {
-                print('No questions found.');
-                return const Center(
-                  child: Text(
-                    'No questions available.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
+                return const EmptyFoldersWidget();
               }
 
               List<DocumentSnapshot> allQuestions = [];
               for (var querySnapshot in questionSnapshot.data!) {
                 allQuestions.addAll(querySnapshot.docs);
               }
-              print('Total questions: ${allQuestions.length}');
 
               if (allQuestions.isEmpty) {
-                print('No questions available after merging.');
-                return const Center(
-                  child: Text(
-                    'No questions available.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
+                return const EmptyFoldersWidget(); // Use the new widget
               }
 
               return PageView.builder(
@@ -95,6 +76,7 @@ class ReelsPage extends StatelessWidget {
                   return QuestionCard(
                     question: questionData['question'],
                     answer: questionData['answer'],
+                    color: color, // Pass the color to QuestionCard
                   );
                 },
               );
@@ -106,13 +88,47 @@ class ReelsPage extends StatelessWidget {
   }
 }
 
+class EmptyFoldersWidget extends StatelessWidget {
+  const EmptyFoldersWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset(
+            'assets/tiktok.json',
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Turn your Tiktok scrolling time into learning time! Add your Questions to get started.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class QuestionCard extends StatefulWidget {
   final String question;
   final String answer;
+  final Color color;
 
   const QuestionCard({
     required this.question,
     required this.answer,
+    required this.color,
     super.key,
   });
 
@@ -122,47 +138,65 @@ class QuestionCard extends StatefulWidget {
 
 class _QuestionCardState extends State<QuestionCard> {
   bool _showAnswer = false;
-  bool _isDisposed = false; // Add this flag
+  bool _isDisposed = false;
 
   @override
   void dispose() {
-    _isDisposed = true; // Set the flag to true when disposing
+    _isDisposed = true;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
-      color: Colors.black,
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        border: Border.all(
+          color: Colors.white,
+          width: 4,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.white,
+            blurRadius: 3,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             widget.question,
-            style: const TextStyle(color: Colors.white, fontSize: 24),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
           if (_showAnswer)
             Text(
               widget.answer,
-              style: const TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(
+                color: widget.color,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              if (_isDisposed) return; // Check if the widget is disposed
+          buildRetroButton(
+            _showAnswer ? 'Hide Answer' : 'Show Answer',
+            widget.color,
+            () {
+              if (_isDisposed) return;
               setState(() {
                 _showAnswer = !_showAnswer;
               });
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-            ),
-            child: Text(_showAnswer ? 'Hide Answer' : 'Show Answer'),
           ),
         ],
       ),
