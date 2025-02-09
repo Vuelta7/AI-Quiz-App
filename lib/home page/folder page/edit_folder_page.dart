@@ -40,6 +40,17 @@ class _EditFolderPageState extends State<EditFolderPage> {
     descriptionController =
         TextEditingController(text: widget.initialDescription);
     _selectedColor = widget.initialColor;
+    _loadSelectedColor();
+  }
+
+  Future<void> _loadSelectedColor() async {
+    final prefs = await SharedPreferences.getInstance();
+    final colorString = prefs.getString('selectedColor');
+    if (colorString != null) {
+      setState(() {
+        _selectedColor = Color(int.parse(colorString));
+      });
+    }
   }
 
   @override
@@ -115,6 +126,7 @@ class _EditFolderPageState extends State<EditFolderPage> {
             color: Colors.black,
           ),
         ),
+        color: _selectedColor,
       ),
       body: Stack(
         children: [

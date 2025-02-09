@@ -1,5 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 
 Widget buildFolderForm({
   required BuildContext context,
@@ -51,19 +52,10 @@ Widget buildFolderForm({
           subheading: const Text('Select a different shade'),
         ),
         const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: isLoading || !isFormValid ? null : onSave,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isFormValid ? Colors.black : Colors.grey,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          ),
-          child: Text(
-            isAddScreen ? 'SUBMIT' : 'Save Changes',
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-          ),
+        buildRetroButton(
+          isAddScreen ? 'SUBMIT' : 'Save Changes',
+          isFormValid ? Colors.black : Colors.grey,
+          isLoading || !isFormValid ? null : onSave,
         ),
       ] else ...[
         TextFormField(
@@ -74,19 +66,10 @@ Widget buildFolderForm({
           onChanged: onChanged,
         ),
         const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: isLoading || !isFormValid ? null : onImport,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isFormValid ? Colors.black : Colors.grey,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          ),
-          child: const Text(
-            'IMPORT',
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
+        buildRetroButton(
+          'IMPORT',
+          isFormValid ? Colors.black : Colors.grey,
+          isLoading || !isFormValid ? null : onImport,
         ),
       ],
     ],

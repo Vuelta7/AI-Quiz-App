@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/color_utils.dart';
+import 'package:learn_n/components/loading.dart';
 import 'package:learn_n/home%20page/home%20page%20util/home_page_appbar.dart';
 import 'package:learn_n/home%20page/home%20page%20util/home_page_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +27,12 @@ class _AddFolderPageState extends State<AddFolderPage> {
   bool get isFormValid {
     return folderNameController.text.trim().isNotEmpty &&
         descriptionController.text.trim().isNotEmpty;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedColor();
   }
 
   @override
@@ -94,6 +101,15 @@ class _AddFolderPageState extends State<AddFolderPage> {
     }
   }
 
+  Future<void> _loadSelectedColor() async {
+    final prefs = await SharedPreferences.getInstance();
+    final colorString =
+        prefs.getString('selectedColor') ?? rgbToHex(Colors.blue);
+    setState(() {
+      _selectedColor = hexToColor(colorString);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,6 +124,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
             color: Colors.black,
           ),
         ),
+        color: _selectedColor,
       ),
       body: Stack(
         children: [
@@ -123,7 +140,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                         });
                       },
                       child: Container(
-                        color: _isAddingFolder ? Colors.black : Colors.white,
+                        color: _isAddingFolder ? _selectedColor : Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(
                           'Add Folder',
@@ -145,7 +162,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                         });
                       },
                       child: Container(
-                        color: !_isAddingFolder ? Colors.black : Colors.white,
+                        color: !_isAddingFolder ? _selectedColor : Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(
                           'Import Folder',
@@ -287,10 +304,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
               ),
             ],
           ),
-          if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(),
-            ),
+          if (_isLoading) const Loading(),
         ],
       ),
     );
