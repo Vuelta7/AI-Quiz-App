@@ -3,6 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart'; // Add this import
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -19,6 +20,7 @@ class _NotificationPageState extends State<NotificationPage>
   TimeOfDay? selectedTime;
   bool isNotificationSet = false;
   bool _isDisposed = false;
+  bool _notificationsAllowed = false; // Add this flag
   List<int> timeIntervals = [5, 10, 15, 20, 25, 30];
   int? selectedInterval;
 
@@ -27,7 +29,22 @@ class _NotificationPageState extends State<NotificationPage>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     NotificationService.init();
+    _checkNotificationPermission(); // Add this line
     _loadPreferences();
+  }
+
+  Future<void> _checkNotificationPermission() async {
+    final status = await Permission.notification.status;
+    setState(() {
+      _notificationsAllowed = status.isGranted;
+    });
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    final status = await Permission.notification.request();
+    setState(() {
+      _notificationsAllowed = status.isGranted;
+    });
   }
 
   @override
@@ -41,6 +58,7 @@ class _NotificationPageState extends State<NotificationPage>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _loadPreferences();
+      _checkNotificationPermission(); // Add this line
     }
   }
 
@@ -333,6 +351,7 @@ class _NotificationPageState extends State<NotificationPage>
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Lottie.asset(
@@ -340,49 +359,57 @@ class _NotificationPageState extends State<NotificationPage>
                 width: 200,
                 height: 200,
               ),
-              _buildNotificationDetails(),
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: getShade(widget.color, 800),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 4,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
+              if (!_notificationsAllowed)
+                buildRetroButton(
+                  "Allow Notifications",
+                  getShade(widget.color, 300),
+                  _requestNotificationPermission,
+                )
+              else ...[
+                _buildNotificationDetails(),
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: getShade(widget.color, 800),
+                    border: Border.all(
                       color: Colors.white,
-                      blurRadius: 3,
-                      offset: Offset(0, 2),
+                      width: 4,
                     ),
-                  ],
-                ),
-                child: _buildNotificationSettings(),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: getShade(widget.color, 800),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 4,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        blurRadius: 3,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.white,
-                      blurRadius: 3,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
+                  child: _buildNotificationSettings(),
                 ),
-                child: _buildTimeIntervalSelector(),
-              ),
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: getShade(widget.color, 800),
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 4,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        blurRadius: 3,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: _buildTimeIntervalSelector(),
+                ),
+              ],
             ],
           ),
         ),
