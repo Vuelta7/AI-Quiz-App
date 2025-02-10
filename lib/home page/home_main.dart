@@ -148,7 +148,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                 index == 0
                     ? Icons.menu_rounded
                     : index == 1
-                        ? Icons.analytics_outlined
+                        ? Icons.fireplace_rounded
                         : index == 2
                             ? Icons.folder
                             : index == 3

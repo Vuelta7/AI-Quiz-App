@@ -20,7 +20,7 @@ class _NotificationPageState extends State<NotificationPage>
   TimeOfDay? selectedTime;
   bool isNotificationSet = false;
   bool _isDisposed = false;
-  bool _notificationsAllowed = false; // Add this flag
+  bool _notificationsAllowed = false;
   List<int> timeIntervals = [5, 10, 15, 20, 25, 30];
   int? selectedInterval;
 
@@ -29,7 +29,7 @@ class _NotificationPageState extends State<NotificationPage>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     NotificationService.init();
-    _checkNotificationPermission(); // Add this line
+    _checkNotificationPermission();
     _loadPreferences();
   }
 

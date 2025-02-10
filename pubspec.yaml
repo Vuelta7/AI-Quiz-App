@@ -77,6 +77,10 @@ flutter:
     - assets/tiktok.json
     - assets/hints.json
     - assets/effectbg.json
+    - assets/dnd.json
+    - assets/theme.json
+    - assets/confetti.json
+    - assets/award.json
 
 flutter_icons:
   android: true

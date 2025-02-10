@@ -289,7 +289,7 @@ class _InFolderMainState extends State<InFolderMain>
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: 2,
         tabBuilder: (int index, bool isActive) {
-          final color = isActive ? Colors.white : Colors.black;
+          final color = isActive ? Colors.white : Colors.white;
           final showLabel = isActive || _selectedIndex == index;
 
           return Column(
@@ -297,13 +297,13 @@ class _InFolderMainState extends State<InFolderMain>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                index == 0 ? Icons.question_answer_rounded : Icons.leaderboard,
+                index == 0 ? Icons.question_answer_rounded : Icons.people,
                 size: 45,
                 color: color,
               ),
               if (showLabel)
                 Text(
-                  index == 0 ? 'Questions' : 'Leaderboard',
+                  index == 0 ? 'Questions' : 'Learners',
                   style: TextStyle(color: color, fontSize: 12),
                 )
             ],

@@ -86,93 +86,104 @@ class _DashboardState extends State<Dashboard> {
   Widget _buildLeaderboards() {
     return Container(
       color: getShade(widget.color, 300),
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .orderBy('rankpoints', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Loading();
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Text('No users found.'),
-            );
-          }
+      child: Column(
+        children: [
+          Lottie.asset('assets/award.json'),
+          Divider(
+            color: widget.color,
+            thickness: 5,
+          ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .orderBy('rankpoints', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Loading();
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text('No users found.'),
+                  );
+                }
 
-          final users = snapshot.data!.docs;
-          int userRank = -1;
-          for (int i = 0; i < users.length; i++) {
-            if (users[i].id == widget.userId) {
-              userRank = i + 1;
-              break;
-            }
-          }
+                final users = snapshot.data!.docs;
+                int userRank = -1;
+                for (int i = 0; i < users.length; i++) {
+                  if (users[i].id == widget.userId) {
+                    userRank = i + 1;
+                    break;
+                  }
+                }
 
-          return ListView.builder(
-            itemCount: users.length > 10 ? 11 : users.length,
-            itemBuilder: (context, index) {
-              if (index < 10) {
-                final user = users[index];
-                return ListTile(
-                  leading: Icon(
-                    index == 0
-                        ? Icons.looks_one
-                        : index == 1
-                            ? Icons.looks_two
-                            : index == 2
-                                ? Icons.looks_3
-                                : Icons.person,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    user['username'],
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
+                return ListView.builder(
+                  itemCount: users.length > 10 ? 11 : users.length,
+                  itemBuilder: (context, index) {
+                    if (index < 10) {
+                      final user = users[index];
+                      return ListTile(
+                        leading: Icon(
+                          index == 0
+                              ? Icons.looks_one
+                              : index == 1
+                                  ? Icons.looks_two
+                                  : index == 2
+                                      ? Icons.looks_3
+                                      : Icons.person,
+                          color: Colors.white,
+                        ),
+                        title: Text(
+                          user['username'],
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    } else if (userRank > 10) {
+                      final user = users[userRank - 1];
+                      return ListTile(
+                        leading: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                        title: Text(
+                          user['username'],
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        trailing: Text(
+                          'Rank: $userRank',
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
                 );
-              } else if (userRank > 10) {
-                final user = users[userRank - 1];
-                return ListTile(
-                  leading: const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    user['username'],
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  trailing: Text(
-                    'Rank: $userRank',
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          );
-        },
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

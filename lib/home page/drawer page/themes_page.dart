@@ -3,6 +3,8 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/home_main.dart';
+import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemesPage extends StatefulWidget {
@@ -38,16 +40,26 @@ class _ThemesPageState extends State<ThemesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Theme Color'),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Select Theme Color',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            Lottie.asset('assets/theme.json'),
             ColorPicker(
               pickersEnabled: const {
                 ColorPickerType.wheel: true,
@@ -58,8 +70,10 @@ class _ThemesPageState extends State<ThemesPage> {
               subheading: const Text('Select a different shade'),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
+            buildRetroButton(
+              'Change Theme Color',
+              selectedColor,
+              () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 String userId = prefs.getString('userId') ?? '';
                 String colorHex = rgbToHex(selectedColor);
@@ -73,25 +87,6 @@ class _ThemesPageState extends State<ThemesPage> {
                   ),
                 );
               },
-              child: const Text('Change Theme Color'),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView(
-                children: List.generate(9, (index) {
-                  final shade = (index + 1) * 100;
-                  final color = getShade(selectedColor, shade);
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: color,
-                    ),
-                    title: Text('Shade $shade'),
-                    subtitle: Text(
-                      'Text color: ${getTextColorForBackground(color) == Colors.black ? 'Black' : 'White'}',
-                    ),
-                  );
-                }),
-              ),
             ),
           ],
         ),
