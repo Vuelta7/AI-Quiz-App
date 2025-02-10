@@ -123,11 +123,12 @@ class _EditFolderPageState extends State<EditFolderPage> {
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         color: _selectedColor,
       ),
+      backgroundColor: _selectedColor,
       body: Stack(
         children: [
           SingleChildScrollView(

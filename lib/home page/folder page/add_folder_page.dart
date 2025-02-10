@@ -121,11 +121,12 @@ class _AddFolderPageState extends State<AddFolderPage> {
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         color: _selectedColor,
       ),
+      backgroundColor: _selectedColor,
       body: Stack(
         children: [
           Column(
@@ -140,7 +141,9 @@ class _AddFolderPageState extends State<AddFolderPage> {
                         });
                       },
                       child: Container(
-                        color: _isAddingFolder ? _selectedColor : Colors.white,
+                        color: _isAddingFolder
+                            ? getShade(_selectedColor, 600)
+                            : Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(
                           'Add Folder',
@@ -162,7 +165,9 @@ class _AddFolderPageState extends State<AddFolderPage> {
                         });
                       },
                       child: Container(
-                        color: !_isAddingFolder ? _selectedColor : Colors.white,
+                        color: !_isAddingFolder
+                            ? getShade(_selectedColor, 600)
+                            : Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(
                           'Import Folder',

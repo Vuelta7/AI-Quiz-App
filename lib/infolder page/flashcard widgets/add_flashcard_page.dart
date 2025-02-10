@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/components/loading.dart';
+import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 import 'package:uuid/uuid.dart';
 
 class AddFlashCardPage extends StatefulWidget {
   final String folderId;
+  final Color color;
 
-  const AddFlashCardPage({super.key, required this.folderId});
+  const AddFlashCardPage(
+      {super.key, required this.folderId, required this.color});
 
   @override
   State<AddFlashCardPage> createState() => _AddFlashCardPageState();
@@ -45,6 +49,7 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: widget.color,
         title: const Text(
           'Add Flashcard',
           style: TextStyle(
@@ -62,6 +67,7 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
           ),
         ),
       ),
+      backgroundColor: widget.color,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -86,8 +92,10 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                     maxLines: 14,
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _isLoading
+                  buildRetroButton(
+                    'SUBMIT',
+                    Colors.black,
+                    _isLoading
                         ? null
                         : () async {
                             if (answerController.text.trim().isEmpty) {
@@ -128,27 +136,12 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                               });
                             }
                           },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                    ),
-                    child: const Text(
-                      'SUBMIT',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
                   ),
                 ],
               ),
             ),
           ),
-          if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(),
-            ),
+          if (_isLoading) const Loading(),
         ],
       ),
     );

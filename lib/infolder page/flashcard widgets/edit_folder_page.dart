@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 
 class EditFlashCardPage extends StatefulWidget {
   final String folderId;
   final String flashCardId;
   final String initialQuestion;
   final String initialAnswer;
+  final Color color;
 
   const EditFlashCardPage({
     super.key,
@@ -13,6 +15,7 @@ class EditFlashCardPage extends StatefulWidget {
     required this.flashCardId,
     required this.initialQuestion,
     required this.initialAnswer,
+    required this.color,
   });
 
   @override
@@ -78,10 +81,11 @@ class _EditFlashCardPageState extends State<EditFlashCardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: widget.color,
         title: const Text(
           'Edit Flashcard',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -91,10 +95,11 @@ class _EditFlashCardPageState extends State<EditFlashCardPage> {
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),
+      backgroundColor: widget.color,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -105,23 +110,31 @@ class _EditFlashCardPageState extends State<EditFlashCardPage> {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: answerController,
-                    cursorColor: Colors.black,
+                    cursorColor: Colors.white,
                     decoration: const InputDecoration(
                       hintText: 'Answer',
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: questionController,
-                    cursorColor: Colors.black,
+                    cursorColor: Colors.white,
                     decoration: const InputDecoration(
                       hintText: 'Question',
+                      hintStyle: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                     maxLines: 14,
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _isLoading || !_isFormValid
+                  buildRetroButton(
+                    'Save Changes',
+                    Colors.black,
+                    _isLoading || !_isFormValid
                         ? null
                         : () async {
                             setState(() {
@@ -145,15 +158,12 @@ class _EditFlashCardPageState extends State<EditFlashCardPage> {
                               });
                             }
                           },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('Save Changes'),
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _isLoading
+                  buildRetroButton(
+                    'Delete Flashcard',
+                    Colors.red,
+                    _isLoading
                         ? null
                         : () async {
                             setState(() {
@@ -177,13 +187,6 @@ class _EditFlashCardPageState extends State<EditFlashCardPage> {
                               });
                             }
                           },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text(
-                      'Delete Flashcard',
-                    ),
                   ),
                 ],
               ),

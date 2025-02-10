@@ -7,6 +7,7 @@ class FlashCardModel extends StatefulWidget {
   final String questionId;
   final String folderId;
   final bool isEditing;
+  final Color color;
 
   const FlashCardModel({
     super.key,
@@ -15,6 +16,7 @@ class FlashCardModel extends StatefulWidget {
     required this.questionId,
     required this.folderId,
     this.isEditing = false,
+    required this.color,
   });
 
   @override
@@ -154,6 +156,7 @@ class _FlashCardModelState extends State<FlashCardModel>
                           flashCardId: widget.questionId,
                           initialQuestion: widget.question,
                           initialAnswer: widget.answer,
+                          color: widget.color,
                         ),
                       ),
                     );
@@ -202,6 +205,7 @@ class _FlashCardModelState extends State<FlashCardModel>
                           flashCardId: widget.questionId,
                           initialQuestion: widget.question,
                           initialAnswer: widget.answer,
+                          color: widget.color,
                         ),
                       ),
                     );

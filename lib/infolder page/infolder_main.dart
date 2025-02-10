@@ -195,6 +195,7 @@ class _InFolderMainState extends State<InFolderMain>
             FlashcardsPage(
               folderId: widget.folderId,
               isEditing: _isEditing,
+              color: widget.headerColor,
             ),
             LeaderboardPage(folderId: widget.folderId),
           ],
@@ -212,7 +213,10 @@ class _InFolderMainState extends State<InFolderMain>
                   return OpenContainer(
                     transitionType: ContainerTransitionType.fadeThrough,
                     openBuilder: (BuildContext context, VoidCallback _) {
-                      return AddFlashCardPage(folderId: widget.folderId);
+                      return AddFlashCardPage(
+                        folderId: widget.folderId,
+                        color: widget.headerColor,
+                      );
                     },
                     closedElevation: 6.0,
                     closedShape: const RoundedRectangleBorder(
@@ -250,7 +254,10 @@ class _InFolderMainState extends State<InFolderMain>
                     transitionType: ContainerTransitionType.fadeThrough,
                     openBuilder: (BuildContext context, VoidCallback _) {
                       if (_isEditing) {
-                        return AddFlashCardPage(folderId: widget.folderId);
+                        return AddFlashCardPage(
+                          folderId: widget.folderId,
+                          color: widget.headerColor,
+                        );
                       } else {
                         return FutureBuilder<List<Map<String, String>>>(
                           future: getQuestions(),
@@ -282,8 +289,7 @@ class _InFolderMainState extends State<InFolderMain>
                         Radius.circular(28.0),
                       ),
                     ),
-                    closedColor: widget.headerColor
-                        .withOpacity(0.9), // Manually specified color
+                    closedColor: widget.headerColor.withOpacity(0.9),
                     closedBuilder:
                         (BuildContext context, VoidCallback openContainer) {
                       return SizedBox(
@@ -335,7 +341,7 @@ class _InFolderMainState extends State<InFolderMain>
           );
         },
         height: 70,
-        backgroundColor: widget.headerColor, // Manually specified color
+        backgroundColor: widget.headerColor,
         activeIndex: _selectedIndex,
         splashColor: widget.headerColor,
         notchAndCornersAnimation: borderRadiusAnimation,

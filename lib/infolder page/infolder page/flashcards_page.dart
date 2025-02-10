@@ -6,11 +6,13 @@ import 'package:lottie/lottie.dart';
 class FlashcardsPage extends StatelessWidget {
   final String folderId;
   final bool isEditing;
+  final Color color;
 
   const FlashcardsPage({
     super.key,
     required this.folderId,
     this.isEditing = false,
+    required this.color,
   });
 
   @override
@@ -65,6 +67,7 @@ class FlashcardsPage extends StatelessWidget {
                 questionId: questionDoc.id,
                 folderId: folderId,
                 isEditing: isEditing,
+                color: color,
               ),
             );
           },
