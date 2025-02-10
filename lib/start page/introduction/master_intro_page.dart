@@ -1,30 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class MasterIntroPage extends StatelessWidget {
-  final Color backgroundColor;
-  final String text1;
-  final String text2;
-  final String text3;
-
-  static const style = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.w600,
-  );
-
-  const MasterIntroPage({
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({
     super.key,
-    required this.backgroundColor,
-    required this.text1,
-    required this.text2,
-    required this.text3,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      color: backgroundColor,
+      color: Colors.redAccent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,23 +20,81 @@ class MasterIntroPage extends StatelessWidget {
             'assets/digitalizequiz.json',
             fit: BoxFit.cover,
           ),
-          Column(
-            children: [
-              Text(
-                text1,
-                style: style,
-              ),
-              Center(
-                child: Text(
-                  text2,
-                  style: style,
-                ),
-              ),
-              Text(
-                text3,
-                style: style,
-              ),
-            ],
+          const Text(
+            "Welcome to Learn-N! Learn smarter with Active Recall and digitalized quizzes!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'PressStart2P',
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class IntroPage extends StatelessWidget {
+  const IntroPage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.teal,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Lottie.asset('assets/rank3.json'),
+          const Text(
+            "Become a productivity master and be an egoist to reach Rank 1!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'PressStart2P',
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class TiktokPage extends StatelessWidget {
+  const TiktokPage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      color: Colors.black,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Lottie.asset(
+            'assets/tiktok.json',
+            fit: BoxFit.cover,
+          ),
+          const Text(
+            "Make your scrolling time a learning time! Instead of endless swiping, boost your knowledge with Learn-N.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'PressStart2P',
+            ),
           )
         ],
       ),

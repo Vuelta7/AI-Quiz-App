@@ -18,30 +18,9 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
   late UpdateType updateType;
 
   final pages = [
-    const MasterIntroPage(
-      backgroundColor: Colors.blue,
-      text1: 'Welcome to Learn N',
-      text2: 'Learn N is a quiz app that helps you learn new things',
-      text3: 'Let\'s get started',
-    ),
-    const MasterIntroPage(
-      backgroundColor: Colors.red,
-      text1: 'Learn N',
-      text2: 'Learn N is a quiz app that helps you learn new things',
-      text3: 'Let\'s get started',
-    ),
-    const MasterIntroPage(
-      backgroundColor: Colors.green,
-      text1: 'Learn N',
-      text2: 'Learn N is a quiz app that helps you learn new things',
-      text3: 'Let\'s get started',
-    ),
-    const MasterIntroPage(
-      backgroundColor: Colors.yellow,
-      text1: 'Learn N',
-      text2: 'Learn N is a quiz app that helps you learn new things',
-      text3: 'Let\'s get started',
-    ),
+    const WelcomePage(),
+    const IntroPage(),
+    const TiktokPage(),
     const StartPage(),
   ];
 
@@ -121,7 +100,7 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
                             page: pages.length - 1, duration: 700);
                       },
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.black,
+                        foregroundColor: Colors.white,
                       ),
                       child: const Text(
                         'Skip',
@@ -145,7 +124,7 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
                         );
                       },
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.black,
+                        foregroundColor: Colors.white,
                       ),
                       child: const Text(
                         'next',
