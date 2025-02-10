@@ -11,6 +11,7 @@ class DoNotDisturbPage extends StatefulWidget {
   State<DoNotDisturbPage> createState() => _DoNotDisturbPageState();
 }
 
+// TODO: fix mechanics
 class _DoNotDisturbPageState extends State<DoNotDisturbPage> {
   final _dndPlugin = DoNotDisturbPlugin();
 
