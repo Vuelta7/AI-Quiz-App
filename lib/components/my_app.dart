@@ -42,6 +42,13 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        snackBarTheme: const SnackBarThemeData(
+          shape: StadiumBorder(),
+          backgroundColor: Colors.white,
+          contentTextStyle: TextStyle(
+            color: Colors.black,
+          ),
+        ),
       ),
       home: const SplashScreen(),
     );

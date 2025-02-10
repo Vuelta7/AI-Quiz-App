@@ -23,7 +23,7 @@ Widget buildRetroTextField(
       return TextFormField(
         controller: controller,
         obscureText: isPassword,
-        cursorColor: Colors.black,
+        cursorColor: Colors.white,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmitted,
         style: const TextStyle(

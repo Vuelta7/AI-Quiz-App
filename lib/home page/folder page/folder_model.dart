@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/folder%20page/edit_folder_page.dart';
 import 'package:learn_n/infolder%20page/infolder_main.dart';
+import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
 
 class FolderModel extends StatelessWidget {
   final String folderId;
@@ -149,15 +151,30 @@ class FolderModel extends StatelessWidget {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('Confirm Deletion'),
+                                  backgroundColor: headerColor,
+                                  title: const Text(
+                                    'Confirm Deletion',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                   content: const Text(
-                                      'Are you sure you want to delete this folder?'),
+                                    'Are you sure you want to delete this folder?',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: const Text('Cancel'),
+                                      child: const Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                     TextButton(
                                       onPressed: () async {
@@ -183,7 +200,12 @@ class FolderModel extends StatelessWidget {
                                           );
                                         }
                                       },
-                                      child: const Text('Delete'),
+                                      child: const Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -203,24 +225,36 @@ class FolderModel extends StatelessWidget {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('Share Folder'),
+                                  backgroundColor: headerColor,
+                                  title: const Text(
+                                    'Share Folder',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       const Text(
                                         'Share this Folder ID with your friend. They can use it to add this folder to their account.',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       const SizedBox(height: 10),
                                       SelectableText(
                                         folderId,
                                         style: const TextStyle(
-                                          fontSize: 16,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       const SizedBox(height: 10),
-                                      ElevatedButton(
-                                        onPressed: () {
+                                      buildRetroButton(
+                                        'Copy Folder ID',
+                                        getShade(headerColor, 300),
+                                        () {
                                           Clipboard.setData(
                                             ClipboardData(text: folderId),
                                           );
@@ -233,7 +267,6 @@ class FolderModel extends StatelessWidget {
                                             ),
                                           );
                                         },
-                                        child: const Text('Copy Folder ID'),
                                       ),
                                     ],
                                   ),
@@ -242,7 +275,10 @@ class FolderModel extends StatelessWidget {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: const Text('Close'),
+                                      child: const Text(
+                                        'Close',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
                                   ],
                                 );
