@@ -1,5 +1,4 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -210,110 +209,77 @@ class _InFolderMainState extends State<InFolderMain>
                 } else if (snapshot.hasError ||
                     !snapshot.hasData ||
                     !snapshot.data!) {
-                  return OpenContainer(
-                    transitionType: ContainerTransitionType.fadeThrough,
-                    openBuilder: (BuildContext context, VoidCallback _) {
-                      return AddFlashCardPage(
-                        folderId: widget.folderId,
-                        color: widget.headerColor,
-                      );
-                    },
-                    closedElevation: 6.0,
-                    closedShape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(28.0),
-                      ),
-                    ),
-                    closedColor: widget.headerColor
-                        .withOpacity(0.9), // Manually specified color
-                    closedBuilder:
-                        (BuildContext context, VoidCallback openContainer) {
-                      return SizedBox(
-                        height: 56.0,
-                        width: 56.0,
-                        child: Center(
-                          child: AnimatedBuilder(
-                            animation: _wiggleController,
-                            builder: (context, child) {
-                              return Transform.rotate(
-                                angle: 0.2 * _wiggleController.value,
-                                child: const Icon(
-                                  Icons.add,
-                                  size: 45,
-                                  color: Colors.white,
-                                ),
-                              );
-                            },
+                  return FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddFlashCardPage(
+                            folderId: widget.folderId,
+                            color: widget.headerColor,
                           ),
                         ),
                       );
                     },
+                    backgroundColor: widget.headerColor.withOpacity(0.9),
+                    shape: const CircleBorder(),
+                    child: AnimatedBuilder(
+                      animation: _wiggleController,
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: 0.2 * _wiggleController.value,
+                          child: const Icon(
+                            Icons.add,
+                            size: 45,
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                    ),
                   );
                 } else {
-                  return OpenContainer(
-                    transitionType: ContainerTransitionType.fadeThrough,
-                    openBuilder: (BuildContext context, VoidCallback _) {
+                  return FloatingActionButton(
+                    onPressed: () async {
                       if (_isEditing) {
-                        return AddFlashCardPage(
-                          folderId: widget.folderId,
-                          color: widget.headerColor,
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddFlashCardPage(
+                              folderId: widget.folderId,
+                              color: widget.headerColor,
+                            ),
+                          ),
                         );
                       } else {
-                        return FutureBuilder<List<Map<String, String>>>(
-                          future: getQuestions(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator(
-                                color: Colors.black,
-                              ));
-                            } else if (snapshot.hasError || !snapshot.hasData) {
-                              return const Center(
-                                  child: Text('Error loading questions'));
-                            } else {
-                              return PlayPage(
-                                folderName: widget.folderName,
-                                folderId: widget.folderId,
-                                headerColor: widget.headerColor,
-                                questions: snapshot.data!,
-                              );
-                            }
-                          },
+                        final questions = await getQuestions();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PlayPage(
+                              folderName: widget.folderName,
+                              folderId: widget.folderId,
+                              headerColor: widget.headerColor,
+                              questions: questions,
+                            ),
+                          ),
                         );
                       }
                     },
-                    closedElevation: 6.0,
-                    closedShape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(28.0),
-                      ),
-                    ),
-                    closedColor: widget.headerColor.withOpacity(0.9),
-                    closedBuilder:
-                        (BuildContext context, VoidCallback openContainer) {
-                      return SizedBox(
-                        height: 56.0,
-                        width: 56.0,
-                        child: Center(
-                          child: AnimatedBuilder(
-                            animation: _wiggleController,
-                            builder: (context, child) {
-                              return Transform.rotate(
-                                angle: 0.2 * _wiggleController.value,
-                                child: Icon(
-                                  _isEditing
-                                      ? Icons.add
-                                      : Icons.play_arrow_rounded,
-                                  size: 45,
-                                  color: Colors.white,
-                                ),
-                              );
-                            },
+                    backgroundColor: widget.headerColor.withOpacity(0.9),
+                    shape: const CircleBorder(),
+                    child: AnimatedBuilder(
+                      animation: _wiggleController,
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: 0.2 * _wiggleController.value,
+                          child: Icon(
+                            _isEditing ? Icons.add : Icons.play_arrow_rounded,
+                            size: 45,
+                            color: Colors.white,
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   );
                 }
               },
@@ -324,6 +290,8 @@ class _InFolderMainState extends State<InFolderMain>
         itemCount: 2,
         tabBuilder: (int index, bool isActive) {
           final color = isActive ? Colors.white : Colors.black;
+          final showLabel = isActive || _selectedIndex == index;
+
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -333,10 +301,11 @@ class _InFolderMainState extends State<InFolderMain>
                 size: 45,
                 color: color,
               ),
-              Text(
-                index == 0 ? 'Questions' : 'Leaderboard',
-                style: TextStyle(color: color, fontSize: 12),
-              )
+              if (showLabel)
+                Text(
+                  index == 0 ? 'Questions' : 'Leaderboard',
+                  style: TextStyle(color: color, fontSize: 12),
+                )
             ],
           );
         },

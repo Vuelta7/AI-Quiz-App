@@ -109,6 +109,11 @@ class _EditFlashCardPageState extends State<EditFlashCardPage> {
                 children: [
                   const SizedBox(height: 10),
                   TextFormField(
+                    style: const TextStyle(
+                      fontFamily: 'Arial',
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                     controller: answerController,
                     cursorColor: Colors.white,
                     decoration: const InputDecoration(
@@ -116,10 +121,16 @@ class _EditFlashCardPageState extends State<EditFlashCardPage> {
                       hintStyle: TextStyle(
                         color: Colors.white,
                       ),
+                      border: InputBorder.none,
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    style: const TextStyle(
+                      fontFamily: 'Arial',
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                     controller: questionController,
                     cursorColor: Colors.white,
                     decoration: const InputDecoration(
@@ -127,6 +138,7 @@ class _EditFlashCardPageState extends State<EditFlashCardPage> {
                       hintStyle: TextStyle(
                         color: Colors.white,
                       ),
+                      border: InputBorder.none,
                     ),
                     maxLines: 14,
                   ),

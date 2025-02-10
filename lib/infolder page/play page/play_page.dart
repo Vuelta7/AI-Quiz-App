@@ -78,7 +78,7 @@ class _PlayPageState extends State<PlayPage> {
     _stopwatch = Stopwatch()..start();
     _fetchHintCount();
     _loadSelectedColor();
-    isMultipleOptionMode = widget.isMultipleOptionMode;
+    _loadModePreference();
   }
 
   Future<void> _fetchHintCount() async {
@@ -101,6 +101,19 @@ class _PlayPageState extends State<PlayPage> {
     setState(() {
       selectedColor = hexToColor(colorString);
     });
+  }
+
+  Future<void> _loadModePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isMultipleOptionMode =
+          prefs.getBool('isMultipleOptionMode') ?? widget.isMultipleOptionMode;
+    });
+  }
+
+  Future<void> _saveModePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isMultipleOptionMode', isMultipleOptionMode);
   }
 
   @override
@@ -379,6 +392,7 @@ class _PlayPageState extends State<PlayPage> {
   void _toggleMode() {
     setState(() {
       isMultipleOptionMode = !isMultipleOptionMode;
+      _saveModePreference();
     });
   }
 
@@ -389,10 +403,15 @@ class _PlayPageState extends State<PlayPage> {
       children: answers.map((answer) {
         Color buttonColor = attemptedAnswers.contains(answer)
             ? Colors.grey
-            : selectedColor ?? widget.headerColor;
+            : widget.headerColor;
 
         return ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: buttonColor,
+            shadowColor: Colors.white.withOpacity(0.5),
+            elevation: 3,
+            side: const BorderSide(color: Colors.white, width: 2),
+          ),
           onPressed: () => checkAnswer(answer),
           child: SizedBox(
             width: double.infinity,
@@ -518,7 +537,7 @@ class _PlayPageState extends State<PlayPage> {
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: selectedColor,
+                                  color: widget.headerColor,
                                   borderRadius: BorderRadius.circular(9),
                                   border: Border.all(
                                     width: 3,
@@ -590,7 +609,6 @@ class _PlayPageState extends State<PlayPage> {
                     controller: _controller,
                     focusNode: _focusNode,
                     onSubmitted: checkAnswer,
-                    cursorColor: Colors.black,
                     style: const TextStyle(
                       fontFamily: 'Arial',
                       color: Color.fromARGB(255, 0, 0, 0),
@@ -607,25 +625,25 @@ class _PlayPageState extends State<PlayPage> {
                         color: Color.fromARGB(255, 0, 0, 0),
                       ),
                       filled: true,
-                      fillColor: const Color.fromARGB(255, 255, 255, 255),
+                      fillColor: widget.headerColor,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: selectedColor ?? widget.headerColor,
+                        borderSide: const BorderSide(
+                          color: Colors.white,
                           width: 3,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: selectedColor ?? widget.headerColor,
+                        borderSide: const BorderSide(
+                          color: Colors.white,
                           width: 3,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: selectedColor ?? widget.headerColor,
+                        borderSide: const BorderSide(
+                          color: Colors.white,
                           width: 3,
                         ),
                       ),

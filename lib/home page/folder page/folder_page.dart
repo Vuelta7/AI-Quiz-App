@@ -97,7 +97,7 @@ class _FolderPageState extends State<FolderPage> {
                   Icons.search,
                   color: Colors.white,
                 ),
-                labelText: 'Seacrh folder',
+                labelText: 'Search folder',
                 labelStyle: const TextStyle(
                   fontFamily: 'PressStart2P',
                   color: Colors.white,

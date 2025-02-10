@@ -251,7 +251,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                             },
                             descriptionFocusNode: descriptionFocusNode,
                             onChanged: (value) {
-                              setState(() {}); // Update form validation state
+                              setState(() {});
                             },
                           )
                         : buildFolderForm(

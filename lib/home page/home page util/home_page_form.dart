@@ -24,18 +24,30 @@ Widget buildFolderForm({
       const SizedBox(height: 10),
       if (!isImported) ...[
         TextFormField(
+          style: const TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 14,
+          ),
           controller: folderNameController,
           decoration: const InputDecoration(
             hintText: 'Folder Name',
+            border: InputBorder.none, // Remove underline
           ),
           onChanged: onChanged,
           onFieldSubmitted: onFieldSubmitted,
         ),
         const SizedBox(height: 10),
         TextFormField(
+          style: const TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 14,
+          ),
           controller: descriptionController,
           decoration: const InputDecoration(
             hintText: 'Description',
+            border: InputBorder.none, // Remove underline
           ),
           maxLines: 3,
           onChanged: onChanged,
@@ -62,6 +74,7 @@ Widget buildFolderForm({
           controller: folderIdController,
           decoration: const InputDecoration(
             hintText: 'Folder ID',
+            border: InputBorder.none, // Remove underline
           ),
           onChanged: onChanged,
         ),

@@ -77,17 +77,29 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                 children: [
                   const SizedBox(height: 10),
                   TextFormField(
+                    style: const TextStyle(
+                      fontFamily: 'Arial',
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                     controller: answerController,
                     decoration: const InputDecoration(
                       hintText: 'Answer',
+                      border: InputBorder.none,
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    style: const TextStyle(
+                      fontFamily: 'Arial',
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                     controller: questionController,
                     cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       hintText: 'Question or Definition',
+                      border: InputBorder.none,
                     ),
                     maxLines: 14,
                   ),
