@@ -40,8 +40,6 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
-// fix naming of streakpet
-// textfield fix color
 // add a privacy policy terms and conditions page
 // create the dnd mechanics
 // introduction page

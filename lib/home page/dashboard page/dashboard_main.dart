@@ -180,63 +180,274 @@ class _DashboardState extends State<Dashboard> {
   Widget _buildShop() {
     return Container(
       color: getShade(widget.color, 300),
-      child: Column(
-        children: [
-          Lottie.asset('assets/hints.json'),
-          StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('users')
-                .doc(widget.userId)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Loading();
-              }
-              if (!snapshot.hasData || !snapshot.data!.exists) {
-                return const Center(
-                  child: Text('User data not found.'),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Lottie.asset('assets/hints.json'),
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(widget.userId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Loading();
+                }
+                if (!snapshot.hasData || !snapshot.data!.exists) {
+                  return const Center(
+                    child: Text('User data not found.'),
+                  );
+                }
+
+                final userData = snapshot.data!.data() as Map<String, dynamic>;
+                final currencyPoints = userData['currencypoints'] ?? 0;
+                final hints = userData['hints'] ?? 0;
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Currency Points: $currencyPoints',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center),
+                      const SizedBox(height: 20),
+                      buildRetroButton(
+                        'Buy Hint (50 points)',
+                        widget.color,
+                        currencyPoints >= 50
+                            ? () async {
+                                await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(widget.userId)
+                                    .update({
+                                  'currencypoints': currencyPoints - 50,
+                                  'hints': hints + 1,
+                                });
+                              }
+                            : null,
+                      ),
+                      const SizedBox(height: 20),
+                      buildRetroButton(
+                        'Change Streak Pet Name (100 points)',
+                        widget.color,
+                        currencyPoints >= 100
+                            ? () async {
+                                String newName =
+                                    await _showChangePetNameDialog();
+                                if (newName.isNotEmpty) {
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(widget.userId)
+                                      .update({
+                                    'currencypoints': currencyPoints - 100,
+                                    'petName': newName,
+                                  });
+                                }
+                              }
+                            : null,
+                      ),
+                      const SizedBox(height: 20),
+                      buildRetroButton(
+                        'Change Username (1000 points)',
+                        widget.color,
+                        currencyPoints >= 500
+                            ? () async {
+                                String newUsername =
+                                    await _showChangeUsernameDialog();
+                                if (newUsername.isNotEmpty) {
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(widget.userId)
+                                      .update({
+                                    'currencypoints': currencyPoints - 1000,
+                                    'username': newUsername,
+                                  });
+                                }
+                              }
+                            : null,
+                      ),
+                    ],
+                  ),
                 );
-              }
-
-              final userData = snapshot.data!.data() as Map<String, dynamic>;
-              final currencyPoints = userData['currencypoints'] ?? 0;
-              final hints = userData['hints'] ?? 0;
-
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Currency Points: $currencyPoints',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center),
-                    const SizedBox(height: 20),
-                    buildRetroButton(
-                      'Buy Hint (50 points)',
-                      widget.color,
-                      currencyPoints >= 50
-                          ? () async {
-                              await FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(widget.userId)
-                                  .update({
-                                'currencypoints': currencyPoints - 50,
-                                'hints': hints + 1,
-                              });
-                            }
-                          : null,
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<String> _showChangePetNameDialog() async {
+    String newName = '';
+    await showDialog(
+      context: context,
+      builder: (context) {
+        final TextEditingController controller = TextEditingController();
+        return AlertDialog(
+          backgroundColor: widget.color,
+          title: const Text(
+            'Change Pet Name',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          content: TextFormField(
+            controller: controller,
+            cursorColor: Colors.white,
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+              hintText: 'Pet Name',
+              labelText: 'Pet Name',
+              labelStyle: const TextStyle(
+                fontFamily: 'PressStart2P',
+                color: Colors.white,
+              ),
+              filled: true,
+              fillColor: getShade(widget.color, 600),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 2,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 2,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 3,
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                newName = controller.text;
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Change',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+    return newName;
+  }
+
+  Future<String> _showChangeUsernameDialog() async {
+    String newUsername = '';
+    await showDialog(
+      context: context,
+      builder: (context) {
+        final TextEditingController controller = TextEditingController();
+        return AlertDialog(
+          backgroundColor: widget.color,
+          title: const Text(
+            'Change Username',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          content: TextFormField(
+            controller: controller,
+            cursorColor: Colors.white,
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+              hintText: 'Username',
+              labelText: 'Username',
+              labelStyle: const TextStyle(
+                fontFamily: 'PressStart2P',
+                color: Colors.white,
+              ),
+              filled: true,
+              fillColor: getShade(widget.color, 600),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 2,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 2,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.white,
+                  width: 3,
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                newUsername = controller.text;
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Change',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+    return newUsername;
   }
 }

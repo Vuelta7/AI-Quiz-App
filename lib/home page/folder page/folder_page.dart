@@ -86,7 +86,6 @@ class _FolderPageState extends State<FolderPage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(13, 10, 13, 0),
             child: TextFormField(
-              cursorColor: Colors.black,
               style: const TextStyle(
                 fontFamily: 'Arial',
                 color: Colors.white,

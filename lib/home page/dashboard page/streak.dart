@@ -32,15 +32,6 @@ class _StreakPageState extends State<StreakPage> {
     });
   }
 
-  Future<void> _updatePetName(String newName) async {
-    final userDoc =
-        FirebaseFirestore.instance.collection('users').doc(widget.userId);
-    await userDoc.update({'petName': newName});
-    setState(() {
-      _petName = newName;
-    });
-  }
-
   Future<Map<DateTime, int>> _fetchHeatmapData() async {
     final userDoc =
         FirebaseFirestore.instance.collection('users').doc(widget.userId);
@@ -89,24 +80,13 @@ class _StreakPageState extends State<StreakPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _petName,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
-                    onPressed: () {
-                      _showChangePetNameDialog(context);
-                    },
-                  ),
-                ],
+              child: Text(
+                _petName,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
             FutureBuilder<Map<DateTime, int>>(
@@ -144,89 +124,6 @@ class _StreakPageState extends State<StreakPage> {
           ],
         ),
       ),
-    );
-  }
-
-  void _showChangePetNameDialog(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: widget.color,
-          title: const Text(
-            'Change Pet Name',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          content: TextFormField(
-            controller: controller,
-            cursorColor: Colors.black,
-            style: const TextStyle(
-              fontFamily: 'Arial',
-              color: Colors.white,
-              fontSize: 14,
-            ),
-            decoration: InputDecoration(
-              hintText: 'Pet Name',
-              labelText: 'Pet Name',
-              labelStyle: const TextStyle(
-                fontFamily: 'PressStart2P',
-                color: Colors.white,
-              ),
-              filled: true,
-              fillColor: getShade(widget.color, 600),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: Colors.white,
-                  width: 2,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: Colors.white,
-                  width: 2,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: Colors.white,
-                  width: 3,
-                ),
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                _updatePetName(controller.text);
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Save',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }
