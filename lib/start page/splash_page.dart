@@ -102,14 +102,17 @@ class SplashScreenState extends State<SplashScreen>
                 children: [
                   Text(
                     loadingText,
-                    style: const TextStyle(fontFamily: 'PressStart2P'),
+                    style: const TextStyle(
+                      fontFamily: 'PressStart2P',
+                      color: Colors.white,
+                    ),
                   ),
                   Container(
                     width: 260,
                     height: 26,
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.black,
+                        color: Colors.white,
                         width: 3,
                       ),
                     ),
@@ -120,7 +123,7 @@ class SplashScreenState extends State<SplashScreen>
                             margin: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
                               color: index / 10 <= _progress.value
-                                  ? Colors.black
+                                  ? Colors.white
                                   : Colors.transparent,
                             ),
                           ),

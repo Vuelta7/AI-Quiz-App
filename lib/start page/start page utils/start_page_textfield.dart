@@ -28,14 +28,14 @@ Widget buildRetroTextField(
         onFieldSubmitted: onFieldSubmitted,
         style: const TextStyle(
           fontFamily: 'Arial',
-          color: Color.fromARGB(255, 0, 0, 0),
+          color: Colors.white,
           fontSize: 14,
         ),
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(
             fontFamily: 'PressStart2P',
-            color: Color.fromARGB(255, 0, 0, 0),
+            color: Colors.white,
           ),
           filled: true,
           fillColor: selectedColor,
@@ -49,14 +49,14 @@ Widget buildRetroTextField(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(
-              color: Colors.black,
+              color: Colors.white,
               width: 2,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(
-              color: Colors.black,
+              color: Colors.white,
               width: 3,
             ),
           ),

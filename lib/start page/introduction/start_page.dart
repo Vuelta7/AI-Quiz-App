@@ -46,7 +46,7 @@ class _StartPageState extends State<StartPage> {
               const SizedBox(height: 40),
               buildRetroButton(
                 'Register',
-                Colors.black,
+                getShade(selectedColor, 300),
                 () {
                   Navigator.push(context, AuthScreen.route(isLogin: false));
                 },
@@ -54,7 +54,7 @@ class _StartPageState extends State<StartPage> {
               const SizedBox(height: 20),
               buildRetroButton(
                 'Log In',
-                Colors.black,
+                getShade(selectedColor, 300),
                 () {
                   Navigator.push(context, AuthScreen.route(isLogin: true));
                 },

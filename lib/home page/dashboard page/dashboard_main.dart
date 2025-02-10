@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/components/loading.dart';
 import 'package:learn_n/home%20page/dashboard%20page/streak.dart';
 import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
@@ -84,7 +85,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _buildLeaderboards() {
     return Container(
-      color: widget.color,
+      color: getShade(widget.color, 300),
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
@@ -177,61 +178,65 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildShop() {
-    return Column(
-      children: [
-        Lottie.asset('assets/hints.json'),
-        StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(widget.userId)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Loading();
-            }
-            if (!snapshot.hasData || !snapshot.data!.exists) {
-              return const Center(
-                child: Text('User data not found.'),
+    return Container(
+      color: getShade(widget.color, 300),
+      child: Column(
+        children: [
+          Lottie.asset('assets/hints.json'),
+          StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(widget.userId)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Loading();
+              }
+              if (!snapshot.hasData || !snapshot.data!.exists) {
+                return const Center(
+                  child: Text('User data not found.'),
+                );
+              }
+
+              final userData = snapshot.data!.data() as Map<String, dynamic>;
+              final currencyPoints = userData['currencypoints'] ?? 0;
+              final hints = userData['hints'] ?? 0;
+
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Currency Points: $currencyPoints',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center),
+                    const SizedBox(height: 20),
+                    buildRetroButton(
+                      'Buy Hint (50 points)',
+                      widget.color,
+                      currencyPoints >= 50
+                          ? () async {
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(widget.userId)
+                                  .update({
+                                'currencypoints': currencyPoints - 50,
+                                'hints': hints + 1,
+                              });
+                            }
+                          : null,
+                    ),
+                  ],
+                ),
               );
-            }
-
-            final userData = snapshot.data!.data() as Map<String, dynamic>;
-            final currencyPoints = userData['currencypoints'] ?? 0;
-            final hints = userData['hints'] ?? 0;
-
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Currency Points: $currencyPoints',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center),
-                  const SizedBox(height: 20),
-                  buildRetroButton(
-                    'Buy Hint (50 points)',
-                    widget.color,
-                    currencyPoints >= 50
-                        ? () async {
-                            await FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(widget.userId)
-                                .update({
-                              'currencypoints': currencyPoints - 50,
-                              'hints': hints + 1,
-                            });
-                          }
-                        : null,
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ],
+            },
+          ),
+        ],
+      ),
     );
   }
 }

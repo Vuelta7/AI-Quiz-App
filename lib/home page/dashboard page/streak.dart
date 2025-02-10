@@ -148,7 +148,7 @@ class _StreakPageState extends State<StreakPage> {
   }
 
   void _showChangePetNameDialog(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
@@ -161,6 +161,7 @@ class _StreakPageState extends State<StreakPage> {
             ),
           ),
           content: TextFormField(
+            controller: controller,
             cursorColor: Colors.black,
             style: const TextStyle(
               fontFamily: 'Arial',
@@ -213,7 +214,7 @@ class _StreakPageState extends State<StreakPage> {
             ),
             TextButton(
               onPressed: () {
-                _updatePetName(_controller.text);
+                _updatePetName(controller.text);
                 Navigator.of(context).pop();
               },
               child: const Text(

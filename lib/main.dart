@@ -40,12 +40,13 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
-// make conditions and info how to update streakpet
+// fix naming of streakpet
 // textfield fix color
 // add a privacy policy terms and conditions page
 // create the dnd mechanics
 // introduction page
 
 // Not important:
+// make conditions and info how to update streakpet
 // WebPage fix
 // add automatic qna

@@ -45,10 +45,16 @@ class _DrawerContentState extends State<DrawerContent> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/logo_icon.png',
-                height: 100,
-                width: 100,
+              ColorFiltered(
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
+                child: Image.asset(
+                  'assets/logo_icon.png',
+                  height: 100,
+                  width: 100,
+                ),
               ),
               const Text(
                 'Learn-N',
@@ -66,28 +72,40 @@ class _DrawerContentState extends State<DrawerContent> {
             padding: EdgeInsets.zero,
             children: [
               ListTile(
-                leading: const Icon(Icons.info),
+                leading: Icon(
+                  Icons.info,
+                  color: widget.selectedColor,
+                ),
                 title: const Text('About Us'),
                 onTap: () {
                   _showDialog(context, 'About Us');
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.privacy_tip),
+                leading: Icon(
+                  Icons.privacy_tip,
+                  color: widget.selectedColor,
+                ),
                 title: const Text('Privacy Policy'),
                 onTap: () {
                   _showDialog(context, 'Privacy Policy');
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.feedback),
+                leading: Icon(
+                  Icons.feedback,
+                  color: widget.selectedColor,
+                ),
                 title: const Text('Feedback and Question'),
                 onTap: () {
                   _showDialog(context, 'Feedback and Question');
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.do_not_disturb_alt_rounded),
+                leading: Icon(
+                  Icons.do_not_disturb_alt_rounded,
+                  color: widget.selectedColor,
+                ),
                 title: const Text('Do not Disturb Settings'),
                 onTap: () {
                   Navigator.push(
@@ -99,7 +117,10 @@ class _DrawerContentState extends State<DrawerContent> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.color_lens),
+                leading: Icon(
+                  Icons.color_lens,
+                  color: widget.selectedColor,
+                ),
                 title: const Text('Themes'),
                 onTap: () {
                   Navigator.push(
@@ -114,20 +135,26 @@ class _DrawerContentState extends State<DrawerContent> {
           ),
         ),
         ListTile(
-          leading: const Icon(Icons.logout),
-          title: const Text('Sign Out'),
+          leading: const Icon(
+            Icons.logout,
+            color: Colors.red,
+          ),
+          title: const Text(
+            'Sign Out',
+            style: TextStyle(
+              color: Colors.red,
+            ),
+          ),
           onTap: () async {
             await FirebaseAuth.instance.signOut();
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.remove('userID');
-            print('userID deleted');
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const LiquidSwipeIntro()),
             );
           },
         ),
-        //add a ThemesPage button here
       ],
     );
   }

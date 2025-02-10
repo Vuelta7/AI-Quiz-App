@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/start%20page/auth_page.dart';
 
 Widget buildLogo() {
-  return Image.asset(
-    'assets/logo_icon.png',
-    height: 200,
-    width: 200,
+  return ColorFiltered(
+    colorFilter: const ColorFilter.mode(
+      Colors.white,
+      BlendMode.srcIn,
+    ),
+    child: Image.asset(
+      'assets/logo_icon.png',
+      height: 200,
+      width: 200,
+    ),
   );
 }
 
@@ -14,7 +20,7 @@ Widget buildTitleText(String text, {double fontSize = 24}) {
     text,
     style: TextStyle(
       fontFamily: 'PressStart2P',
-      color: Colors.black,
+      color: Colors.white,
       fontSize: fontSize,
       letterSpacing: 2.0,
       fontWeight: FontWeight.bold,
@@ -37,6 +43,7 @@ Widget buildGestureDetector(BuildContext context, {required bool isLogin}) {
             text: isLogin ? 'Register' : 'Login',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
           ),
         ],

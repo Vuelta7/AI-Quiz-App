@@ -188,7 +188,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   widget.isLogin ? 'Login' : 'Register',
                   style: const TextStyle(
                     fontFamily: 'PressStart2P',
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -237,7 +237,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             : widget.isLogin
                                 ? 'Login'
                                 : 'Register',
-                        const Color.fromARGB(255, 0, 0, 0),
+                        getShade(selectedColor, 300),
                         isLoading ? null : authenticateUser,
                       ),
                       const SizedBox(height: 20),

@@ -17,7 +17,7 @@ Widget buildRetroButton(String text, Color color, VoidCallback? onPressed,
         text,
         style: const TextStyle(
           fontFamily: 'PressStart2P',
-          fontSize: 16,
+          fontSize: 13,
           color: Color.fromARGB(255, 255, 255, 255),
         ),
       ),
