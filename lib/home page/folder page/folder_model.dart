@@ -179,7 +179,6 @@ class FolderModel extends StatelessWidget {
                                     TextButton(
                                       onPressed: () async {
                                         Navigator.of(context).pop();
-                                        // Call the delete function here
                                         try {
                                           await FirebaseFirestore.instance
                                               .collection("folders")

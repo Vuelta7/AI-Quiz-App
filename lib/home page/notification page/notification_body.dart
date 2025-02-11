@@ -58,7 +58,7 @@ class _NotificationPageState extends State<NotificationPage>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _loadPreferences();
-      _checkNotificationPermission(); // Add this line
+      _checkNotificationPermission();
     }
   }
 
