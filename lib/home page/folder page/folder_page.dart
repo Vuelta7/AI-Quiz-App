@@ -86,6 +86,7 @@ class _FolderPageState extends State<FolderPage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(13, 10, 13, 0),
             child: TextFormField(
+              controller: _searchController,
               style: const TextStyle(
                 fontFamily: 'Arial',
                 color: Colors.white,

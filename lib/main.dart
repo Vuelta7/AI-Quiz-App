@@ -40,8 +40,8 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
-// add a privacy policy terms and conditions page
-// introduction page
+// add automatic qna
+// add weekly folder
 
 // Not important:
 // make conditions and info how to update streakpet
