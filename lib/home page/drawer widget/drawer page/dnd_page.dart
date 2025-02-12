@@ -14,14 +14,36 @@ class DoNotDisturbPage extends StatefulWidget {
 }
 
 // TODO: fix mechanics
-class _DoNotDisturbPageState extends State<DoNotDisturbPage> {
+class _DoNotDisturbPageState extends State<DoNotDisturbPage>
+    with WidgetsBindingObserver {
   final _dndPlugin = DoNotDisturbPlugin();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkNotificationPolicyAccessGranted();
     _checkDndEnabled();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _setInterruptionFilter(
+        InterruptionFilter.all); // Ensure DND is disabled when leaving page
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      _setInterruptionFilter(
+          InterruptionFilter.all); // Disable DND when app goes to background
+    } else if (state == AppLifecycleState.resumed) {
+      _setInterruptionFilter(
+          InterruptionFilter.alarms); // Re-enable DND when app is reopened
+    }
   }
 
   bool _isDndEnabled = false;
