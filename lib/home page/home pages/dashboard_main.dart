@@ -1,20 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
-import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/components/loading.dart';
+import 'package:learn_n/utils/color_utils.dart';
 import 'package:lottie/lottie.dart';
 
-class StreakPage extends StatefulWidget {
+class Dashboard extends StatefulWidget {
   final String userId;
   final Color color;
-  const StreakPage({super.key, required this.userId, required this.color});
+
+  const Dashboard({super.key, required this.userId, required this.color});
 
   @override
-  _StreakPageState createState() => _StreakPageState();
+  _DashboardState createState() => _DashboardState();
 }
 
-class _StreakPageState extends State<StreakPage> {
+class _DashboardState extends State<Dashboard> {
   String _petName = 'Augy chan';
 
   @override

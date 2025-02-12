@@ -1,204 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/components/loading.dart';
-import 'package:learn_n/home%20page/dashboard%20page/streak.dart';
-import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
+import 'package:learn_n/utils/color_utils.dart';
+import 'package:learn_n/utils/retro_button.dart';
 import 'package:lottie/lottie.dart';
 
-class Dashboard extends StatefulWidget {
+class StorePage extends StatelessWidget {
   final String userId;
   final Color color;
-
-  const Dashboard({super.key, required this.userId, required this.color});
-
-  @override
-  _DashboardState createState() => _DashboardState();
-}
-
-class _DashboardState extends State<Dashboard> {
-  int _selectedOption = 0;
+  const StorePage({super.key, required this.userId, required this.color});
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
-    if (_selectedOption == 0) {
-      body = StreakPage(
-        userId: widget.userId,
-        color: widget.color,
-      );
-    } else if (_selectedOption == 1) {
-      body = _buildShop();
-    } else {
-      body = _buildLeaderboards();
-    }
-
     return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(child: _buildOptionButton('Store', 1)),
-              Expanded(child: _buildOptionButton('Analytics', 0)),
-              Expanded(child: _buildOptionButton('Ranking', 2)),
-            ],
-          ),
-          Expanded(child: body),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOptionButton(String title, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedOption = index;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        decoration: BoxDecoration(
-          color: _selectedOption == index ? widget.color : Colors.white,
-          border: Border(
-            bottom: BorderSide(
-              color:
-                  _selectedOption == index ? widget.color : Colors.transparent,
-              width: 3,
-            ),
-          ),
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: TextStyle(
-              color: _selectedOption == index ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLeaderboards() {
-    return Container(
-      color: getShade(widget.color, 300),
-      child: Column(
-        children: [
-          Lottie.asset('assets/award.json'),
-          Divider(
-            color: widget.color,
-            thickness: 5,
-          ),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .orderBy('rankpoints', descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Loading();
-                }
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text('No users found.'),
-                  );
-                }
-
-                final users = snapshot.data!.docs;
-                int userRank = -1;
-                for (int i = 0; i < users.length; i++) {
-                  if (users[i].id == widget.userId) {
-                    userRank = i + 1;
-                    break;
-                  }
-                }
-
-                return ListView.builder(
-                  itemCount: users.length > 10 ? 11 : users.length,
-                  itemBuilder: (context, index) {
-                    if (index < 10) {
-                      final user = users[index];
-                      return ListTile(
-                        leading: Icon(
-                          index == 0
-                              ? Icons.looks_one
-                              : index == 1
-                                  ? Icons.looks_two
-                                  : index == 2
-                                      ? Icons.looks_3
-                                      : Icons.person,
-                          color: Colors.white,
-                        ),
-                        title: Text(
-                          user['username'],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      );
-                    } else if (userRank > 10) {
-                      final user = users[userRank - 1];
-                      return ListTile(
-                        leading: const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                        ),
-                        title: Text(
-                          user['username'],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Rank Points: ${NumberFormat.decimalPattern().format(user['rankpoints'])}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        trailing: Text(
-                          'Rank: $userRank',
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildShop() {
-    return Container(
-      color: getShade(widget.color, 300),
-      child: SingleChildScrollView(
+      backgroundColor: getShade(color, 300),
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Lottie.asset('assets/hints.json'),
             StreamBuilder<DocumentSnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('users')
-                  .doc(widget.userId)
+                  .doc(userId)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -228,12 +51,12 @@ class _DashboardState extends State<Dashboard> {
                       const SizedBox(height: 20),
                       buildRetroButton(
                         'Buy Hint (50 points)',
-                        widget.color,
+                        color,
                         currencyPoints >= 50
                             ? () async {
                                 await FirebaseFirestore.instance
                                     .collection('users')
-                                    .doc(widget.userId)
+                                    .doc(userId)
                                     .update({
                                   'currencypoints': currencyPoints - 50,
                                   'hints': hints + 1,
@@ -244,15 +67,15 @@ class _DashboardState extends State<Dashboard> {
                       const SizedBox(height: 20),
                       buildRetroButton(
                         'Change Streak Pet Name (100 points)',
-                        widget.color,
+                        color,
                         currencyPoints >= 100
                             ? () async {
                                 String newName =
-                                    await _showChangePetNameDialog();
+                                    await _showChangePetNameDialog(context);
                                 if (newName.isNotEmpty) {
                                   await FirebaseFirestore.instance
                                       .collection('users')
-                                      .doc(widget.userId)
+                                      .doc(userId)
                                       .update({
                                     'currencypoints': currencyPoints - 100,
                                     'petName': newName,
@@ -264,15 +87,15 @@ class _DashboardState extends State<Dashboard> {
                       const SizedBox(height: 20),
                       buildRetroButton(
                         'Change Username (1000 points)',
-                        widget.color,
+                        color,
                         currencyPoints >= 500
                             ? () async {
                                 String newUsername =
-                                    await _showChangeUsernameDialog();
+                                    await _showChangeUsernameDialog(context);
                                 if (newUsername.isNotEmpty) {
                                   await FirebaseFirestore.instance
                                       .collection('users')
-                                      .doc(widget.userId)
+                                      .doc(userId)
                                       .update({
                                     'currencypoints': currencyPoints - 1000,
                                     'username': newUsername,
@@ -292,14 +115,14 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Future<String> _showChangePetNameDialog() async {
+  Future<String> _showChangePetNameDialog(BuildContext context) async {
     String newName = '';
     await showDialog(
       context: context,
       builder: (context) {
         final TextEditingController controller = TextEditingController();
         return AlertDialog(
-          backgroundColor: widget.color,
+          backgroundColor: color,
           title: const Text(
             'Change Pet Name',
             style: TextStyle(
@@ -322,7 +145,7 @@ class _DashboardState extends State<Dashboard> {
                 color: Colors.white,
               ),
               filled: true,
-              fillColor: getShade(widget.color, 600),
+              fillColor: getShade(color, 600),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(
@@ -377,14 +200,14 @@ class _DashboardState extends State<Dashboard> {
     return newName;
   }
 
-  Future<String> _showChangeUsernameDialog() async {
+  Future<String> _showChangeUsernameDialog(BuildContext context) async {
     String newUsername = '';
     await showDialog(
       context: context,
       builder: (context) {
         final TextEditingController controller = TextEditingController();
         return AlertDialog(
-          backgroundColor: widget.color,
+          backgroundColor: color,
           title: const Text(
             'Change Username',
             style: TextStyle(
@@ -407,7 +230,7 @@ class _DashboardState extends State<Dashboard> {
                 color: Colors.white,
               ),
               filled: true,
-              fillColor: getShade(widget.color, 600),
+              fillColor: getShade(color, 600),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(

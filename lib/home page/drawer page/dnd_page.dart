@@ -1,11 +1,13 @@
 import 'package:do_not_disturb/do_not_disturb_plugin.dart';
 import 'package:do_not_disturb/types.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
+import 'package:learn_n/utils/color_utils.dart';
+import 'package:learn_n/utils/retro_button.dart';
 import 'package:lottie/lottie.dart';
 
 class DoNotDisturbPage extends StatefulWidget {
-  const DoNotDisturbPage({super.key});
+  final Color color;
+  const DoNotDisturbPage({super.key, required this.color});
 
   @override
   State<DoNotDisturbPage> createState() => _DoNotDisturbPageState();
@@ -29,22 +31,26 @@ class _DoNotDisturbPageState extends State<DoNotDisturbPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Do Not Disturb Settings',
+        backgroundColor: getShade(widget.color, 300),
+        title: Text(
+          'DND Settings',
           style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+            color: widget.color,
+            fontFamily: 'PressStart2P',
             fontSize: 20,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.black),
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: widget.color,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
-      backgroundColor: Colors.teal,
+      backgroundColor: widget.color,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -68,7 +74,7 @@ class _DoNotDisturbPageState extends State<DoNotDisturbPage> {
               if (!_notifPolicyAccess)
                 buildRetroButton(
                   'Open Notification Policy Access Settings',
-                  Colors.teal[300]!,
+                  getShade(widget.color, 300),
                   _openNotificationPolicyAccessSettings,
                 ),
               if (_notifPolicyAccess)

@@ -1,7 +1,7 @@
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/start page/start page utils/start_page_button.dart';
+import 'package:learn_n/utils/retro_button.dart';
 import 'package:lottie/lottie.dart';
 
 class ReelsPage extends StatelessWidget {

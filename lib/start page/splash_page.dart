@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/home%20page/home_main.dart';
 import 'package:learn_n/start%20page/introduction/liquid_swipe.dart';
-import 'package:learn_n/start%20page/start%20page%20utils/start_page_utils.dart';
+import 'package:learn_n/utils/color_utils.dart';
+import 'package:learn_n/utils/start_page_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {

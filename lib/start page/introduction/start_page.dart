@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/components/color_utils.dart';
 import 'package:learn_n/start%20page/auth_page.dart';
-import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
-import 'package:learn_n/start%20page/start%20page%20utils/start_page_utils.dart';
+import 'package:learn_n/utils/color_utils.dart';
+import 'package:learn_n/utils/retro_button.dart';
+import 'package:learn_n/utils/start_page_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StartPage extends StatefulWidget {

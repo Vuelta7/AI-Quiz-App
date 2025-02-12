@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:learn_n/components/firebase_options.dart';
 import 'package:learn_n/components/my_app.dart';
-import 'package:learn_n/home%20page/notification%20page/notification_body.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
@@ -13,7 +12,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   tz.initializeTimeZones();
-  await NotificationService.init();
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   SystemChrome.setSystemUIOverlayStyle(

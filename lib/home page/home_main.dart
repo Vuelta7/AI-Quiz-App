@@ -1,12 +1,12 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/components/color_utils.dart';
-import 'package:learn_n/home%20page/dashboard%20page/dashboard_main.dart';
 import 'package:learn_n/home%20page/drawer%20page/drawer_contents.dart';
 import 'package:learn_n/home%20page/folder%20page/add_folder_page.dart';
-import 'package:learn_n/home%20page/folder%20page/folder_page.dart';
-import 'package:learn_n/home%20page/notification%20page/notification_body.dart';
-import 'package:learn_n/home%20page/reels_page/reels_page.dart';
+import 'package:learn_n/home%20page/home%20pages/dashboard_main.dart';
+import 'package:learn_n/home%20page/home%20pages/folder_page.dart';
+import 'package:learn_n/home%20page/home%20pages/reels_page.dart';
+import 'package:learn_n/home%20page/home%20pages/store_page.dart';
+import 'package:learn_n/utils/color_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeMain extends StatefulWidget {
@@ -94,14 +94,15 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
     Widget body;
     if (_selectedIndex == 1) {
-      body = Dashboard(userId: widget.userId, color: _selectedColor!);
+      body = ReelsPage(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 2) {
       body = FolderPage(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 3) {
-      body = ReelsPage(userId: widget.userId, color: _selectedColor!);
+      body = Dashboard(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 4) {
-      body = NotificationPage(
+      body = StorePage(
         color: _selectedColor!,
+        userId: widget.userId,
       );
     } else {
       body = FolderPage(userId: widget.userId, color: _selectedColor!);
@@ -113,7 +114,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       resizeToAvoidBottomInset: true,
       drawer: Drawer(
         child: DrawerContent(
-          selectedColor: _selectedColor,
+          color: _selectedColor ?? Colors.blue,
         ),
       ),
       body: body,
@@ -148,12 +149,12 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                 index == 0
                     ? Icons.menu_rounded
                     : index == 1
-                        ? Icons.fireplace_rounded
+                        ? Icons.video_library
                         : index == 2
                             ? Icons.folder
                             : index == 3
-                                ? Icons.video_library
-                                : Icons.notifications,
+                                ? Icons.fireplace_rounded
+                                : Icons.shopping_basket_rounded,
                 size: 45,
                 color: color,
               ),
@@ -162,11 +163,11 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                   index == 0
                       ? 'Menu'
                       : index == 1
-                          ? 'Dashboard'
+                          ? 'Reels'
                           : index == 2
                               ? 'Folders'
                               : index == 3
-                                  ? 'Reels'
+                                  ? 'Dashboard'
                                   : 'Notify',
                   style: const TextStyle(color: color, fontSize: 12),
                 )

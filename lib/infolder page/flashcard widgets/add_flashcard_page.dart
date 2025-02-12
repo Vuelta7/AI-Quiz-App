@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/loading.dart';
-import 'package:learn_n/start%20page/start%20page%20utils/start_page_button.dart';
+import 'package:learn_n/utils/retro_button.dart';
 import 'package:uuid/uuid.dart';
 
 class AddFlashCardPage extends StatefulWidget {
