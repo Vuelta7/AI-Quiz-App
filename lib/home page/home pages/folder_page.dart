@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/loading.dart';
-import 'package:learn_n/home%20page/folder%20page/folder_model.dart';
+import 'package:learn_n/home%20page/folder%20widget/folder_model.dart';
 import 'package:learn_n/utils/color_utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:learn_n/home%20page/folder%20page/edit_folder_page.dart';
+import 'package:learn_n/home%20page/folder%20widget/edit_folder_page.dart';
 import 'package:learn_n/infolder%20page/infolder_main.dart';
 import 'package:learn_n/utils/color_utils.dart';
 import 'package:learn_n/utils/retro_button.dart';

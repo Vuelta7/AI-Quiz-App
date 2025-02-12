@@ -1,7 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/home%20page/drawer%20page/drawer_contents.dart';
-import 'package:learn_n/home%20page/folder%20page/add_folder_page.dart';
+import 'package:learn_n/home%20page/drawer%20widget/drawer_contents.dart';
+import 'package:learn_n/home%20page/folder%20widget/add_folder_page.dart';
 import 'package:learn_n/home%20page/home%20pages/dashboard_main.dart';
 import 'package:learn_n/home%20page/home%20pages/folder_page.dart';
 import 'package:learn_n/home%20page/home%20pages/reels_page.dart';

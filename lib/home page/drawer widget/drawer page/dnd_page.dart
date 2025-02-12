@@ -80,7 +80,7 @@ class _DoNotDisturbPageState extends State<DoNotDisturbPage> {
               if (_notifPolicyAccess)
                 buildRetroButton(
                   'Toggle DND mode',
-                  Colors.teal[300]!,
+                  getShade(widget.color, 300),
                   () async {
                     await _checkNotificationPolicyAccessGranted();
                     await Future.delayed(const Duration(milliseconds: 50));
@@ -130,6 +130,8 @@ class _DoNotDisturbPageState extends State<DoNotDisturbPage> {
   Future<void> _openNotificationPolicyAccessSettings() async {
     try {
       await _dndPlugin.openNotificationPolicyAccessSettings();
+      _checkNotificationPolicyAccessGranted();
+      _checkDndEnabled();
     } catch (e) {
       print('Error opening notification policy access settings: $e');
     }
