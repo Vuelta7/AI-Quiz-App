@@ -38,11 +38,11 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
-// add automatic qna
-// add weekly folder
+// add automatic qna - feb14
+// add weekly folder - feb15
 
 // Not important:
-// make conditions and info how to update streakpet
 // WebPage fix
-// add automatic qna
 // create the dnd mechanics
+// make conditions and info how to update streakpet
+// add local storage

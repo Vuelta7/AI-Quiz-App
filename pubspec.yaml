@@ -38,6 +38,8 @@ dependencies:
   flutter_chat_ui: ^1.6.15
   file_picker: ^8.3.5
   syncfusion_flutter_pdf: ^28.2.5
+  uuid: ^4.5.1
+
 
 dev_dependencies:
   flutter_test:
@@ -58,10 +60,7 @@ flutter:
     - assets/logo_icon.png
     - assets/wrong_sf.mp3
     - assets/correct_sf.mp3
-    - assets/rank1.json
-    - assets/rank2.json
-    - assets/rank3.json
-    - assets/rank4.json
+    - assets/fire.json
     - assets/streakpet1.json
     - assets/streakpet2.json
     - assets/streakpet3.json
@@ -79,6 +78,7 @@ flutter:
     - assets/theme.json
     - assets/confetti.json
     - assets/award.json
+    - assets/loading.json
 
 flutter_icons:
   android: true

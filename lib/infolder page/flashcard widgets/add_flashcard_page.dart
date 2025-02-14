@@ -354,7 +354,11 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                       maxLines: 5,
                                       decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
-                                        labelText: "Or paste your text here",
+                                        labelText: "paste your text here",
+                                        labelStyle: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: 'PressStart2P',
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 16),
@@ -403,11 +407,11 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                                             fontSize: 16),
                                                       ),
                                                       const SizedBox(height: 4),
-                                                      Text("A: ${qa['answer']}",
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14)),
+                                                      Text(
+                                                        "A: ${qa['answer']}",
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                      ),
                                                     ],
                                                   ),
                                                 ),

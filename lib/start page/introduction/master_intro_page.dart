@@ -50,7 +50,7 @@ class IntroPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Lottie.asset('assets/rank3.json'),
+          Lottie.asset('assets/fire.json'),
           const Text(
             "Become a productivity master and be an egoist to reach Rank 1!",
             textAlign: TextAlign.center,

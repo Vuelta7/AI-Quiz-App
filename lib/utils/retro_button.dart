@@ -13,7 +13,13 @@ Widget buildRetroButton(String text, Color color, VoidCallback? onPressed,
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      icon: icon != null ? Icon(icon, size: 18) : Container(),
+      icon: icon != null
+          ? Icon(
+              icon,
+              size: 18,
+              color: Colors.white,
+            )
+          : Container(),
       label: Text(
         text,
         style: const TextStyle(
