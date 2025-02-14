@@ -19,6 +19,7 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
   final answerController = TextEditingController();
   final questionController = TextEditingController();
   bool _isLoading = false;
+  bool _isAddingFlashcard = true;
 
   @override
   void dispose() {
@@ -70,88 +71,158 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
       backgroundColor: widget.color,
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: Column(
+          Column(
+            children: [
+              Row(
                 children: [
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    style: const TextStyle(
-                      fontFamily: 'Arial',
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                    controller: answerController,
-                    decoration: const InputDecoration(
-                      hintText: 'Answer',
-                      border: InputBorder.none,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isAddingFlashcard = true;
+                        });
+                      },
+                      child: Container(
+                        color: _isAddingFlashcard ? Colors.black : Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Text(
+                          'Add Flashcard',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: _isAddingFlashcard
+                                ? Colors.white
+                                : Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    style: const TextStyle(
-                      fontFamily: 'Arial',
-                      color: Colors.white,
-                      fontSize: 14,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isAddingFlashcard = false;
+                        });
+                      },
+                      child: Container(
+                        color:
+                            !_isAddingFlashcard ? Colors.black : Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Text(
+                          'Magic Import',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: !_isAddingFlashcard
+                                ? Colors.white
+                                : Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                    controller: questionController,
-                    cursorColor: Colors.black,
-                    decoration: const InputDecoration(
-                      hintText: 'Question or Definition',
-                      border: InputBorder.none,
-                    ),
-                    maxLines: 14,
-                  ),
-                  const SizedBox(height: 10),
-                  buildRetroButton(
-                    'SUBMIT',
-                    Colors.black,
-                    _isLoading
-                        ? null
-                        : () async {
-                            if (answerController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please enter a question.'),
-                                ),
-                              );
-                              return;
-                            }
-                            if (questionController.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Please enter an answer.'),
-                                ),
-                              );
-                              return;
-                            }
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            try {
-                              await uploadFlashCardToDb();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content:
-                                      Text('Flashcard added successfully!'),
-                                ),
-                              );
-                              Navigator.pop(context);
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Error: $e')),
-                              );
-                            } finally {
-                              setState(() {
-                                _isLoading = false;
-                              });
-                            }
-                          },
                   ),
                 ],
               ),
-            ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    child: _isAddingFlashcard
+                        ? Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              TextFormField(
+                                style: const TextStyle(
+                                  fontFamily: 'Arial',
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                                controller: answerController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Answer',
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              TextFormField(
+                                style: const TextStyle(
+                                  fontFamily: 'Arial',
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                                controller: questionController,
+                                cursorColor: Colors.black,
+                                decoration: const InputDecoration(
+                                  hintText: 'Question or Definition',
+                                  border: InputBorder.none,
+                                ),
+                                maxLines: 14,
+                              ),
+                              const SizedBox(height: 10),
+                              buildRetroButton(
+                                'SUBMIT',
+                                Colors.black,
+                                _isLoading
+                                    ? null
+                                    : () async {
+                                        if (answerController.text
+                                            .trim()
+                                            .isEmpty) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Please enter a question.'),
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        if (questionController.text
+                                            .trim()
+                                            .isEmpty) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Please enter an answer.'),
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        setState(() {
+                                          _isLoading = true;
+                                        });
+                                        try {
+                                          await uploadFlashCardToDb();
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Flashcard added successfully!'),
+                                            ),
+                                          );
+                                          Navigator.pop(context);
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text('Error: $e')),
+                                          );
+                                        } finally {
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                        }
+                                      },
+                              ),
+                            ],
+                          )
+                        : Container(), // Placeholder for Magic Import content
+                  ),
+                ),
+              ),
+            ],
           ),
           if (_isLoading) const Loading(),
         ],
