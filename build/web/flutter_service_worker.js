@@ -32,8 +32,8 @@ const RESOURCES = {"assets/AssetManifest.bin": "f061ee96a25593fb28c51dad39984c8c
 "assets/assets/tiktok.json": "322786280182e9d751ae0b26b4a402a8",
 "assets/assets/wrong_sf.mp3": "9b07b38674b610e3c46feae9ad646bcc",
 "assets/FontManifest.json": "af72817180f1600c6ad8d83aa72f0a98",
-"assets/fonts/MaterialIcons-Regular.otf": "6ea29a4674de0604a5375fd74b04ed78",
-"assets/NOTICES": "9fb9bc593849d310e308b457d66d75c6",
+"assets/fonts/MaterialIcons-Regular.otf": "81d7dda9a5ceb290d4a303ece3c2f3c9",
+"assets/NOTICES": "3a291e08bee8f59e33c800d5045feb28",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "e986ebe42ef785b27164c36a9abc7818",
 "assets/packages/flex_color_picker/assets/opacity.png": "49c4f3bcb1b25364bb4c255edcaaf5b2",
 "assets/packages/flutter_chat_ui/assets/2.0x/icon-arrow.png": "8efbd753127a917b4dc02bf856d32a47",
@@ -69,10 +69,10 @@ const RESOURCES = {"assets/AssetManifest.bin": "f061ee96a25593fb28c51dad39984c8c
 "canvaskit/skwasm.wasm": "828c26a0b1cc8eb1adacbdd0c5e8bcfa",
 "canvaskit/skwasm.worker.js": "89990e8c92bcb123999aa81f7e203b1c",
 "flutter.js": "4b2350e14c6650ba82871f60906437ea",
-"flutter_bootstrap.js": "06b044f7c417dad3f4c3d877b5d9dc40",
+"flutter_bootstrap.js": "3da0d9bf55d5ff4fc41a3b1320b3ded8",
 "index.html": "31590bb9b4f70e7d35ac5e5766df7c5b",
 "/": "31590bb9b4f70e7d35ac5e5766df7c5b",
-"main.dart.js": "a51c249e1d7f45c66f382b2bfc3f2245",
+"main.dart.js": "2b204825609fb0251b03b1f5677e11d6",
 "manifest.json": "f4427555446665e7b6eb1c7a9b710610",
 "version.json": "c344d4ec2a7481a952f560382c0822a6"};
 // The application shell files that are downloaded before a service worker can

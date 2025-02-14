@@ -134,6 +134,32 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
     }
   }
 
+  Future<void> saveQuestionToFirestore(
+      String folderId, String question, String answer) async {
+    try {
+      String id = FirebaseFirestore.instance
+          .collection("folders")
+          .doc(folderId)
+          .collection("questions")
+          .doc()
+          .id;
+
+      await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(folderId)
+          .collection("questions")
+          .doc(id)
+          .set({
+        "question": question.trim(),
+        "answer": answer.trim(),
+      });
+
+      print("Question saved successfully!");
+    } catch (e) {
+      print("Error saving question: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,105 +241,105 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        _isAddingFlashcard
-                            ? Column(
-                                children: [
-                                  TextFormField(
-                                    style: const TextStyle(
-                                      fontFamily: 'Arial',
-                                      color: Colors.white,
-                                      fontSize: 14,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        children: [
+                          _isAddingFlashcard
+                              ? Column(
+                                  children: [
+                                    TextFormField(
+                                      style: const TextStyle(
+                                        fontFamily: 'Arial',
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
+                                      controller: answerController,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Answer',
+                                        border: InputBorder.none,
+                                      ),
                                     ),
-                                    controller: answerController,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Answer',
-                                      border: InputBorder.none,
+                                    const SizedBox(height: 10),
+                                    TextFormField(
+                                      style: const TextStyle(
+                                        fontFamily: 'Arial',
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
+                                      controller: questionController,
+                                      cursorColor: Colors.black,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Question or Definition',
+                                        border: InputBorder.none,
+                                      ),
+                                      maxLines: 14,
                                     ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  TextFormField(
-                                    style: const TextStyle(
-                                      fontFamily: 'Arial',
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                    controller: questionController,
-                                    cursorColor: Colors.black,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Question or Definition',
-                                      border: InputBorder.none,
-                                    ),
-                                    maxLines: 14,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  buildRetroButton(
-                                    'SUBMIT',
-                                    getShade(Colors.black, 300),
-                                    _isLoading
-                                        ? null
-                                        : () async {
-                                            if (answerController.text
-                                                .trim()
-                                                .isEmpty) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Please enter a question.'),
-                                                ),
-                                              );
-                                              return;
-                                            }
-                                            if (questionController.text
-                                                .trim()
-                                                .isEmpty) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Please enter an answer.'),
-                                                ),
-                                              );
-                                              return;
-                                            }
-                                            setState(() {
-                                              _isLoading = true;
-                                            });
-                                            try {
-                                              await uploadFlashCardToDb();
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Flashcard added successfully!'),
-                                                ),
-                                              );
-                                              Navigator.pop(context);
-                                            } catch (e) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                    content: Text('Error: $e')),
-                                              );
-                                            } finally {
+                                    const SizedBox(height: 10),
+                                    buildRetroButton(
+                                      'SUBMIT',
+                                      getShade(Colors.black, 300),
+                                      _isLoading
+                                          ? null
+                                          : () async {
+                                              if (answerController.text
+                                                  .trim()
+                                                  .isEmpty) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        'Please enter a question.'),
+                                                  ),
+                                                );
+                                                return;
+                                              }
+                                              if (questionController.text
+                                                  .trim()
+                                                  .isEmpty) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        'Please enter an answer.'),
+                                                  ),
+                                                );
+                                                return;
+                                              }
                                               setState(() {
-                                                _isLoading = false;
+                                                _isLoading = true;
                                               });
-                                            }
-                                          },
-                                  ),
-                                ],
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
+                                              try {
+                                                await uploadFlashCardToDb();
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        'Flashcard added successfully!'),
+                                                  ),
+                                                );
+                                                Navigator.pop(context);
+                                              } catch (e) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                      content:
+                                                          Text('Error: $e')),
+                                                );
+                                              } finally {
+                                                setState(() {
+                                                  _isLoading = false;
+                                                });
+                                              }
+                                            },
+                                    ),
+                                  ],
+                                )
+                              : Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     buildRetroButton(
@@ -348,56 +374,64 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     questionsAndAnswers.isNotEmpty
-                                        ? SizedBox(
-                                            height:
-                                                300, // Define a height for the ListView
-                                            child: ListView.builder(
-                                              itemCount:
-                                                  questionsAndAnswers.length,
-                                              itemBuilder: (context, index) {
-                                                final qa =
-                                                    questionsAndAnswers[index];
-                                                return Card(
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 8),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            12),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Q: ${qa['question']}",
+                                        ? ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount:
+                                                questionsAndAnswers.length,
+                                            itemBuilder: (context, index) {
+                                              final qa =
+                                                  questionsAndAnswers[index];
+                                              return Card(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 8),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(12),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "Q: ${qa['question']}",
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16),
+                                                      ),
+                                                      const SizedBox(height: 4),
+                                                      Text("A: ${qa['answer']}",
                                                           style:
                                                               const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 16),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 4),
-                                                        Text(
-                                                            "A: ${qa['answer']}",
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        14)),
-                                                      ],
-                                                    ),
+                                                                  fontSize:
+                                                                      14)),
+                                                    ],
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                ),
+                                              );
+                                            },
                                           )
                                         : const Text("No questions generated."),
+                                    const SizedBox(height: 16),
+                                    buildRetroButton(
+                                      'Add to Folder',
+                                      getShade(Colors.black, 300),
+                                      () {
+                                        for (var qa in questionsAndAnswers) {
+                                          saveQuestionToFirestore(
+                                              widget.folderId,
+                                              qa['question']!,
+                                              qa['answer']!);
+                                        }
+                                      },
+                                    ),
                                   ],
                                 ),
-                              ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
