@@ -1,7 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/infolder%20page/infolder_main.dart';
 import 'package:learn_n/utils/color_utils.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayPage extends StatefulWidget {
@@ -10,6 +12,7 @@ class PlayPage extends StatefulWidget {
   final String folderId;
   final Color headerColor;
   final bool isMultipleOptionMode;
+  final bool isImported;
 
   const PlayPage({
     super.key,
@@ -18,6 +21,7 @@ class PlayPage extends StatefulWidget {
     required this.folderId,
     required this.headerColor,
     this.isMultipleOptionMode = true,
+    required this.isImported,
   });
 
   @override
@@ -227,71 +231,70 @@ class _PlayPageState extends State<PlayPage> {
         return Dialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Quiz Completed!',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  "You've completed all questions.\n\nTotal Wrong Attempts: $wrongAnswers\nTime Spent: ${timeSpent}s",
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () async {
-                    await _addPointsToUser(5);
-                    await _updateLeaderboard(timeSpent);
-                    await _updateHeatmapData();
-                    _restartQuiz();
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                  ),
-                  child: const Text(
-                    'Restart',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'PressStart2P',
+          child: Stack(
+            children: [
+              Lottie.asset(
+                'assets/confetti.json',
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Quiz Completed!',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () async {
-                    await _addPointsToUser(5);
-                    await _updateLeaderboard(timeSpent);
-                    await _updateHeatmapData();
-                    _finishQuiz();
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                  child: const Text(
-                    'Finish',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'PressStart2P',
+                    const SizedBox(height: 20),
+                    Text(
+                      "You've completed all questions.\n\nTotal Wrong Attempts: $wrongAnswers\nTime Spent: ${timeSpent}s",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _addPointsToUser(5);
+                        await _updateLeaderboard(timeSpent);
+                        await _updateHeatmapData();
+                        _finishQuiz();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InFolderMain(
+                              folderId: widget.folderId,
+                              folderName: widget.folderName,
+                              headerColor: widget.headerColor,
+                              isImported: widget.isImported,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                      child: const Text(
+                        'Finish',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'PressStart2P',
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
@@ -369,20 +372,6 @@ class _PlayPageState extends State<PlayPage> {
 
       await userDoc.update({'heatmap': heatmapData});
     }
-  }
-
-  void _restartQuiz() {
-    setState(() {
-      currentIndex = 0;
-      wrongAnswers = 0;
-      currentHint = '';
-      feedbackMessage = 'Work Smart';
-      wrongAnswerCount = List.filled(widget.questions.length, 0);
-      attemptedAnswers.clear();
-      _pageController.jumpToPage(0);
-      _stopwatch.reset();
-      _stopwatch.start();
-    });
   }
 
   void _finishQuiz() {

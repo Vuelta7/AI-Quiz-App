@@ -260,6 +260,7 @@ class _InFolderMainState extends State<InFolderMain>
                               folderId: widget.folderId,
                               headerColor: widget.headerColor,
                               questions: questions,
+                              isImported: widget.isImported,
                             ),
                           ),
                         );
