@@ -2,10 +2,10 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/drawer%20widget/drawer_contents.dart';
 import 'package:learn_n/home%20page/folder%20widget/add_folder_page.dart';
-import 'package:learn_n/home%20page/home%20pages/dashboard_main.dart';
 import 'package:learn_n/home%20page/home%20pages/folder_page.dart';
 import 'package:learn_n/home%20page/home%20pages/reels_page.dart';
 import 'package:learn_n/home%20page/home%20pages/store_page.dart';
+import 'package:learn_n/home%20page/home%20pages/streak_page.dart';
 import 'package:learn_n/utils/color_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,6 +27,10 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
   late CurvedAnimation borderRadiusCurve;
   late AnimationController _hideBottomBarAnimationController;
   Color? _selectedColor;
+  late ReelsPage _reelsPage;
+  late FolderPage _folderPage;
+  late StreakPage _dashboard;
+  late StorePage _storePage;
 
   @override
   void initState() {
@@ -62,6 +66,10 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     String? colorHex = prefs.getString('selectedColor');
     setState(() {
       _selectedColor = colorHex != null ? hexToColor(colorHex) : Colors.blue;
+      _reelsPage = ReelsPage(userId: widget.userId, color: _selectedColor!);
+      _folderPage = FolderPage(userId: widget.userId, color: _selectedColor!);
+      _dashboard = StreakPage(userId: widget.userId, color: _selectedColor!);
+      _storePage = StorePage(color: _selectedColor!, userId: widget.userId);
     });
   }
 
@@ -94,18 +102,15 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
     Widget body;
     if (_selectedIndex == 1) {
-      body = ReelsPage(userId: widget.userId, color: _selectedColor!);
+      body = _reelsPage;
     } else if (_selectedIndex == 2) {
-      body = FolderPage(userId: widget.userId, color: _selectedColor!);
+      body = _folderPage;
     } else if (_selectedIndex == 3) {
-      body = Dashboard(userId: widget.userId, color: _selectedColor!);
+      body = _dashboard;
     } else if (_selectedIndex == 4) {
-      body = StorePage(
-        color: _selectedColor!,
-        userId: widget.userId,
-      );
+      body = _storePage;
     } else {
-      body = FolderPage(userId: widget.userId, color: _selectedColor!);
+      body = _folderPage;
     }
 
     return Scaffold(

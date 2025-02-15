@@ -5,17 +5,17 @@ import 'package:learn_n/components/loading.dart';
 import 'package:learn_n/utils/color_utils.dart';
 import 'package:lottie/lottie.dart';
 
-class Dashboard extends StatefulWidget {
+class StreakPage extends StatefulWidget {
   final String userId;
   final Color color;
 
-  const Dashboard({super.key, required this.userId, required this.color});
+  const StreakPage({super.key, required this.userId, required this.color});
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _StreakPageState createState() => _StreakPageState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _StreakPageState extends State<StreakPage> {
   String _petName = 'Augy chan';
 
   @override

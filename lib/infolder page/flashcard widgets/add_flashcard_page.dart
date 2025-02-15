@@ -30,12 +30,27 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
   String extractedText = "Select a PDF to extract text.";
   List<Map<String, String>> questionsAndAnswers = [];
   TextEditingController textController = TextEditingController();
+  List<TextEditingController> questionControllers = [];
+  List<TextEditingController> answerControllers = [];
+  List<String> flashCardIds = [];
 
   @override
   void dispose() {
     answerController.dispose();
     questionController.dispose();
+    for (var controller in questionControllers) {
+      controller.dispose();
+    }
+    for (var controller in answerControllers) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchExistingFlashcards();
   }
 
   Color getShade(Color color, int shade) {
@@ -160,6 +175,64 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
     }
   }
 
+  Future<void> fetchExistingFlashcards() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .collection("questions")
+          .get();
+
+      setState(() {
+        for (var doc in snapshot.docs) {
+          flashCardIds.add(doc.id);
+          questionControllers.add(TextEditingController(text: doc['question']));
+          answerControllers.add(TextEditingController(text: doc['answer']));
+        }
+      });
+    } catch (e) {
+      print("Error fetching flashcards: $e");
+    }
+  }
+
+  Future<void> updateFlashCardInDb(
+      String flashCardId, String question, String answer) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .collection("questions")
+          .doc(flashCardId)
+          .update({
+        "question": question.trim(),
+        "answer": answer.trim(),
+      });
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> deleteFlashCardFromDb(String flashCardId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .collection("questions")
+          .doc(flashCardId)
+          .delete();
+      setState(() {
+        int index = flashCardIds.indexOf(flashCardId);
+        flashCardIds.removeAt(index);
+        questionControllers.removeAt(index);
+        answerControllers.removeAt(index);
+      });
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,6 +254,25 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
             color: Colors.black,
           ),
         ),
+        actions: [
+          if (!_isAddingFlashcard)
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                for (int i = 0; i < questionsAndAnswers.length; i++) {
+                  saveQuestionToFirestore(
+                    widget.folderId,
+                    questionControllers[i].text,
+                    answerControllers[i].text,
+                  );
+                }
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Questions saved successfully!')),
+                );
+              },
+            ),
+        ],
       ),
       backgroundColor: widget.color,
       body: Stack(
@@ -281,7 +373,7 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                     ),
                                     const SizedBox(height: 10),
                                     buildRetroButton(
-                                      'SUBMIT',
+                                      'Add Flashcard',
                                       getShade(Colors.black, 300),
                                       _isLoading
                                           ? null
@@ -387,6 +479,15 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                             itemBuilder: (context, index) {
                                               final qa =
                                                   questionsAndAnswers[index];
+                                              if (questionControllers.length <=
+                                                  index) {
+                                                questionControllers.add(
+                                                    TextEditingController(
+                                                        text: qa['question']));
+                                                answerControllers.add(
+                                                    TextEditingController(
+                                                        text: qa['answer']));
+                                              }
                                               return Card(
                                                 margin:
                                                     const EdgeInsets.symmetric(
@@ -399,18 +500,24 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text(
-                                                        "Q: ${qa['question']}",
-                                                        style: const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 16),
+                                                      TextField(
+                                                        controller:
+                                                            questionControllers[
+                                                                index],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          labelText: 'Question',
+                                                        ),
                                                       ),
                                                       const SizedBox(height: 4),
-                                                      Text(
-                                                        "A: ${qa['answer']}",
-                                                        style: const TextStyle(
-                                                            fontSize: 14),
+                                                      TextField(
+                                                        controller:
+                                                            answerControllers[
+                                                                index],
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          labelText: 'Answer',
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -430,6 +537,97 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                               qa['question']!,
                                               qa['answer']!);
                                         }
+                                      },
+                                    ),
+                                    const SizedBox(height: 16),
+                                    const Text(
+                                      "Existing Flashcards:",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: flashCardIds.length,
+                                      itemBuilder: (context, index) {
+                                        return Card(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 8),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextField(
+                                                  controller:
+                                                      questionControllers[
+                                                          index],
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText: 'Question',
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                TextField(
+                                                  controller:
+                                                      answerControllers[index],
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    labelText: 'Answer',
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                          Icons.save),
+                                                      onPressed: () {
+                                                        updateFlashCardInDb(
+                                                          flashCardIds[index],
+                                                          questionControllers[
+                                                                  index]
+                                                              .text,
+                                                          answerControllers[
+                                                                  index]
+                                                              .text,
+                                                        );
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                              content: Text(
+                                                                  'Flashcard updated!')),
+                                                        );
+                                                      },
+                                                    ),
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                          Icons.delete),
+                                                      onPressed: () {
+                                                        deleteFlashCardFromDb(
+                                                            flashCardIds[
+                                                                index]);
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                              content: Text(
+                                                                  'Flashcard deleted!')),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
                                       },
                                     ),
                                   ],

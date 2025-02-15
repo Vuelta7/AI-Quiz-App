@@ -38,6 +38,8 @@ class _InFolderMainState extends State<InFolderMain>
   late CurvedAnimation borderRadiusCurve;
   late AnimationController _hideBottomBarAnimationController;
   late AnimationController _hideFabAnimationController;
+  late FlashcardsPage _flashcardsPage;
+  late LeaderboardPage _leaderboardPage;
 
   @override
   void initState() {
@@ -87,6 +89,12 @@ class _InFolderMainState extends State<InFolderMain>
       const Duration(milliseconds: 100),
       () => _borderRadiusAnimationController.forward(),
     );
+
+    _flashcardsPage = FlashcardsPage(
+      folderId: widget.folderId,
+      color: widget.headerColor,
+    );
+    _leaderboardPage = LeaderboardPage(folderId: widget.folderId);
   }
 
   @override
@@ -189,24 +197,21 @@ class _InFolderMainState extends State<InFolderMain>
                 style: TextStyle(
                   fontFamily: 'PressStart2P',
                   fontSize: 10,
-                  color: widget.headerColor,
+                  color: getShade(widget.headerColor, 800),
                 ),
               ),
             ),
           ),
         ],
       ),
-      backgroundColor: widget.headerColor.withOpacity(0.7),
+      backgroundColor: getShade(widget.headerColor, 700),
       body: NotificationListener<ScrollNotification>(
         onNotification: onScrollNotification,
         child: IndexedStack(
           index: _selectedIndex,
           children: [
-            FlashcardsPage(
-              folderId: widget.folderId,
-              color: widget.headerColor,
-            ),
-            LeaderboardPage(folderId: widget.folderId),
+            _flashcardsPage,
+            _leaderboardPage,
           ],
         ),
       ),
