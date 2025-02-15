@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
           contentTextStyle: TextStyle(
             color: Colors.black,
           ),
+          behavior: SnackBarBehavior.floating,
         ),
       ),
       home: const SplashScreen(),

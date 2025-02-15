@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/infolder%20page/flashcard%20widgets/edit_folder_page.dart';
 
 class FlashCardModel extends StatefulWidget {
   final String question;
   final String answer;
   final String questionId;
   final String folderId;
-  final bool isEditing;
   final Color color;
 
   const FlashCardModel({
@@ -15,7 +13,6 @@ class FlashCardModel extends StatefulWidget {
     required this.answer,
     required this.questionId,
     required this.folderId,
-    this.isEditing = false,
     required this.color,
   });
 
@@ -86,22 +83,20 @@ class _FlashCardModelState extends State<FlashCardModel>
       animation: _wiggleController,
       builder: (context, child) {
         return Transform.translate(
-          offset: widget.isEditing
-              ? Offset(5 * _wiggleController.value, 0)
-              : Offset.zero,
+          offset: Offset.zero,
           child: Container(
             width: double.infinity,
             height: 180,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: widget.color,
               borderRadius: BorderRadius.circular(9),
               border: Border.all(
                 width: 4,
-                color: const Color.fromARGB(255, 0, 0, 0),
+                color: Colors.white,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.white.withOpacity(0.5),
                   offset: const Offset(0, 5),
                   blurRadius: 10,
                   spreadRadius: 0,
@@ -124,45 +119,18 @@ class _FlashCardModelState extends State<FlashCardModel>
     return Visibility(
       visible: _animation.value < 0.5,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(3.0),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                widget.question,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (widget.isEditing)
-                IconButton(
-                  icon: const Icon(
-                    Icons.edit,
-                    size: 20,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditFlashCardPage(
-                          folderId: widget.folderId,
-                          flashCardId: widget.questionId,
-                          initialQuestion: widget.question,
-                          initialAnswer: widget.answer,
-                          color: widget.color,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-            ],
+          child: Text(
+            widget.question,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),
@@ -176,42 +144,14 @@ class _FlashCardModelState extends State<FlashCardModel>
         transform: Matrix4.rotationY(_animation.value < 0.5 ? 0 : 3.14159),
         alignment: Alignment.center,
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                widget.answer,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              if (widget.isEditing)
-                IconButton(
-                  icon: const Icon(
-                    Icons.edit,
-                    size: 20,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditFlashCardPage(
-                          folderId: widget.folderId,
-                          flashCardId: widget.questionId,
-                          initialQuestion: widget.question,
-                          initialAnswer: widget.answer,
-                          color: widget.color,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-            ],
+          child: Text(
+            widget.answer,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center,
           ),
         ),
       ),

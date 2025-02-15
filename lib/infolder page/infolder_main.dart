@@ -6,6 +6,7 @@ import 'package:learn_n/infolder%20page/flashcard%20widgets/add_flashcard_page.d
 import 'package:learn_n/infolder%20page/infolder%20page/flashcards_page.dart';
 import 'package:learn_n/infolder%20page/infolder%20page/leaderboards_page.dart';
 import 'package:learn_n/infolder%20page/play%20page/play_page.dart';
+import 'package:learn_n/utils/color_utils.dart';
 
 class InFolderMain extends StatefulWidget {
   final String folderId;
@@ -28,7 +29,6 @@ class InFolderMain extends StatefulWidget {
 class _InFolderMainState extends State<InFolderMain>
     with TickerProviderStateMixin {
   int _selectedIndex = 0;
-  bool _isEditing = false;
   late AnimationController _wiggleController;
   late AnimationController _fabAnimationController;
   late AnimationController _borderRadiusAnimationController;
@@ -37,6 +37,7 @@ class _InFolderMainState extends State<InFolderMain>
   late CurvedAnimation fabCurve;
   late CurvedAnimation borderRadiusCurve;
   late AnimationController _hideBottomBarAnimationController;
+  late AnimationController _hideFabAnimationController;
 
   @override
   void initState() {
@@ -72,6 +73,12 @@ class _InFolderMainState extends State<InFolderMain>
       vsync: this,
     );
 
+    _hideFabAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+      value: 1.0,
+    );
+
     Future.delayed(
       const Duration(seconds: 1),
       () => _fabAnimationController.forward(),
@@ -85,18 +92,8 @@ class _InFolderMainState extends State<InFolderMain>
   @override
   void dispose() {
     _wiggleController.dispose();
+    _hideFabAnimationController.dispose();
     super.dispose();
-  }
-
-  void _toggleEditMode() {
-    setState(() {
-      _isEditing = !_isEditing;
-      if (_isEditing) {
-        _wiggleController.repeat(reverse: true);
-      } else {
-        _wiggleController.stop();
-      }
-    });
   }
 
   Future<List<Map<String, String>>> getQuestions() async {
@@ -118,24 +115,21 @@ class _InFolderMainState extends State<InFolderMain>
     return questions;
   }
 
-  Future<bool> hasQuestions() async {
-    final questions = await getQuestions();
-    return questions.isNotEmpty;
-  }
-
   bool onScrollNotification(ScrollNotification notification) {
     if (notification is UserScrollNotification &&
         notification.metrics.axis == Axis.vertical) {
       switch (notification.direction) {
         case ScrollDirection.forward:
-          _hideBottomBarAnimationController.reverse();
-          _fabAnimationController.forward(from: 0);
+          _hideBottomBarAnimationController.forward();
+          _hideFabAnimationController.reverse();
           break;
         case ScrollDirection.reverse:
           _hideBottomBarAnimationController.forward();
-          _fabAnimationController.reverse(from: 1);
+          _hideFabAnimationController.reverse();
           break;
         case ScrollDirection.idle:
+          _hideBottomBarAnimationController.reverse();
+          _hideFabAnimationController.forward();
           break;
       }
     }
@@ -144,45 +138,62 @@ class _InFolderMainState extends State<InFolderMain>
 
   @override
   Widget build(BuildContext context) {
-    const textColor = Colors.white;
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
         title: Text(
           widget.folderName,
           style: const TextStyle(
-            color: textColor,
+            color: Colors.white,
             fontFamily: 'PressStart2P',
             fontSize: 16,
           ),
         ),
         leading: IconButton(
-          icon:
-              const Icon(Icons.arrow_back_rounded, size: 30, color: textColor),
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            size: 30,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: widget.headerColor,
         actions: [
-          if (_selectedIndex == 0 && !widget.isImported)
-            FutureBuilder<bool>(
-              future: hasQuestions(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Container();
-                } else if (snapshot.hasData && snapshot.data!) {
-                  return IconButton(
-                    icon: Icon(
-                      _isEditing ? Icons.play_circle_fill_rounded : Icons.edit,
-                      size: 40,
-                      color: textColor,
-                    ),
-                    onPressed: _toggleEditMode,
-                  );
-                } else {
-                  return Container();
-                }
-              },
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 6.0,
+              horizontal: 6.0,
             ),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddFlashCardPage(
+                      folderId: widget.folderId,
+                      color: widget.headerColor,
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'Add Flashcard',
+                style: TextStyle(
+                  fontFamily: 'PressStart2P',
+                  fontSize: 10,
+                  color: widget.headerColor,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       backgroundColor: widget.headerColor.withOpacity(0.7),
@@ -193,7 +204,6 @@ class _InFolderMainState extends State<InFolderMain>
           children: [
             FlashcardsPage(
               folderId: widget.folderId,
-              isEditing: _isEditing,
               color: widget.headerColor,
             ),
             LeaderboardPage(folderId: widget.folderId),
@@ -201,96 +211,55 @@ class _InFolderMainState extends State<InFolderMain>
         ),
       ),
       floatingActionButton: _selectedIndex == 0
-          ? FutureBuilder<bool>(
-              future: hasQuestions(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError ||
-                    !snapshot.hasData ||
-                    !snapshot.data!) {
-                  return FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddFlashCardPage(
-                            folderId: widget.folderId,
-                            color: widget.headerColor,
-                          ),
+          ? FadeTransition(
+              opacity: _hideFabAnimationController,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  final questions = await getQuestions();
+                  if (questions.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('No questions available in this folder.'),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlayPage(
+                          folderName: widget.folderName,
+                          folderId: widget.folderId,
+                          headerColor: widget.headerColor,
+                          questions: questions,
+                          isImported: widget.isImported,
                         ),
-                      );
-                    },
-                    backgroundColor: widget.headerColor.withOpacity(0.9),
-                    shape: const CircleBorder(),
-                    child: AnimatedBuilder(
-                      animation: _wiggleController,
-                      builder: (context, child) {
-                        return Transform.rotate(
-                          angle: 0.2 * _wiggleController.value,
-                          child: const Icon(
-                            Icons.add,
-                            size: 45,
-                            color: Colors.white,
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return FloatingActionButton(
-                    onPressed: () async {
-                      if (_isEditing) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddFlashCardPage(
-                              folderId: widget.folderId,
-                              color: widget.headerColor,
-                            ),
-                          ),
-                        );
-                      } else {
-                        final questions = await getQuestions();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PlayPage(
-                              folderName: widget.folderName,
-                              folderId: widget.folderId,
-                              headerColor: widget.headerColor,
-                              questions: questions,
-                              isImported: widget.isImported,
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    backgroundColor: widget.headerColor.withOpacity(0.9),
-                    shape: const CircleBorder(),
-                    child: AnimatedBuilder(
-                      animation: _wiggleController,
-                      builder: (context, child) {
-                        return Transform.rotate(
-                          angle: 0.2 * _wiggleController.value,
-                          child: Icon(
-                            _isEditing ? Icons.add : Icons.play_arrow_rounded,
-                            size: 45,
-                            color: Colors.white,
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
+                      ),
+                    );
+                  }
+                },
+                backgroundColor: Colors.white,
+                shape: const CircleBorder(),
+                child: AnimatedBuilder(
+                  animation: _wiggleController,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: 0.2 * _wiggleController.value,
+                      child: Icon(
+                        Icons.play_arrow_rounded,
+                        size: 45,
+                        color: getShade(widget.headerColor, 800),
+                      ),
+                    );
+                  },
+                ),
+              ),
             )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
         itemCount: 2,
         tabBuilder: (int index, bool isActive) {
-          final color = isActive ? Colors.white : Colors.white;
+          const color = Colors.white;
           final showLabel = isActive || _selectedIndex == index;
 
           return Column(
@@ -304,14 +273,18 @@ class _InFolderMainState extends State<InFolderMain>
               ),
               if (showLabel)
                 Text(
-                  index == 0 ? 'Questions' : 'Learners',
-                  style: TextStyle(color: color, fontSize: 12),
+                  index == 0 ? 'Flashcards' : 'Learners',
+                  style: const TextStyle(
+                    color: color,
+                    fontSize: 10,
+                    fontFamily: 'PressStart2P',
+                  ),
                 )
             ],
           );
         },
         height: 70,
-        backgroundColor: widget.headerColor,
+        backgroundColor: getShade(widget.headerColor, 800),
         activeIndex: _selectedIndex,
         splashColor: widget.headerColor,
         notchAndCornersAnimation: borderRadiusAnimation,

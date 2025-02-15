@@ -66,7 +66,6 @@ class FlashcardsPage extends StatelessWidget {
                 answer: questionData['answer'],
                 questionId: questionDoc.id,
                 folderId: folderId,
-                isEditing: isEditing,
                 color: color,
               ),
             );
