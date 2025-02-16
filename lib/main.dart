@@ -36,7 +36,6 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
-// add automatic qna - feb14
 // add weekly folder - feb15
 
 // Not important:

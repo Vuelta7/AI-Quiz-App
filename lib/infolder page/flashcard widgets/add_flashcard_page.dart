@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/services/gemini_service.dart';
+import 'package:learn_n/components/loading.dart';
+import 'package:learn_n/infolder page/flashcard widgets/auto_quiz.dart';
 import 'package:learn_n/utils/retro_button.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:uuid/uuid.dart';
 
 class AddFlashCardPage extends StatefulWidget {
@@ -24,10 +20,6 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
   final answerController = TextEditingController();
   final questionController = TextEditingController();
   bool _isLoading = false;
-  final GeminiService gemini = GeminiService();
-  String extractedText = "Select a PDF to extract text.";
-  List<Map<String, String>> questionsAndAnswers = [];
-  TextEditingController textController = TextEditingController();
   List<TextEditingController> questionControllers = [];
   List<TextEditingController> answerControllers = [];
   List<String> flashCardIds = [];
@@ -53,6 +45,82 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
 
   Color getShade(Color color, int shade) {
     return color.withOpacity(shade / 1000);
+  }
+
+  Future<void> uploadFlashCardToDb() async {
+    try {
+      final id = const Uuid().v4();
+      await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .collection("questions")
+          .doc(id)
+          .set({
+        "answer": answerController.text.trim(),
+        "question": questionController.text.trim(),
+      });
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> fetchExistingFlashcards() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .collection("questions")
+          .get();
+
+      setState(() {
+        for (var doc in snapshot.docs) {
+          flashCardIds.add(doc.id);
+          questionControllers.add(TextEditingController(text: doc['question']));
+          answerControllers.add(TextEditingController(text: doc['answer']));
+        }
+      });
+    } catch (e) {
+      print("Error fetching flashcards: $e");
+    }
+  }
+
+  Future<void> updateFlashCardInDb(
+      String flashCardId, String question, String answer) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .collection("questions")
+          .doc(flashCardId)
+          .update({
+        "question": question.trim(),
+        "answer": answer.trim(),
+      });
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> deleteFlashCardFromDb(String flashCardId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("folders")
+          .doc(widget.folderId)
+          .collection("questions")
+          .doc(flashCardId)
+          .delete();
+      setState(() {
+        int index = flashCardIds.indexOf(flashCardId);
+        flashCardIds.removeAt(index);
+        questionControllers.removeAt(index);
+        answerControllers.removeAt(index);
+      });
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 
   @override
@@ -165,183 +233,20 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                     );
                   },
                 ),
-                const Text(
-                  'Automatic Generate Quiz:',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
+                const SizedBox(height: 16),
                 buildRetroButton(
-                  'Pick PDF',
-                  getShade(Colors.black, 300),
-                  () async {
-                    await pickAndExtractText();
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Extracted Questions'),
-                          content: SizedBox(
-                            height: 400,
-                            width: double.maxFinite,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: questionsAndAnswers.length,
-                                    itemBuilder: (context, index) {
-                                      final qa = questionsAndAnswers[index];
-                                      return ListTile(
-                                        title: Text(qa['question'] ?? ''),
-                                        subtitle: Text(qa['answer'] ?? ''),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                for (var qa in questionsAndAnswers) {
-                                  saveQuestionToFirestore(widget.folderId,
-                                      qa['question']!, qa['answer']!);
-                                }
-                                Navigator.of(context).pop();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Questions saved!')),
-                                );
-                              },
-                              child: const Text('Save'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  icon: Icons.picture_as_pdf,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                buildRetroButton(
-                  'Paste from Clipboard',
-                  icon: Icons.paste,
+                  'Automatic Quiz Generation',
+                  icon: Icons.quiz,
                   getShade(Colors.black, 300),
                   () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title:
-                              const Text('Generate Questions from Clipboard'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                controller: textController,
-                                maxLines: 5,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Paste your text here",
-                                  labelStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'PressStart2P',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                await generateQuestionsFromClipboard(
-                                    textController.text);
-                                Navigator.of(context).pop();
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Extracted Questions'),
-                                      content: SizedBox(
-                                        height: 400,
-                                        width: double.maxFinite,
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              child: ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount:
-                                                    questionsAndAnswers.length,
-                                                itemBuilder: (context, index) {
-                                                  final qa =
-                                                      questionsAndAnswers[
-                                                          index];
-                                                  return ListTile(
-                                                    title: Text(
-                                                        qa['question'] ?? ''),
-                                                    subtitle: Text(
-                                                        qa['answer'] ?? ''),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            for (var qa
-                                                in questionsAndAnswers) {
-                                              saveQuestionToFirestore(
-                                                  widget.folderId,
-                                                  qa['question']!,
-                                                  qa['answer']!);
-                                            }
-                                            Navigator.of(context).pop();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  content:
-                                                      Text('Questions saved!')),
-                                            );
-                                          },
-                                          child: const Text('Save'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              child: const Text('Generate'),
-                            ),
-                          ],
-                        );
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AutoQuizPage(
+                          folderId: widget.folderId,
+                          color: widget.color,
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -455,187 +360,12 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                     );
                   },
                 ),
+                if (_isLoading) const Loading(),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  Future<void> uploadFlashCardToDb() async {
-    try {
-      final id = const Uuid().v4();
-      await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(widget.folderId)
-          .collection("questions")
-          .doc(id)
-          .set({
-        "answer": answerController.text.trim(),
-        "question": questionController.text.trim(),
-      });
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
-  Future<void> pickAndExtractText() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-
-    if (result != null) {
-      String filePath = result.files.single.path!;
-      File file = File(filePath);
-
-      try {
-        final PdfDocument pdfDoc =
-            PdfDocument(inputBytes: file.readAsBytesSync());
-        String text = "";
-        for (int i = 0; i < pdfDoc.pages.count; i++) {
-          PdfTextExtractor extractor = PdfTextExtractor(pdfDoc);
-          text += "${extractor.extractText()}\n\n";
-        }
-
-        setState(() {
-          extractedText = text.isNotEmpty ? text : "No text found in PDF.";
-        });
-
-        pdfDoc.dispose();
-
-        generateQuestionsFromClipboard(text);
-      } catch (e) {
-        setState(() {
-          extractedText = "Error reading PDF: $e";
-        });
-      }
-    } else {
-      setState(() {
-        extractedText = "No file selected.";
-      });
-    }
-  }
-
-  Future<void> generateQuestionsFromClipboard(String text) async {
-    String prompt =
-        "Generate questions and answers, keep the answer short for example(1 to 3 words only) from the following text. Format it as a valid Dart list of maps like this: [{ \"question\": \"...\", \"answer\": \"...\" }, ...]. Text: $text";
-
-    String? response = await gemini.sendMessage(prompt);
-
-    if (response != null) {
-      try {
-        response = response.trim();
-        if (response.startsWith("```json")) {
-          response =
-              response.replaceAll("```json", "").replaceAll("```", "").trim();
-        }
-        if (response.startsWith("```dart")) {
-          response =
-              response.replaceAll("```dart", "").replaceAll("```", "").trim();
-        }
-
-        var decodedData = jsonDecode(response);
-
-        if (decodedData is List) {
-          setState(() {
-            questionsAndAnswers = List<Map<String, String>>.from(
-                decodedData.map((item) => Map<String, String>.from(item)));
-          });
-        } else {
-          throw Exception("Response is not a List format.");
-        }
-      } catch (e) {
-        setState(() {
-          extractedText = "Failed to parse response: $e";
-        });
-      }
-    }
-  }
-
-  Future<void> saveQuestionToFirestore(
-      String folderId, String question, String answer) async {
-    try {
-      String id = FirebaseFirestore.instance
-          .collection("folders")
-          .doc(folderId)
-          .collection("questions")
-          .doc()
-          .id;
-
-      await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(folderId)
-          .collection("questions")
-          .doc(id)
-          .set({
-        "question": question.trim(),
-        "answer": answer.trim(),
-      });
-
-      print("Question saved successfully!");
-    } catch (e) {
-      print("Error saving question: $e");
-    }
-  }
-
-  Future<void> fetchExistingFlashcards() async {
-    try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(widget.folderId)
-          .collection("questions")
-          .get();
-
-      setState(() {
-        for (var doc in snapshot.docs) {
-          flashCardIds.add(doc.id);
-          questionControllers.add(TextEditingController(text: doc['question']));
-          answerControllers.add(TextEditingController(text: doc['answer']));
-        }
-      });
-    } catch (e) {
-      print("Error fetching flashcards: $e");
-    }
-  }
-
-  Future<void> updateFlashCardInDb(
-      String flashCardId, String question, String answer) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(widget.folderId)
-          .collection("questions")
-          .doc(flashCardId)
-          .update({
-        "question": question.trim(),
-        "answer": answer.trim(),
-      });
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
-  Future<void> deleteFlashCardFromDb(String flashCardId) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(widget.folderId)
-          .collection("questions")
-          .doc(flashCardId)
-          .delete();
-      setState(() {
-        int index = flashCardIds.indexOf(flashCardId);
-        flashCardIds.removeAt(index);
-        questionControllers.removeAt(index);
-        answerControllers.removeAt(index);
-      });
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
   }
 }

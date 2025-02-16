@@ -1,0 +1,2 @@
+C:/Users/uriel/learn_n/android/app/.cxx/Debug/3i1u632j/x86/CMakeFiles/edit_cache.dir
+C:/Users/uriel/learn_n/android/app/.cxx/Debug/3i1u632j/x86/CMakeFiles/rebuild_cache.dir
