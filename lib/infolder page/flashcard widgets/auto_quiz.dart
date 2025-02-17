@@ -33,7 +33,7 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
   Future<void> generateQuestionsFromText(
       String text, String customPrompt) async {
     String defaultPrompt =
-        "Generate questions and answers, keep the answer short for example(1 to 3 words only) from the following text. Format it as a valid Dart list of maps like this: [{ \"question\": \"...\", \"answer\": \"...\" }, ...]. Text: $text";
+        "Generate questions and answers from the following text. Format it as a valid Dart list of maps like this: [{ \"question\": \"...\", \"answer\": \"...\" }, ...]. Text: $text";
     String prompt = customPrompt.isNotEmpty
         ? "$defaultPrompt $customPrompt"
         : defaultPrompt;
@@ -102,7 +102,7 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
       appBar: AppBar(
         backgroundColor: widget.color,
         title: const Text(
-          'Automatic Quiz Generation',
+          'Generate Quiz',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -118,6 +118,23 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
             color: Colors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.save,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              for (var qa in questionsAndAnswers) {
+                saveQuestionToFirestore(
+                    widget.folderId, qa['question']!, qa['answer']!);
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Questions saved!')),
+              );
+            },
+          ),
+        ],
       ),
       backgroundColor: widget.color,
       body: Padding(
@@ -128,66 +145,42 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
             child: Column(
               children: [
                 TextField(
+                  controller: textController,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Paste your text here",
+                    hintStyle: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'PressStart2P',
+                        color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
                   controller: promptController,
                   decoration: const InputDecoration(
-                    hintText: 'Custom Prompt (optional)',
+                    border: OutlineInputBorder(),
+                    hintText: "Custom Prompt (Optional)",
+                    hintStyle: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'PressStart2P',
+                        color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 10),
                 buildRetroButton(
-                  'Generate Questions from Clipboard',
+                  'Generate Questions from Text',
                   getShade(widget.color, 300),
-                  () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title:
-                              const Text('Generate Questions from Clipboard'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                controller: textController,
-                                maxLines: 5,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Paste your text here",
-                                  labelStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'PressStart2P',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                await generateQuestionsFromText(
-                                    textController.text, promptController.text);
-                                setState(() {
-                                  _isLoading = false;
-                                });
-                                if (mounted) {
-                                  Navigator.of(context).pop();
-                                }
-                              },
-                              child: const Text('Generate'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                  () async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    await generateQuestionsFromText(
+                        textController.text, promptController.text);
+                    setState(() {
+                      _isLoading = false;
+                    });
                   },
                 ),
                 const SizedBox(height: 16),
@@ -229,19 +222,20 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
                       )
                     : const Text("No questions generated."),
                 const SizedBox(height: 16),
-                buildRetroButton(
-                  'Save to Folder',
-                  getShade(widget.color, 300),
-                  () {
-                    for (var qa in questionsAndAnswers) {
-                      saveQuestionToFirestore(
-                          widget.folderId, qa['question']!, qa['answer']!);
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Questions saved!')),
-                    );
-                  },
-                ),
+                if (questionsAndAnswers.isNotEmpty)
+                  buildRetroButton(
+                    'Save to Folder',
+                    getShade(widget.color, 300),
+                    () {
+                      for (var qa in questionsAndAnswers) {
+                        saveQuestionToFirestore(
+                            widget.folderId, qa['question']!, qa['answer']!);
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Questions saved!')),
+                      );
+                    },
+                  ),
                 if (_isLoading) const Loading(),
               ],
             ),

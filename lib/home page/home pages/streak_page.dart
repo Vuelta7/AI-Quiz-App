@@ -107,7 +107,7 @@ class _StreakPageState extends State<StreakPage> {
                       endDate: DateTime.now().add(
                         const Duration(days: 40),
                       ),
-                      size: 37.0,
+                      size: 38.0,
                       showText: false,
                       scrollable: true,
                       colorsets: const {

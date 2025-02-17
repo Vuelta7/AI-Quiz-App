@@ -22,6 +22,7 @@ Widget buildRetroButton(String text, Color color, VoidCallback? onPressed,
           : Container(),
       label: Text(
         text,
+        textAlign: TextAlign.center,
         style: const TextStyle(
           fontFamily: 'PressStart2P',
           fontSize: 13,
