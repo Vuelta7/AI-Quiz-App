@@ -36,7 +36,9 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
-// add weekly folder - feb15
+// add pre-existing folder - feb17
+// add weekly folder - feb17
+// fix pdf if not get rid of the pdf - feb17
 
 // Not important:
 // WebPage fix

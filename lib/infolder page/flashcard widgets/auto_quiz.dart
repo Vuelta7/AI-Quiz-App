@@ -1,15 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/loading.dart';
 import 'package:learn_n/services/gemini_service.dart';
 import 'package:learn_n/utils/color_utils.dart';
 import 'package:learn_n/utils/retro_button.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class AutoQuizPage extends StatefulWidget {
   final String folderId;
@@ -32,59 +28,6 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
   @override
   void initState() {
     super.initState();
-    requestStoragePermission();
-  }
-
-  Future<void> requestStoragePermission() async {
-    if (Platform.isAndroid) {
-      var storageStatus = await Permission.storage.request();
-      var mediaStatus =
-          await Permission.mediaLibrary.request(); // For Android 13+
-
-      if (storageStatus.isGranted || mediaStatus.isGranted) {
-        print("Storage permission granted!");
-      } else {
-        print("Storage permission denied!");
-      }
-    }
-  }
-
-  Future<void> pickAndExtractText() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-
-    if (result != null) {
-      String filePath = result.files.single.path!;
-      File file = File(filePath);
-
-      try {
-        final PdfDocument pdfDoc =
-            PdfDocument(inputBytes: file.readAsBytesSync());
-        String text = "";
-        for (int i = 0; i < pdfDoc.pages.count; i++) {
-          PdfTextExtractor extractor = PdfTextExtractor(pdfDoc);
-          text += "${extractor.extractText()}\n\n";
-        }
-
-        setState(() {
-          extractedText = text.isNotEmpty ? text : "No text found in PDF.";
-        });
-
-        pdfDoc.dispose();
-
-        generateQuestionsFromText(text, promptController.text);
-      } catch (e) {
-        setState(() {
-          extractedText = "Error reading PDF: $e";
-        });
-      }
-    } else {
-      setState(() {
-        extractedText = "No file selected.";
-      });
-    }
   }
 
   Future<void> generateQuestionsFromText(
@@ -191,13 +134,6 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                buildRetroButton(
-                  'Pick PDF',
-                  getShade(widget.color, 300),
-                  pickAndExtractText,
-                  icon: Icons.picture_as_pdf,
-                ),
-                const SizedBox(height: 16),
                 buildRetroButton(
                   'Generate Questions from Clipboard',
                   getShade(widget.color, 300),
