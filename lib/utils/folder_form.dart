@@ -26,13 +26,27 @@ Widget buildFolderForm({
         TextFormField(
           style: const TextStyle(
             fontFamily: 'Arial',
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 14,
           ),
           controller: folderNameController,
-          decoration: const InputDecoration(
+          cursorColor: selectedColor,
+          decoration: InputDecoration(
             hintText: 'Folder Name',
-            border: InputBorder.none, // Remove underline
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: selectedColor,
+                width: 2,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: selectedColor,
+                width: 2,
+              ),
+            ),
           ),
           onChanged: onChanged,
           onFieldSubmitted: onFieldSubmitted,
@@ -41,40 +55,78 @@ Widget buildFolderForm({
         TextFormField(
           style: const TextStyle(
             fontFamily: 'Arial',
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 14,
           ),
           controller: descriptionController,
-          decoration: const InputDecoration(
+          cursorColor: selectedColor,
+          decoration: InputDecoration(
             hintText: 'Description',
-            border: InputBorder.none, // Remove underline
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: selectedColor,
+                width: 2,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: selectedColor,
+                width: 2,
+              ),
+            ),
           ),
           maxLines: 3,
           onChanged: onChanged,
           focusNode: descriptionFocusNode,
         ),
         const SizedBox(height: 10),
-        ColorPicker(
-          pickersEnabled: const {
-            ColorPickerType.wheel: true,
-          },
-          color: selectedColor,
-          onColorChanged: onColorChanged,
-          heading: const Text('Select color'),
-          subheading: const Text('Select a different shade'),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: selectedColor,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: ColorPicker(
+            pickersEnabled: const {
+              ColorPickerType.wheel: true,
+            },
+            color: selectedColor,
+            onColorChanged: onColorChanged,
+            heading: const Text('Select color'),
+            subheading: const Text('Select a different shade'),
+          ),
         ),
         const SizedBox(height: 10),
         buildRetroButton(
           isAddScreen ? 'SUBMIT' : 'Save Changes',
-          isFormValid ? Colors.black : Colors.grey,
+          isFormValid ? selectedColor : Colors.grey,
           isLoading || !isFormValid ? null : onSave,
         ),
       ] else ...[
         TextFormField(
           controller: folderIdController,
-          decoration: const InputDecoration(
-            hintText: 'Folder ID',
-            border: InputBorder.none, // Remove underline
+          cursorColor: selectedColor,
+          decoration: InputDecoration(
+            hintText: 'Description',
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: selectedColor,
+                width: 2,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: selectedColor,
+                width: 2,
+              ),
+            ),
           ),
           onChanged: onChanged,
         ),

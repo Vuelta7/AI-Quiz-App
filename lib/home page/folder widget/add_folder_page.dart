@@ -126,7 +126,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
         ),
         color: _selectedColor,
       ),
-      backgroundColor: _selectedColor,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Column(

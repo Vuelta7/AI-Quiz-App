@@ -128,7 +128,7 @@ class _EditFolderPageState extends State<EditFolderPage> {
         ),
         color: _selectedColor,
       ),
-      backgroundColor: _selectedColor,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           SingleChildScrollView(
