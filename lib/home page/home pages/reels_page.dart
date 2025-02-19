@@ -62,7 +62,7 @@ class ReelsPage extends StatelessWidget {
               }
 
               if (allQuestions.isEmpty) {
-                return const EmptyFoldersWidget(); // Use the new widget
+                return const EmptyFoldersWidget();
               }
 
               return PageView.builder(
@@ -76,7 +76,7 @@ class ReelsPage extends StatelessWidget {
                   return QuestionCard(
                     question: questionData['question'],
                     answer: questionData['answer'],
-                    color: color, // Pass the color to QuestionCard
+                    color: color,
                   );
                 },
               );

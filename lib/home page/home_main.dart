@@ -173,7 +173,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                               ? 'Folders'
                               : index == 3
                                   ? 'Streak'
-                                  : 'Notify',
+                                  : 'Store',
                   style: const TextStyle(
                     color: color,
                     fontSize: 8,
