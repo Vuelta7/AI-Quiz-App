@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/home%20page/folder%20widget/folder_model.dart';
 import 'package:learn_n/utils/color_utils.dart';
 import 'package:lottie/lottie.dart';
 
@@ -63,6 +64,41 @@ class _StreakPageState extends State<StreakPage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.fromLTRB(13, 0, 13, 10),
+              decoration: BoxDecoration(
+                color: getShade(widget.color, 500),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(36),
+                  topRight: Radius.circular(36),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Weekly Folder',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  FolderModel(
+                    folderId: '4612',
+                    folderName: 'Programming Fundamentals',
+                    description:
+                        'This Folder helps you to learn the basics of programming terms.',
+                    isImported: true,
+                    headerColor: widget.color,
+                  ),
+                  const SizedBox(height: 200),
+                ],
               ),
             ),
           ],

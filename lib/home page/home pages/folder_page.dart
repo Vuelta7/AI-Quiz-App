@@ -21,7 +21,6 @@ class _FolderPageState extends State<FolderPage> {
   List<DocumentSnapshot> _folders = [];
   String searchQuery = '';
   Map<String, int> _folderPositions = {};
-  bool _isWeeklyFolderVisible = true;
 
   @override
   void initState() {
@@ -84,52 +83,6 @@ class _FolderPageState extends State<FolderPage> {
       backgroundColor: getShade(widget.color, 600),
       body: Column(
         children: [
-          if (_isWeeklyFolderVisible)
-            Container(
-              padding: const EdgeInsets.fromLTRB(13, 0, 13, 10),
-              decoration: BoxDecoration(
-                color: getShade(widget.color, 500),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(36),
-                  bottomRight: Radius.circular(36),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Weekly Folder',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  FolderModel(
-                    folderId: '4612',
-                    folderName: 'Programming Fundamentals',
-                    description:
-                        'This Folder helps you to learn the basics of programming terms.',
-                    isImported: true,
-                    headerColor: widget.color,
-                  )
-                ],
-              ),
-            ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _isWeeklyFolderVisible = !_isWeeklyFolderVisible;
-              });
-            },
-            child: Icon(
-              _isWeeklyFolderVisible
-                  ? Icons.arrow_drop_up
-                  : Icons.arrow_drop_down,
-              color: Colors.white,
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(13, 5, 13, 0),
             child: TextFormField(

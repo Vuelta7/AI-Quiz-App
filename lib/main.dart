@@ -36,12 +36,6 @@ void main() async {
 
 // Mighty Creation of Uriel
 // TODO:
-// get rid of the heatmap
-// add pre-existing folder - feb17
-// add weekly folder - feb17
-// fix pdf if not get rid of the pdf - feb17
-
-// Not important:
 // WebPage fix
 // create the dnd mechanics
 // make conditions and info how to update streakpet
