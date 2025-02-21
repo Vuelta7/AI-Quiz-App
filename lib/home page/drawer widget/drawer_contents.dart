@@ -144,9 +144,9 @@ With this app, we strive to create an efficient and accessible platform that mak
               padding: EdgeInsets.zero,
               children: [
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.info,
-                    color: widget.color,
+                    color: Colors.white,
                   ),
                   title: const Text(
                     'About Us',
@@ -160,9 +160,9 @@ With this app, we strive to create an efficient and accessible platform that mak
                   },
                 ),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.privacy_tip,
-                    color: widget.color,
+                    color: Colors.white,
                   ),
                   title: const Text(
                     'Privacy Policy',
@@ -176,9 +176,9 @@ With this app, we strive to create an efficient and accessible platform that mak
                   },
                 ),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.feedback,
-                    color: widget.color,
+                    color: Colors.white,
                   ),
                   title: const Text(
                     'Feedback and Question',
@@ -192,9 +192,9 @@ With this app, we strive to create an efficient and accessible platform that mak
                   },
                 ),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.do_not_disturb_alt_rounded,
-                    color: widget.color,
+                    color: Colors.white,
                   ),
                   title: const Text(
                     'Focus Mode',
@@ -214,9 +214,9 @@ With this app, we strive to create an efficient and accessible platform that mak
                   },
                 ),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.color_lens,
-                    color: widget.color,
+                    color: Colors.white,
                   ),
                   title: const Text(
                     'Themes',
