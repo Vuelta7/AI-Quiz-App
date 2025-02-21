@@ -1,0 +1,4 @@
+#Thu Feb 20 23:26:23 PST 2025
+base.0=C\:\\Users\\uriel\\learn_n\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
