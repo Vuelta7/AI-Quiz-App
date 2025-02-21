@@ -20,7 +20,6 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
   final pages = [
     const WelcomePage(),
     const IntroPage(),
-    const TiktokPage(),
     const StartPage(),
   ];
 

@@ -66,38 +66,3 @@ class IntroPage extends StatelessWidget {
     );
   }
 }
-
-class TiktokPage extends StatelessWidget {
-  const TiktokPage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      color: Colors.black,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Lottie.asset(
-            'assets/tiktok.json',
-            fit: BoxFit.cover,
-          ),
-          const Text(
-            "Make your scrolling time a learning time! Instead of endless swiping, boost your knowledge with Learn-N.",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'PressStart2P',
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}

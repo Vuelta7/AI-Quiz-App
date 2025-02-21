@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/drawer%20widget/drawer_contents.dart';
 import 'package:learn_n/home%20page/folder%20widget/add_folder_page.dart';
 import 'package:learn_n/home%20page/home%20pages/folder_page.dart';
-import 'package:learn_n/home%20page/home%20pages/reels_page.dart';
 import 'package:learn_n/home%20page/home%20pages/store_page.dart';
 import 'package:learn_n/home%20page/home%20pages/streak_page.dart';
 import 'package:learn_n/utils/color_utils.dart';
@@ -27,10 +26,6 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
   late CurvedAnimation borderRadiusCurve;
   late AnimationController _hideBottomBarAnimationController;
   Color? _selectedColor;
-  late ReelsPage _reelsPage;
-  late FolderPage _folderPage;
-  late StreakPage _dashboard;
-  late StorePage _storePage;
 
   @override
   void initState() {
@@ -66,10 +61,6 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     String? colorHex = prefs.getString('selectedColor');
     setState(() {
       _selectedColor = colorHex != null ? hexToColor(colorHex) : Colors.blue;
-      _reelsPage = ReelsPage(userId: widget.userId, color: _selectedColor!);
-      _folderPage = FolderPage(userId: widget.userId, color: _selectedColor!);
-      _dashboard = StreakPage(userId: widget.userId, color: _selectedColor!);
-      _storePage = StorePage(color: _selectedColor!, userId: widget.userId);
     });
   }
 
@@ -102,15 +93,13 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
     Widget body;
     if (_selectedIndex == 1) {
-      body = _reelsPage;
+      body = StreakPage(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 2) {
-      body = _folderPage;
+      body = FolderPage(userId: widget.userId, color: _selectedColor!);
     } else if (_selectedIndex == 3) {
-      body = _dashboard;
-    } else if (_selectedIndex == 4) {
-      body = _storePage;
+      body = StorePage(color: _selectedColor!, userId: widget.userId);
     } else {
-      body = _folderPage;
+      body = FolderPage(userId: widget.userId, color: _selectedColor!);
     }
 
     return Scaffold(
@@ -141,7 +130,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
             )
           : null,
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        itemCount: 5,
+        itemCount: 4,
         tabBuilder: (int index, bool isActive) {
           const color = Colors.white;
           final showLabel = isActive || _selectedIndex == index;
@@ -154,12 +143,10 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                 index == 0
                     ? Icons.menu_rounded
                     : index == 1
-                        ? Icons.video_library
+                        ? Icons.fireplace_rounded
                         : index == 2
                             ? Icons.folder
-                            : index == 3
-                                ? Icons.fireplace_rounded
-                                : Icons.shopping_basket_rounded,
+                            : Icons.shopping_basket_rounded,
                 size: 45,
                 color: color,
               ),
@@ -168,12 +155,10 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
                   index == 0
                       ? 'Menu'
                       : index == 1
-                          ? 'Reels'
+                          ? 'Streak'
                           : index == 2
                               ? 'Folders'
-                              : index == 3
-                                  ? 'Streak'
-                                  : 'Store',
+                              : 'Store',
                   style: const TextStyle(
                     color: color,
                     fontSize: 8,

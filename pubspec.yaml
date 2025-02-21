@@ -59,7 +59,6 @@ flutter:
     - assets/digitalizequiz.json
     - assets/folders.json
     - assets/logo.png
-    - assets/tiktok.json
     - assets/hints.json
     - assets/effectbg.json
     - assets/dnd.json
