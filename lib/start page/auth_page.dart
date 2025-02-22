@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/home%20page/home_main.dart';
+import 'package:learn_n/utils/auth_textfield.dart';
 import 'package:learn_n/utils/color_utils.dart';
 import 'package:learn_n/utils/retro_button.dart';
-import 'package:learn_n/utils/auth_textfield.dart';
 import 'package:learn_n/utils/start_page_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +28,7 @@ class _AuthScreenState extends State<AuthScreen> {
   String? errorMessage;
   bool isLoading = false;
   final FocusNode passwordFocusNode = FocusNode();
-  Color selectedColor = Colors.blue; // Default color
+  Color selectedColor = Colors.blue;
 
   @override
   void dispose() {
@@ -171,7 +171,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: selectedColor, // change this to the selected color
+      backgroundColor: selectedColor,
       resizeToAvoidBottomInset: true,
       body: Center(
         child: Padding(
@@ -198,7 +198,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   key: formKey,
                   child: Column(
                     children: [
-                      buildRetroTextField('Username',
+                      AuthTextFormField('Username',
                           controller: usernameController, validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Username is required';
@@ -208,7 +208,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         FocusScope.of(context).requestFocus(passwordFocusNode);
                       }),
                       const SizedBox(height: 10),
-                      buildRetroTextField('Password',
+                      AuthTextFormField('Password',
                           isPassword: true,
                           controller: passwordController,
                           focusNode: passwordFocusNode, validator: (value) {

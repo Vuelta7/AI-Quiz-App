@@ -8,7 +8,7 @@ Future<Color> getSelectedColor() async {
   return hexToColor(colorString);
 }
 
-Widget buildRetroTextField(
+Widget AuthTextFormField(
   String label, {
   bool isPassword = false,
   required TextEditingController controller,
