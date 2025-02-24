@@ -19,8 +19,7 @@ class HomeMain extends StatefulWidget {
 
 class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool _isDisposed = false;
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
   late AnimationController _borderRadiusAnimationController;
   late Animation<double> borderRadiusAnimation;
   late CurvedAnimation borderRadiusCurve;
@@ -30,6 +29,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _loadSelectedColor();
     _borderRadiusAnimationController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
@@ -52,8 +52,6 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       const Duration(milliseconds: 100),
       () => _borderRadiusAnimationController.forward(),
     );
-
-    _loadSelectedColor();
   }
 
   Future<void> _loadSelectedColor() async {
@@ -66,17 +64,13 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _isDisposed = true;
     _borderRadiusAnimationController.dispose();
     _hideBottomBarAnimationController.dispose();
     super.dispose();
   }
 
   void _onItemTapped(int index) {
-    if (index == 0) {
-      _scaffoldKey.currentState?.openDrawer();
-    } else {
-      if (_isDisposed) return;
+    if (mounted) {
       setState(() {
         _selectedIndex = index;
       });
@@ -85,21 +79,17 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (_selectedColor == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final primaryColor = _selectedColor!;
+    final mainColor = _selectedColor ?? Colors.blue;
 
     Widget body;
-    if (_selectedIndex == 1) {
-      body = StreakPage(userId: widget.userId, color: _selectedColor!);
+    if (_selectedIndex == 0) {
+      body = StreakPage(userId: widget.userId, color: mainColor);
+    } else if (_selectedIndex == 1) {
+      body = FolderPage(userId: widget.userId, color: mainColor);
     } else if (_selectedIndex == 2) {
-      body = FolderPage(userId: widget.userId, color: _selectedColor!);
-    } else if (_selectedIndex == 3) {
-      body = StorePage(color: _selectedColor!, userId: widget.userId);
+      body = StorePage(userId: widget.userId, color: mainColor);
     } else {
-      body = FolderPage(userId: widget.userId, color: _selectedColor!);
+      body = FolderPage(userId: widget.userId, color: mainColor);
     }
 
     return Scaffold(
@@ -108,11 +98,11 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       resizeToAvoidBottomInset: true,
       drawer: Drawer(
         child: DrawerContent(
-          color: _selectedColor ?? Colors.blue,
+          color: mainColor,
         ),
       ),
       body: body,
-      floatingActionButton: _selectedIndex == 2 || _selectedIndex == 0
+      floatingActionButton: _selectedIndex == 1
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.push(
@@ -124,13 +114,13 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
               backgroundColor: Colors.white,
               child: Icon(
                 Icons.add_rounded,
-                color: getShade(primaryColor, 800),
+                color: getShade(mainColor, 800),
                 size: 30,
               ),
             )
           : null,
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        itemCount: 4,
+        itemCount: 3,
         tabBuilder: (int index, bool isActive) {
           const color = Colors.white;
           final showLabel = isActive || _selectedIndex == index;
@@ -141,24 +131,20 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
             children: [
               Icon(
                 index == 0
-                    ? Icons.menu_rounded
+                    ? Icons.fireplace_rounded
                     : index == 1
-                        ? Icons.fireplace_rounded
-                        : index == 2
-                            ? Icons.folder
-                            : Icons.shopping_basket_rounded,
-                size: 45,
+                        ? Icons.folder
+                        : Icons.person,
+                size: 55,
                 color: color,
               ),
               if (showLabel)
                 Text(
                   index == 0
-                      ? 'Menu'
+                      ? 'Streak'
                       : index == 1
-                          ? 'Streak'
-                          : index == 2
-                              ? 'Folders'
-                              : 'Store',
+                          ? 'Folders'
+                          : 'Store',
                   style: const TextStyle(
                     color: color,
                     fontSize: 8,
@@ -168,7 +154,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
             ],
           );
         },
-        backgroundColor: getShade(primaryColor, 800),
+        backgroundColor: getShade(mainColor, 800),
         height: 70,
         activeIndex: _selectedIndex,
         splashColor: Colors.black,

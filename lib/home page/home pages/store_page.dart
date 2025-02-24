@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/components/loading.dart';
+import 'package:learn_n/home%20page/drawer%20widget/drawer_contents.dart';
 import 'package:learn_n/utils/color_utils.dart';
 import 'package:learn_n/utils/retro_button.dart';
 import 'package:lottie/lottie.dart';
@@ -13,6 +14,26 @@ class StorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            fontFamily: 'PressStart2P',
+            color: Colors.white,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          icon: const Icon(
+            Icons.menu_rounded,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: color,
+      ),
+      drawer: DrawerContent(color: color),
       backgroundColor: getShade(color, 300),
       body: SingleChildScrollView(
         child: Column(

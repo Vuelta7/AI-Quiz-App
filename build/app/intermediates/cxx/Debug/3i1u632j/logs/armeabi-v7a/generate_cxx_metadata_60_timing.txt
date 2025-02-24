@@ -4,3 +4,6 @@ generate_cxx_metadata
   [gap of 21ms]
 generate_cxx_metadata completed in 35ms
 
+# C/C++ build system timings
+generate_cxx_metadata 19ms
+
