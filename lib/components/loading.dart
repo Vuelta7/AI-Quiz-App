@@ -12,7 +12,7 @@ class Loading extends StatelessWidget {
           children: [
             Lottie.asset('assets/loading.json'),
             const Text(
-              'Cooking Stuffs',
+              'Cooking',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,

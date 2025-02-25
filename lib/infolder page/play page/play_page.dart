@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/infolder%20page/infolder_main.dart';
-import 'package:learn_n/utils/color_utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -81,7 +80,6 @@ class _PlayPageState extends State<PlayPage> {
     }
     _stopwatch = Stopwatch()..start();
     _fetchHintCount();
-    _loadSelectedColor();
     _loadModePreference();
   }
 
@@ -96,15 +94,6 @@ class _PlayPageState extends State<PlayPage> {
         hintCount = userSnapshot.data()?['hints'] ?? 0;
       });
     }
-  }
-
-  Future<void> _loadSelectedColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    final colorString =
-        prefs.getString('selectedColor') ?? rgbToHex(Colors.blue);
-    setState(() {
-      selectedColor = hexToColor(colorString);
-    });
   }
 
   Future<void> _loadModePreference() async {
@@ -394,23 +383,26 @@ class _PlayPageState extends State<PlayPage> {
             ? Colors.grey
             : widget.headerColor;
 
-        return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: buttonColor,
-            shadowColor: Colors.white.withOpacity(0.5),
-            elevation: 3,
-            side: const BorderSide(color: Colors.white, width: 2),
-          ),
-          onPressed: () => checkAnswer(answer),
-          child: SizedBox(
-            width: double.infinity,
-            child: Text(
-              answer,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: _getTextColorForBackground(buttonColor),
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+        return Container(
+          padding: const EdgeInsets.all(4.0),
+          decoration: const BoxDecoration(),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(15),
+              backgroundColor: buttonColor,
+              side: const BorderSide(color: Colors.white, width: 2),
+            ),
+            onPressed: () => checkAnswer(answer),
+            child: SizedBox(
+              width: double.infinity,
+              child: Text(
+                answer,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: _getTextColorForBackground(buttonColor),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
             ),
           ),
@@ -460,12 +452,15 @@ class _PlayPageState extends State<PlayPage> {
       backgroundColor: widget.headerColor,
       body: Column(
         children: [
-          SizedBox(
-            height: 10,
-            child: LinearProgressIndicator(
-              value: (currentIndex + 1) / widget.questions.length,
-              color: selectedColor ?? widget.headerColor,
-              backgroundColor: Colors.white,
+          Material(
+            elevation: 2,
+            child: SizedBox(
+              height: 10,
+              child: LinearProgressIndicator(
+                value: (currentIndex + 1) / widget.questions.length,
+                color: Colors.green,
+                backgroundColor: Colors.white,
+              ),
             ),
           ),
           Flexible(
@@ -524,54 +519,51 @@ class _PlayPageState extends State<PlayPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: widget.headerColor,
-                                  borderRadius: BorderRadius.circular(9),
-                                  border: Border.all(
-                                    width: 3,
-                                    color: Colors.white,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.5),
-                                      offset: const Offset(0, 5),
-                                      blurRadius: 10,
-                                      spreadRadius: 0,
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      currentHint.isNotEmpty
-                                          ? currentHint
-                                          : '_',
-                                      style: const TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const Divider(
-                                      thickness: 3,
+                              child: Material(
+                                borderOnForeground: true,
+                                elevation: 2,
+                                borderRadius: BorderRadius.circular(9),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: widget.headerColor,
+                                    borderRadius: BorderRadius.circular(9),
+                                    border: Border.all(
+                                      width: 3,
                                       color: Colors.white,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Text(
-                                        question['question']!,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        currentHint.isNotEmpty
+                                            ? currentHint
+                                            : '_',
                                         style: const TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
-                                    ),
-                                  ],
+                                      const Divider(
+                                        thickness: 3,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Text(
+                                          question['question']!,
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -594,46 +586,50 @@ class _PlayPageState extends State<PlayPage> {
                 if (isMultipleOptionMode)
                   buildAnswerButtons()
                 else
-                  TextField(
-                    controller: _controller,
-                    focusNode: _focusNode,
-                    onSubmitted: checkAnswer,
-                    style: const TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Type Answer',
-                      hintStyle: const TextStyle(
-                        fontFamily: 'PressStart2P',
-                        color: Color.fromARGB(150, 0, 0, 0),
-                      ),
-                      labelStyle: const TextStyle(
-                        fontFamily: 'PressStart2P',
+                  Material(
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(8),
+                    child: TextField(
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      onSubmitted: checkAnswer,
+                      style: const TextStyle(
+                        fontFamily: 'Arial',
                         color: Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
                       ),
-                      filled: true,
-                      fillColor: widget.headerColor,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 3,
+                      decoration: InputDecoration(
+                        hintText: 'Type Answer',
+                        hintStyle: const TextStyle(
+                          fontFamily: 'PressStart2P',
+                          color: Color.fromARGB(150, 0, 0, 0),
                         ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 3,
+                        labelStyle: const TextStyle(
+                          fontFamily: 'PressStart2P',
+                          color: Color.fromARGB(255, 0, 0, 0),
                         ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 3,
+                        filled: true,
+                        fillColor: widget.headerColor,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: Colors.white,
+                            width: 3,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: Colors.white,
+                            width: 3,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: Colors.white,
+                            width: 3,
+                          ),
                         ),
                       ),
                     ),
