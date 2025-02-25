@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/components/loading.dart';
 import 'package:learn_n/infolder/flashcard%20widgets/auto_quiz.dart';
+import 'package:learn_n/utils/loading.dart';
 import 'package:learn_n/utils/retro_button.dart';
 import 'package:uuid/uuid.dart';
 

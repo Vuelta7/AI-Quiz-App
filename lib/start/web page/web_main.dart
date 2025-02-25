@@ -7,6 +7,7 @@ class WebMain extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100,
         centerTitle: true,
         title: ColorFiltered(
           colorFilter: const ColorFilter.mode(
@@ -21,6 +22,7 @@ class WebMain extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
+      body: Text('data'),
     );
   }
 }

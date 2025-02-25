@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:learn_n/components/loading.dart';
+import 'package:learn_n/utils/loading.dart';
 import 'package:lottie/lottie.dart';
 
 //TODO: fix the creator badge
