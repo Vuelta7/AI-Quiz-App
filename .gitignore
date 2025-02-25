@@ -44,6 +44,10 @@ app.*.map.json
 # Ignore everything inside the build folder
 build/*
 
-# But allow tracking of build/web
+# But allow tracking of build/web and its contents
 !build/web/
 !build/web/**
+
+# Ignore specific files or subdirectories within lib/components/
+lib/components/some_temp_file.dart
+lib/components/some_temp_directory/

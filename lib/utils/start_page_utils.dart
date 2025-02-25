@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/start%20page/auth_page.dart';
+import 'package:learn_n/start/start%20pages/auth_page.dart';
 
 Widget buildLogo() {
   return ColorFiltered(
