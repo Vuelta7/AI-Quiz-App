@@ -59,6 +59,10 @@ class SplashScreenState extends State<SplashScreen>
     );
   }
 
+  bool isMobileWeb(BuildContext context) {
+    return kIsWeb && MediaQuery.of(context).size.width < 800;
+  }
+
   Future<void> _loadSelectedColor() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? colorHex = prefs.getString('selectedColor');
@@ -95,15 +99,41 @@ class SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    Color widgetColor = kIsWeb ? Colors.black : Colors.white;
     return Scaffold(
-      backgroundColor: _selectedColor ?? Colors.white,
+      backgroundColor: kIsWeb ? Colors.white : _selectedColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            buildLogo(),
-            buildTitleText('Learn-N'),
+            kIsWeb && !isMobileWeb(context)
+                ? ColorFiltered(
+                    colorFilter: const ColorFilter.mode(
+                      Colors.black,
+                      BlendMode.srcIn,
+                    ),
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: 500,
+                    ),
+                  )
+                : Column(
+                    children: [
+                      ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          widgetColor,
+                          BlendMode.srcIn,
+                        ),
+                        child: Column(
+                          children: [
+                            buildLogo(),
+                            buildTitleText('Learn-N'),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
             const SizedBox(height: 300),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -112,9 +142,9 @@ class SplashScreenState extends State<SplashScreen>
                 children: [
                   Text(
                     loadingText,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'PressStart2P',
-                      color: Colors.white,
+                      color: widgetColor,
                     ),
                   ),
                   Container(
@@ -122,7 +152,7 @@ class SplashScreenState extends State<SplashScreen>
                     height: 26,
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.white,
+                        color: widgetColor,
                         width: 3,
                       ),
                     ),
@@ -133,7 +163,7 @@ class SplashScreenState extends State<SplashScreen>
                             margin: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
                               color: index / 10 <= _progress.value
-                                  ? Colors.white
+                                  ? widgetColor
                                   : Colors.transparent,
                             ),
                           ),

@@ -22,7 +22,7 @@ class WebMain extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: const Text('data'),
+      body: Column(),
     );
   }
 }

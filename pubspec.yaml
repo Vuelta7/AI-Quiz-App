@@ -71,6 +71,7 @@ flutter:
     - assets/confetti.json
     - assets/award.json
     - assets/loading.json
+    - assets/sti_logo.webp
 
 flutter_icons:
   android: true
