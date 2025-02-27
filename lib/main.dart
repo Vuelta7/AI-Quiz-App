@@ -2,9 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_n/components/firebase_options.dart';
-import 'package:learn_n/start/start%20pages/splash_page.dart';
-import 'package:learn_n/utils/themes.dart';
+import 'package:learn_n/core/utils/themes.dart';
+import 'package:learn_n/repositories/firebase_options.dart';
+import 'package:learn_n/view/introduction/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
