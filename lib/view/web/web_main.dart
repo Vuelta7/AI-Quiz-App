@@ -26,6 +26,9 @@ class WebMain extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+            ),
             const Text(
               'The Fastest Way To Learn',
               textAlign: TextAlign.center,
@@ -53,13 +56,13 @@ class WebMain extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Colors.transparent, Colors.purple, Colors.cyan],
+                  colors: [Colors.transparent, Colors.cyan],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Image.asset(
+              child: Image.network(
                 'assets/screenshot.webp',
                 width: double.infinity,
                 height: 600,
