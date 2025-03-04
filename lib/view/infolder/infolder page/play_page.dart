@@ -436,7 +436,9 @@ class _PlayPageState extends State<PlayPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded, size: 30),
           color: Colors.white,
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         actions: [
           IconButton(

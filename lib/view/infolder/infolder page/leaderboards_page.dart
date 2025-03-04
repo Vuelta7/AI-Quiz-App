@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:lottie/lottie.dart';
 
-//TODO: fix the creator badge
 class LeaderboardPage extends StatelessWidget {
   final String folderId;
 

@@ -6,7 +6,7 @@ import 'package:learn_n/core/utils/color_utils.dart';
 import 'package:learn_n/view/infolder/flashcard%20widgets/add_flashcard_page.dart';
 import 'package:learn_n/view/infolder/infolder%20page/flashcards_page.dart';
 import 'package:learn_n/view/infolder/infolder%20page/leaderboards_page.dart';
-import 'package:learn_n/view/infolder/play%20page/play_page.dart';
+import 'package:learn_n/view/infolder/infolder%20page/play_page.dart';
 
 class InFolderMain extends StatefulWidget {
   final String folderId;
