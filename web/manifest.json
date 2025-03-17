@@ -5,28 +5,28 @@
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Learn-N! This quiz app uses Active Recall to help you memorize for exams with customizable quizzes, and automatic quiz generator, all with no ads and a user-friendly interface.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
         {
-            "src": "logo_icon.png",
+            "src": "assets/logo_icon.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "logo_icon.png",
+            "src": "assets/logo_icon.png",
             "sizes": "512x512",
             "type": "image/png"
         },
         {
-            "src": "logo_icon.png",
+            "src": "assets/logo_icon.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "logo_icon.png",
+            "src": "assets/logo_icon.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"

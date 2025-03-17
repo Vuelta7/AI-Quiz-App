@@ -6,7 +6,6 @@ import 'package:learn_n/core/utils/color_utils.dart';
 import 'package:learn_n/core/utils/start_page_utils.dart';
 import 'package:learn_n/view/home/home_main.dart';
 import 'package:learn_n/view/introduction/liquid_swipe.dart';
-import 'package:learn_n/view/web/web_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -48,16 +47,16 @@ class SplashScreenState extends State<SplashScreen>
       });
     });
 
-    Future.delayed(
-        const Duration(seconds: 3), kIsWeb ? _goWeb : _checkAuthState);
+    Future.delayed(const Duration(seconds: 3), _checkAuthState);
   }
 
-  void _goWeb() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const WebMain()),
-    );
-  }
+  //TODO: Make Something for web
+  // void _goWeb() {
+  //   Navigator.pushReplacement(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const WebMain()),
+  //   );
+  // }
 
   bool isMobileWeb(BuildContext context) {
     return kIsWeb && MediaQuery.of(context).size.width < 800;
