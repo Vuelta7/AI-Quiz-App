@@ -1,0 +1,2 @@
+/home/vuelta/learn_n/android/app/.cxx/Debug/4p59w5zn/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/vuelta/learn_n/android/app/.cxx/Debug/4p59w5zn/arm64-v8a/CMakeFiles/rebuild_cache.dir

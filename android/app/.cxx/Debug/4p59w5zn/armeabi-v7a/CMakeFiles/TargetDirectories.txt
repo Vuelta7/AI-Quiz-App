@@ -1,0 +1,2 @@
+/home/vuelta/learn_n/android/app/.cxx/Debug/4p59w5zn/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/vuelta/learn_n/android/app/.cxx/Debug/4p59w5zn/armeabi-v7a/CMakeFiles/rebuild_cache.dir
