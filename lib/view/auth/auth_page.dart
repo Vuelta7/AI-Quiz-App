@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/start_page_utils.dart';
 import 'package:learn_n/core/widgets/auth_textfield.dart';
+import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/model/user_color_provider.dart';
 import 'package:learn_n/view/home/home_main.dart';
@@ -143,82 +144,90 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         error: (_, __) => Colors.blue,
       ),
       resizeToAvoidBottomInset: true,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                buildLogo(),
-                buildTitleText('Learn-N'),
-                const SizedBox(height: 20),
-                Text(
-                  widget.isLogin ? 'Login' : 'Register',
-                  style: const TextStyle(
-                    fontFamily: 'PressStart2P',
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+      body: selectedColorAsync.when(
+        data: (color) => Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  buildLogo(),
+                  buildTitleText('Learn-N'),
+                  const SizedBox(height: 20),
+                  Text(
+                    widget.isLogin ? 'Login' : 'Register',
+                    style: const TextStyle(
+                      fontFamily: 'PressStart2P',
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      AuthTextFormField('Username',
-                          controller: usernameController, validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Username is required';
-                        }
-                        return null;
-                      }, onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(passwordFocusNode);
-                      }),
-                      const SizedBox(height: 10),
-                      AuthTextFormField('Password',
-                          isPassword: true,
-                          controller: passwordController,
-                          focusNode: passwordFocusNode, validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is required';
-                        } else if (!widget.isLogin && value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      }, onFieldSubmitted: (_) {
-                        authenticateUser();
-                      }),
-                      const SizedBox(height: 20),
-                      if (errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            errorMessage!,
-                            style: const TextStyle(
-                                color: Colors.red, fontSize: 14),
+                  const SizedBox(height: 20),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        AuthTextFormField('Username',
+                            controller: usernameController, validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Username is required';
+                          }
+                          return null;
+                        }, onFieldSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(passwordFocusNode);
+                        }),
+                        const SizedBox(height: 10),
+                        AuthTextFormField('Password',
+                            isPassword: true,
+                            controller: passwordController,
+                            focusNode: passwordFocusNode, validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password is required';
+                          } else if (!widget.isLogin && value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        }, onFieldSubmitted: (_) {
+                          authenticateUser();
+                        }),
+                        const SizedBox(height: 20),
+                        if (errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              errorMessage!,
+                              style: const TextStyle(
+                                  color: Colors.red, fontSize: 14),
+                            ),
                           ),
+                        buildRetroButton(
+                          isLoading
+                              ? 'Loading...'
+                              : widget.isLogin
+                                  ? 'Login'
+                                  : 'Register',
+                          getShade(color, 800),
+                          isLoading ? null : authenticateUser,
                         ),
-                      buildRetroButton(
-                        isLoading
-                            ? 'Loading...'
-                            : widget.isLogin
-                                ? 'Login'
-                                : 'Register',
-                        getShade(selectedColor, 800),
-                        isLoading ? null : authenticateUser,
-                      ),
-                      const SizedBox(height: 20),
-                      buildGestureDetector(context, isLogin: widget.isLogin),
-                    ],
+                        const SizedBox(height: 20),
+                        buildGestureDetector(context, isLogin: widget.isLogin),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
+        loading: () => const Loading(),
+        error: (_, __) => buildRetroButton(
+            widget.isLogin ? 'Login' : 'Register',
+            Colors.blue,
+            authenticateUser),
       ),
     );
   }
