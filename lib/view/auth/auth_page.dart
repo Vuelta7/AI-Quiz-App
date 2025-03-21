@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/start_page_utils.dart';
 import 'package:learn_n/core/widgets/auth_textfield.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:learn_n/view/home/home_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   final bool isLogin;
 
   const AuthScreen({super.key, required this.isLogin});
@@ -18,10 +19,10 @@ class AuthScreen extends StatefulWidget {
       );
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -40,16 +41,6 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
-    _loadSelectedColor();
-  }
-
-  Future<void> _loadSelectedColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    final colorString =
-        prefs.getString('selectedColor') ?? rgbToHex(Colors.blue);
-    setState(() {
-      selectedColor = hexToColor(colorString);
-    });
   }
 
   Future<void> authenticateUser() async {
@@ -71,7 +62,6 @@ class _AuthScreenState extends State<AuthScreen> {
     final username = usernameController.text.trim().toLowerCase();
     final password = passwordController.text.trim();
 
-    // Check if the username already exists
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('username', isEqualTo: username)
@@ -83,11 +73,9 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
-    // Sign in anonymously to get a Firebase Auth user
     final userCredential = await FirebaseAuth.instance.signInAnonymously();
     final firebaseUser = userCredential.user;
 
-    // Create a new user in Firestore with the Firebase user ID
     await FirebaseFirestore.instance
         .collection('users')
         .doc(firebaseUser!.uid)
@@ -101,26 +89,21 @@ class _AuthScreenState extends State<AuthScreen> {
       'selectedColor': rgbToHex(Colors.blue),
     });
 
-    // Save user ID to SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userId', firebaseUser.uid);
+    await prefs.setString('selectedColor', rgbToHex(Colors.blue));
 
     setState(() => errorMessage = null);
     Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => HomeMain(
-          userId: firebaseUser.uid,
-        ), // Default color
-      ),
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomeMain(userId: firebaseUser.uid)));
   }
 
   Future<void> loginUser() async {
     final username = usernameController.text.trim().toLowerCase();
     final password = passwordController.text.trim();
 
-    // Query Firestore for the user with the provided username and password
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('username', isEqualTo: username)
@@ -128,40 +111,21 @@ class _AuthScreenState extends State<AuthScreen> {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      // User found, use the Firestore database ID
       final userDoc = querySnapshot.docs.first;
       final userId = userDoc.id;
       final userData = userDoc.data();
 
-      // Save user ID and selected color to SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userId', userId);
       await prefs.setString('selectedColor', userData['selectedColor']);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => HomeMain(
-                  userId: userId,
-                )),
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Login successful!',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.green,
-        ),
-      );
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => HomeMain(userId: userId)));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            'Invalid username or password. Please try again.',
-            style: TextStyle(color: Colors.white),
-          ),
+          content: Text('Invalid username or password. Please try again.',
+              style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.red,
         ),
       );
@@ -170,8 +134,14 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedColorAsync = ref.watch(userColorProvider);
+
     return Scaffold(
-      backgroundColor: selectedColor,
+      backgroundColor: selectedColorAsync.when(
+        data: (color) => color,
+        loading: () => Colors.grey,
+        error: (_, __) => Colors.blue,
+      ),
       resizeToAvoidBottomInset: true,
       body: Center(
         child: Padding(

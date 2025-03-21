@@ -1,8 +1,8 @@
 import 'package:do_not_disturb/do_not_disturb_plugin.dart';
 import 'package:do_not_disturb/types.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:lottie/lottie.dart';
 
 class DoNotDisturbPage extends StatefulWidget {

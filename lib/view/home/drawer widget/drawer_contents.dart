@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:learn_n/view/home/drawer%20widget/dnd_page.dart';
 import 'package:learn_n/view/home/drawer%20widget/themes_page.dart';
 import 'package:learn_n/view/introduction/liquid_swipe.dart';

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:learn_n/view/home/home_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
 import 'package:learn_n/core/widgets/custom_appbar.dart';
 import 'package:learn_n/core/widgets/folder_form.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditFolderPage extends StatefulWidget {

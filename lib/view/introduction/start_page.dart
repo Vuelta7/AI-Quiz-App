@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
 import 'package:learn_n/core/utils/start_page_utils.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:learn_n/view/auth/auth_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

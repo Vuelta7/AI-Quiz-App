@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
 import 'package:learn_n/core/widgets/loading.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:learn_n/view/home/folder%20widget/folder_model.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';

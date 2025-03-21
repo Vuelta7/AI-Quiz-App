@@ -1,6 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:learn_n/view/home/drawer%20widget/drawer_contents.dart';
 import 'package:learn_n/view/home/folder%20widget/add_folder_page.dart';
 import 'package:learn_n/view/home/home%20pages/folder_page.dart';

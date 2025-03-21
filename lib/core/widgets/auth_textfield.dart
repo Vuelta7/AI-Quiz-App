@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/color_utils.dart';
+import 'package:learn_n/model/user_color_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Color> getSelectedColor() async {
