@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/themes.dart';
-import 'package:learn_n/repositories/firebase_options.dart';
-import 'package:learn_n/view/introduction/splash_page.dart';
+import 'package:learn_n/features/introduction/splash_page.dart';
+import 'package:learn_n/services/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
