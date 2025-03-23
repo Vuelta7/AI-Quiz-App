@@ -83,47 +83,46 @@ class _FolderPageState extends State<FolderPage> {
       backgroundColor: getShade(widget.color, 600),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(13, 5, 13, 0),
-            child: TextFormField(
-              controller: _searchController,
-              style: const TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.white,
-                fontSize: 14,
+          Container(
+            width: double.infinity,
+            height: 80,
+            decoration: BoxDecoration(
+              color: widget.color,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(32),
+                bottomRight: Radius.circular(32),
               ),
-              decoration: InputDecoration(
-                hintText: 'Search Folder',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                labelText: 'Search folder',
-                labelStyle: const TextStyle(
-                  fontFamily: 'PressStart2P',
-                  color: Colors.white,
-                ),
-                filled: true,
-                fillColor: getShade(widget.color, 600),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
+                child: TextFormField(
+                  controller: _searchController,
+                  style: const TextStyle(
+                    fontFamily: 'Arial',
                     color: Colors.white,
-                    width: 2,
+                    fontSize: 14,
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: Colors.white,
-                    width: 2,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: Colors.white,
-                    width: 3,
+                  decoration: InputDecoration(
+                    focusColor: Colors.white,
+                    hintText: 'Search Folder',
+                    hintStyle: const TextStyle(
+                      fontFamily: 'PressStart2P',
+                      color: Colors.grey,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
+                    filled: true,
+                    fillColor: getShade(widget.color, 600),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -1,0 +1,1 @@
+/home/vuelta/learn_n/build/app/intermediates/cxx/RelWithDebInfo/3ds6et5p/obj/arm64-v8a

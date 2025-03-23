@@ -131,20 +131,20 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
             children: [
               Icon(
                 index == 0
-                    ? Icons.fireplace_rounded
+                    ? Icons.school_rounded
                     : index == 1
-                        ? Icons.folder
-                        : Icons.person,
+                        ? Icons.storage_rounded
+                        : Icons.attractions_rounded,
                 size: 55,
                 color: color,
               ),
               if (showLabel)
                 Text(
                   index == 0
-                      ? 'Streak'
+                      ? 'Activity'
                       : index == 1
-                          ? 'Folders'
-                          : 'Store',
+                          ? 'Library'
+                          : 'Options',
                   style: const TextStyle(
                     color: color,
                     fontSize: 8,
@@ -154,7 +154,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
             ],
           );
         },
-        backgroundColor: getShade(mainColor, 800),
+        backgroundColor: mainColor,
         height: 70,
         activeIndex: _selectedIndex,
         splashColor: Colors.black,
