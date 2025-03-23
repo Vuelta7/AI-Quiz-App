@@ -1,7 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/features/home/drawer%20widget/drawer_contents.dart';
 import 'package:learn_n/features/home/folder%20widget/add_folder_page.dart';
 import 'package:learn_n/features/home/home%20pages/folder_page.dart';
 import 'package:learn_n/features/home/home%20pages/store_page.dart';
@@ -87,7 +86,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     } else if (_selectedIndex == 1) {
       body = FolderPage(userId: widget.userId, color: mainColor);
     } else if (_selectedIndex == 2) {
-      body = StorePage(userId: widget.userId, color: mainColor);
+      body = SettingPage(userId: widget.userId, color: mainColor);
     } else {
       body = FolderPage(userId: widget.userId, color: mainColor);
     }
@@ -96,11 +95,6 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
       extendBody: true,
       key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
-      drawer: Drawer(
-        child: DrawerContent(
-          color: mainColor,
-        ),
-      ),
       body: body,
       floatingActionButton: _selectedIndex == 1
           ? FloatingActionButton(
