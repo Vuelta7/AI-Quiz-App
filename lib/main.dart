@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/themes.dart';
 import 'package:learn_n/features/introduction/splash_page.dart';
+import 'package:learn_n/features/introduction/start_page.dart';
 import 'package:learn_n/services/firebase_options.dart';
 
 void main() async {
@@ -41,6 +42,9 @@ class MyApp extends StatelessWidget {
       title: 'Learn-N',
       theme: learnNThemes,
       home: const SplashScreen(),
+      routes: <String, WidgetBuilder>{
+        '/startPage': (BuildContext context) => const StartPage(),
+      },
     );
   }
 }

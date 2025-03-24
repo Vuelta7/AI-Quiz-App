@@ -45,15 +45,7 @@ class SplashScreenState extends State<SplashScreen>
       });
     });
 
-    Future.delayed(
-        const Duration(seconds: 3), kIsWeb ? _goWeb : _checkAuthState);
-  }
-
-  void _goWeb() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const WebMain()),
-    );
+    Future.delayed(const Duration(seconds: 3), _checkAuthState);
   }
 
   bool isMobileWeb(BuildContext context) {
@@ -66,7 +58,16 @@ class SplashScreenState extends State<SplashScreen>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
 
-    if (userId != null) {
+    if (kIsWeb) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WebMain(
+            userId: userId ?? '',
+          ),
+        ),
+      );
+    } else if (userId != null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeMain(userId: userId)),
