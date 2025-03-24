@@ -6,18 +6,18 @@ import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/home/folder%20widget/folder_model.dart';
 import 'package:lottie/lottie.dart';
 
-class StreakPage extends StatefulWidget {
+class ActivtyPage extends StatefulWidget {
   final String userId;
   final Color color;
 
-  const StreakPage({super.key, required this.userId, required this.color});
+  const ActivtyPage({super.key, required this.userId, required this.color});
 
   @override
-  _StreakPageState createState() => _StreakPageState();
+  _ActivtyPageState createState() => _ActivtyPageState();
 }
 
-class _StreakPageState extends State<StreakPage> {
-  String _petName = 'Augy chan';
+class _ActivtyPageState extends State<ActivtyPage> {
+  String _petName = '';
 
   @override
   void initState() {

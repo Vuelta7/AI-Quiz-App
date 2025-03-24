@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/features/home/folder%20widget/add_folder_page.dart';
 import 'package:learn_n/features/home/home%20pages/folder_page.dart';
-import 'package:learn_n/features/home/home%20pages/store_page.dart';
-import 'package:learn_n/features/home/home%20pages/streak_page.dart';
+import 'package:learn_n/features/home/home%20pages/setting_page.dart';
+import 'package:learn_n/features/home/home%20pages/acrivity_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeMain extends StatefulWidget {
@@ -82,7 +82,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
     Widget body;
     if (_selectedIndex == 0) {
-      body = StreakPage(userId: widget.userId, color: mainColor);
+      body = ActivtyPage(userId: widget.userId, color: mainColor);
     } else if (_selectedIndex == 1) {
       body = FolderPage(userId: widget.userId, color: mainColor);
     } else if (_selectedIndex == 2) {
