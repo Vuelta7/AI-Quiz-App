@@ -97,7 +97,20 @@ class _ActivtyPageState extends State<ActivtyPage> {
                     description:
                         'This Folder helps you to learn the basics of programming terms.',
                     isImported: true,
-                    headerColor: widget.color,
+                    headerColor: getShade(widget.color, 900),
+                    userId: widget.userId,
+                    isActivity: true,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  FolderModel(
+                    folderId: '4612',
+                    folderName: 'SQL Fundamentals',
+                    description:
+                        'This Folder helps you to learn the basics of Database terms.',
+                    isImported: true,
+                    headerColor: getShade(widget.color, 900),
                     userId: widget.userId,
                     isActivity: true,
                   ),

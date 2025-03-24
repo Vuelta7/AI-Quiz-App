@@ -46,7 +46,7 @@ class _IntroWebPageState extends State<IntroWebPage> {
             child: Container(
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Colors.cyan, Colors.pink],
+                  colors: [Colors.black, Colors.grey],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -58,13 +58,12 @@ class _IntroWebPageState extends State<IntroWebPage> {
             ),
           ),
           Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Colors.pink, Colors.cyan],
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.white, Colors.black],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
-              borderRadius: BorderRadius.circular(8),
             ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(40, 40, 40, 0),
@@ -75,8 +74,9 @@ class _IntroWebPageState extends State<IntroWebPage> {
                     elevation: 2,
                     borderRadius: BorderRadius.circular(9),
                     child: Container(
+                      width: 600,
                       decoration: BoxDecoration(
-                        color: Colors.cyan,
+                        color: const Color.fromARGB(255, 82, 82, 82),
                         borderRadius: BorderRadius.circular(9),
                         border: Border.all(
                           width: 3,
@@ -139,7 +139,7 @@ class _IntroWebPageState extends State<IntroWebPage> {
                           color: Colors.white,
                         ),
                         filled: true,
-                        fillColor: Colors.cyan,
+                        fillColor: Colors.grey,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: const BorderSide(

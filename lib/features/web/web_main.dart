@@ -18,9 +18,9 @@ class WebMain extends StatelessWidget {
           'assets/logo.png',
           width: 150,
         ),
-        backgroundColor: Colors.pink,
+        backgroundColor: Colors.black,
       ),
-      backgroundColor: Colors.pink,
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -34,7 +34,7 @@ class WebMain extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Colors.pink, Colors.cyan],
+                      colors: [Colors.black, Colors.grey],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),

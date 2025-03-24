@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:learn_n/features/introduction/liquid_swipe.dart';
+import 'package:learn_n/features/web/web_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -44,16 +45,16 @@ class SplashScreenState extends State<SplashScreen>
       });
     });
 
-    Future.delayed(const Duration(seconds: 3), _checkAuthState);
+    Future.delayed(
+        const Duration(seconds: 3), kIsWeb ? _goWeb : _checkAuthState);
   }
 
-  //TODO: Make Something for web
-  // void _goWeb() {
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const WebMain()),
-  //   );
-  // }
+  void _goWeb() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const WebMain()),
+    );
+  }
 
   bool isMobileWeb(BuildContext context) {
     return kIsWeb && MediaQuery.of(context).size.width < 800;
