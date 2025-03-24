@@ -139,7 +139,7 @@ class _ActivtyPageState extends State<ActivtyPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Currency Points: $currencyPoints',
+                            Text('Points: $currencyPoints',
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,

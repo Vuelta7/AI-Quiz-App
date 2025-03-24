@@ -60,6 +60,7 @@ class SettingPage extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
+                const Divider(),
                 _buildTile(context, 'About Us', Icons.info, () {
                   Navigator.push(
                     context,
@@ -72,6 +73,66 @@ We are students from STI Malolos College, specifically from section ITMAWD12B. T
 Many existing apps are difficult to navigate and filled with intrusive advertisements, making the learning experience frustrating. Our goal is to provide a minimalist and user-friendly experience, ensuring that users can focus on learning without distractions.
 
 With this app, we strive to create an efficient and accessible platform that makes studying easier and more enjoyable. Thank you for supporting our project!
+''',
+                        color: color,
+                      ),
+                    ),
+                  );
+                }),
+                _buildTile(context, 'Our Team', Icons.group, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => InfoPage(
+                        title: 'Our Team',
+                        description: '''
+Developer – Mark Uriel "The King" Vuelta
+Leads the development and continuous improvement of the application.  
+
+Leader – August Evangelista  
+Oversees all company operations and ensures smooth business processes.  
+
+Designer – Jhikeine Lopez  
+Designs the application's interface and overall visual experience.  
+
+Marketer – Johann Francisco  
+Identifies market challenges and potential issues that could impact the company.  
+
+Tester – Justine Adriano
+Detects and addresses bugs and technical flaws by rigorously testing the application.  
+
+Generalists – Kyle Raine & Mikko Dela Cruz  
+Take on various tasks essential for the company’s operations.  
+''',
+                        color: color,
+                      ),
+                    ),
+                  );
+                }),
+                _buildTile(context, 'Our Purpose', Icons.lightbulb, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => InfoPage(
+                        title: 'Our Purpose',
+                        description: '''
+Vision  
+Learn-N helps students improve their learning by making studying easier and more effective.
+
+Mission  
+Learn-N enhances learning by continuously improving based on student feedback while keeping all essential features free for everyone.
+
+Goals  
+- Simplify studying for all students.  
+- Adapt to students' needs and feedback.  
+- Remain free and accessible to everyone.  
+- Use proven study methods like active recall and spaced repetition.  
+
+Core Values  
+- Continuous improvement.  
+- Accessibility for all.  
+- Efficient and effective learning.  
+- Prioritizing student feedback.  
 ''',
                         color: color,
                       ),
@@ -121,7 +182,7 @@ We may update this Privacy Policy occasionally to reflect changes in our practic
 
 7. Contact Us
 
-If you have any questions or concerns about this Privacy Policy, feel free to reach out to us at urielvuelta@gmail.com.
+If you have any questions or concerns about this Privacy Policy, feel free to reach out to us at LearnNCustomerServices@gmail.com.
 
 By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experience while we handle your data responsibly!
 ''',
@@ -130,9 +191,26 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
                     ),
                   );
                 }),
-                _buildTile(context, 'Feedback and Question', Icons.feedback,
+                _buildTile(context, 'Feedback and Questions', Icons.feedback,
                     () {
-                  _showDialog(context, 'Feedback and Question');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => InfoPage(
+                        title: 'Feedback and Questions',
+                        description: '''
+We value your feedback! If you have any questions, suggestions, or concerns, feel free to reach out.
+
+Customer Service: LearnNCustomerServices@gmail.com
+
+I am Uriel Vuelta, the creator and developer of this application. Your input helps us improve and provide the best experience possible. Thank you for your support!
+
+Contact me: urielvuelta@gmail.com  
+''',
+                        color: color,
+                      ),
+                    ),
+                  );
                 }),
                 _buildTile(
                     context, 'Focus Mode', Icons.do_not_disturb_alt_rounded,
@@ -197,43 +275,6 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
         ),
       ),
       onTap: onTap,
-    );
-  }
-
-  void _showDialog(BuildContext context, String title) {
-    String content;
-    if (title == 'Feedback and Question') {
-      content = '''
-We value your feedback! If you have any questions, suggestions, or concerns, feel free to reach out.
-
-Contact Us: urielvuelta@gmail.com
-
-I am Uriel Vuelta, the creator and developer of this application. Your input helps us improve and provide the best experience possible. Thank you for your support!
-''';
-    } else {
-      content = 'diko pa tapos to hehe';
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: Text(content),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Close',
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }
