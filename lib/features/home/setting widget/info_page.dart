@@ -17,10 +17,21 @@ class InfoPage extends StatelessWidget {
       appBar: AppBar(
         title: Image.asset(
           'assets/logo.png',
-          width: 500,
+          width: 170,
         ),
+        toolbarHeight: 70,
         centerTitle: true,
         backgroundColor: color,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+            size: 40,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -31,10 +42,10 @@ class InfoPage extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: color),
                   ),
                   const SizedBox(height: 16),
                   Text(
