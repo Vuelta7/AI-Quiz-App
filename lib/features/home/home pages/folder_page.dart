@@ -192,6 +192,7 @@ class _FolderPageState extends State<FolderPage> {
                         folderName: folderData['folderName'],
                         description: folderData['description'],
                         isImported: isImported,
+                        userId: widget.userId,
                       ),
                     );
                   },

@@ -98,6 +98,8 @@ class _ActivtyPageState extends State<ActivtyPage> {
                         'This Folder helps you to learn the basics of programming terms.',
                     isImported: true,
                     headerColor: widget.color,
+                    userId: widget.userId,
+                    isActivity: true,
                   ),
                   Lottie.asset('assets/hints.json'),
                   StreamBuilder<DocumentSnapshot>(

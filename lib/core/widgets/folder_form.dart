@@ -112,7 +112,7 @@ Widget buildFolderForm({
           controller: folderIdController,
           cursorColor: selectedColor,
           decoration: InputDecoration(
-            hintText: 'Description',
+            hintText: 'Code',
             filled: true,
             fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(

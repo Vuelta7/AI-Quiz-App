@@ -10,6 +10,7 @@ class FolderModelKen extends StatelessWidget {
   final String description;
   final Color headerColor;
   final bool isImported;
+  final String userId;
 
   const FolderModelKen({
     super.key,
@@ -18,6 +19,7 @@ class FolderModelKen extends StatelessWidget {
     required this.description,
     this.headerColor = const Color(0xFFBDBDBD),
     required this.isImported,
+    required this.userId,
   });
 
   @override
@@ -40,12 +42,12 @@ class FolderModelKen extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
             child: Container(
               width: double.infinity,
               height: 200,
               decoration: BoxDecoration(
-                color: headerColor.withOpacity(0.9),
+                color: headerColor,
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
@@ -56,8 +58,8 @@ class FolderModelKen extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                const BoxShadow(
+              boxShadow: const [
+                BoxShadow(
                   color: Colors.black26,
                   blurRadius: 4,
                   offset: Offset(0, 2),
@@ -72,25 +74,29 @@ class FolderModelKen extends StatelessWidget {
                   children: [
                     Text(
                       folderName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
+                        color: headerColor,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       description,
-                      style: const TextStyle(fontSize: 16),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: headerColor,
+                      ),
                     ),
                   ],
                 ),
                 Positioned(
-                  bottom: 20,
+                  bottom: 5,
                   child: PopupMenuButton<String>(
                     icon: Icon(
                       Icons.arrow_drop_down_sharp,
-                      size: 24,
-                      color: headerColor.withOpacity(0.7),
+                      size: 40,
+                      color: headerColor,
                     ),
                     onSelected: (value) {
                       if (value == 'Edit') {
@@ -143,17 +149,36 @@ class FolderModelKen extends StatelessWidget {
                                   onPressed: () async {
                                     Navigator.of(context).pop();
                                     try {
-                                      await FirebaseFirestore.instance
-                                          .collection("folders")
-                                          .doc(folderId)
-                                          .delete();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Folder deleted successfully!'),
-                                        ),
-                                      );
+                                      if (isImported) {
+                                        await FirebaseFirestore.instance
+                                            .collection("folders")
+                                            .doc(folderId)
+                                            .update({
+                                          "accessUsers":
+                                              FieldValue.arrayRemove([
+                                            /* Add logic to get the current user's ID */
+                                          ]),
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'You have been removed from the folder access list.'),
+                                          ),
+                                        );
+                                      } else {
+                                        await FirebaseFirestore.instance
+                                            .collection("folders")
+                                            .doc(folderId)
+                                            .delete();
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Folder deleted successfully!'),
+                                          ),
+                                        );
+                                      }
                                     } catch (e) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
