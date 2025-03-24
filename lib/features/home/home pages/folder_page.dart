@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
-import 'package:learn_n/features/home/folder%20widget/folder_model.dart';
+import 'package:learn_n/features/home/folder%20widget/folder_model_ken.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -186,7 +186,7 @@ class _FolderPageState extends State<FolderPage> {
 
                     return ListTile(
                       key: ValueKey(folderDoc.id),
-                      title: FolderModel(
+                      title: FolderModelKen(
                         folderId: folderDoc.id,
                         headerColor: hexToColor(folderData['color']),
                         folderName: folderData['folderName'],
