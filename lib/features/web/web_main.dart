@@ -54,12 +54,9 @@ class _WebMainState extends State<WebMain> {
 
   @override
   Widget build(BuildContext context) {
-    double appBarHeight = AppBar().preferredSize.height;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double adjustedHeight = screenHeight - appBarHeight;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: appBarHeight,
+        toolbarHeight: 70,
         centerTitle: true,
         title: Image.asset(
           'assets/logo.png',
@@ -71,20 +68,22 @@ class _WebMainState extends State<WebMain> {
       body: Center(
         child: SingleChildScrollView(
             child: SizedBox(
-          height: adjustedHeight,
+          height: 1003,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              const SizedBox(height: 200),
               const Text(
-                'The Best Way To Practice Quiz',
+                'The Best Way\nTo Practice Quiz',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
-                  color: Colors.white,
+                  color: Colors.black,
                   fontFamily: 'PressStart2P',
                 ),
               ),
+              const SizedBox(height: 200),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -191,7 +190,7 @@ class _WebMainState extends State<WebMain> {
                                 color: Colors.white,
                               ),
                               filled: true,
-                              fillColor: Colors.grey,
+                              fillColor: const Color.fromARGB(255, 82, 82, 82),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: const BorderSide(
