@@ -68,7 +68,7 @@ class _WebMainState extends State<WebMain> {
       body: Center(
         child: SingleChildScrollView(
             child: SizedBox(
-          height: 1003,
+          height: 1500,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
