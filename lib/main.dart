@@ -41,6 +41,9 @@ void main() async {
 final GoRouter _router = GoRouter(
   routerNeglect: true,
   initialLocation: '/',
+  redirect: (context, state) {
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
