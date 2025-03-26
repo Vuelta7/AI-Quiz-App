@@ -23,8 +23,22 @@ class LeaderboardPage extends StatelessWidget {
           return const Loading();
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Text('No leaderboard data available.'),
+          return Column(
+            children: [
+              Lottie.asset('assets/award.json'),
+              const Divider(
+                color: Colors.white,
+                thickness: 5,
+              ),
+              const Text(
+                'No leaderboard data available.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'PressStart2P',
+                  color: Colors.white,
+                ),
+              ),
+            ],
           );
         }
 

@@ -117,7 +117,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
                 index == 0
                     ? Icons.school_rounded
                     : index == 1
-                        ? Icons.storage_rounded
+                        ? Icons.folder_rounded
                         : Icons.attractions_rounded,
                 size: 55,
                 color: color,

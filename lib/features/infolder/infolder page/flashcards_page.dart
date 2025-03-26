@@ -39,8 +39,12 @@ class FlashcardsPage extends StatelessWidget {
                     'assets/makequiz.json',
                   ),
                   const Text(
-                    'No Flashcards here 🗂️\nCreate one by clicking the Add Flashcards.',
+                    'No Flashcards here!\nCreate one by clicking the\n"Edit library"',
                     textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'PressStart2P',
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),

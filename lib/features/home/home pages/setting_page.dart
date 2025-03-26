@@ -48,8 +48,8 @@ class SettingPage extends ConsumerWidget {
                       'Learn-N',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        fontFamily: 'PressStart2P',
                       ),
                     ),
                   ],

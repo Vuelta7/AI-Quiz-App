@@ -116,9 +116,9 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                   decoration: InputDecoration(
                     focusColor: Colors.white,
                     hintText: 'Search Folder',
-                    hintStyle: const TextStyle(
+                    hintStyle: TextStyle(
                       fontFamily: 'PressStart2P',
-                      color: Colors.grey,
+                      color: userColor,
                     ),
                     prefixIcon: const Icon(
                       Icons.search,
@@ -165,20 +165,21 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                 if (_folders.isEmpty) {
                   return Padding(
                     padding: const EdgeInsets.all(40.0),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Lottie.asset('assets/folders.json'),
-                          const Text(
-                            'No Folder here\nCreate one by clicking the Add Folder.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                    child: SingleChildScrollView(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Lottie.asset('assets/folders.json'),
+                            const Text(
+                              'No Libraries here\nCreate one by clicking the\nAdd Button.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'PressStart2P',
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/infolder/flashcard%20widgets/auto_quiz.dart';
+import 'package:lottie/lottie.dart';
 import 'package:uuid/uuid.dart';
 
 class AddFlashCardPage extends StatefulWidget {
@@ -41,10 +43,6 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
   void initState() {
     super.initState();
     fetchExistingFlashcards();
-  }
-
-  Color getShade(Color color, int shade) {
-    return color.withOpacity(shade / 1000);
   }
 
   Future<void> uploadFlashCardToDb() async {
@@ -157,7 +155,8 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                 buildRetroButton(
                   'Add Flashcard',
                   icon: Icons.add_box,
-                  getShade(Colors.black, 300),
+                  height: 60,
+                  getShade(widget.color, 300),
                   () {
                     showDialog(
                       context: context,
@@ -225,7 +224,7 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                   });
                                 }
                               },
-                              child: const Text('Add'),
+                              child: const Text('submit'),
                             ),
                           ],
                         );
@@ -235,9 +234,10 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                 ),
                 const SizedBox(height: 16),
                 buildRetroButton(
-                  'Automatic Quiz Generation',
+                  'Quiz Generator',
+                  height: 60,
                   icon: Icons.quiz,
-                  getShade(Colors.black, 300),
+                  getShade(widget.color, 300),
                   () {
                     Navigator.push(
                       context,
@@ -253,10 +253,12 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                 const SizedBox(height: 16),
                 const Text(
                   "Existing Flashcards:",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    fontFamily: 'PressStart2P',
                   ),
                 ),
                 StreamBuilder<QuerySnapshot>(
@@ -267,10 +269,30 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const Loading();
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return const Text("No flashcards found.");
+                      return Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Lottie.asset(
+                                'assets/makequiz.json',
+                              ),
+                              const Text(
+                                'No Flashcards here!\nCreate one by clicking the\n"Add Flashcard"',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'PressStart2P',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                     }
                     var flashcards = snapshot.data!.docs;
                     return ListView.builder(
@@ -284,7 +306,7 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                         var answerController =
                             TextEditingController(text: flashcard['answer']);
                         return Card(
-                          color: getShade(Colors.black, 300),
+                          color: getShade(widget.color, 300),
                           margin: const EdgeInsets.symmetric(vertical: 8),
                           child: Padding(
                             padding: const EdgeInsets.all(12),

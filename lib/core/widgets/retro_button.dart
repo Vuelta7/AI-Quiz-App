@@ -16,6 +16,8 @@ Widget buildRetroButton(String text, Color color, VoidCallback? onPressed,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
+        shadowColor: Colors.black,
+        elevation: 6,
       ),
       icon: icon != null
           ? Icon(

@@ -6,6 +6,7 @@ import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/services/gemini_service.dart';
+import 'package:lottie/lottie.dart';
 
 class AutoQuizPage extends StatefulWidget {
   final String folderId;
@@ -144,84 +145,119 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
             width: double.infinity,
             child: Column(
               children: [
-                TextField(
-                  controller: textController,
-                  maxLines: 5,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Paste your text here",
-                    hintStyle: TextStyle(
-                        fontSize: 12,
-                        fontFamily: 'PressStart2P',
-                        color: Colors.white),
+                if (questionsAndAnswers.isEmpty) ...[
+                  TextField(
+                    controller: textController,
+                    maxLines: 7,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Paste your text here",
+                      hintStyle: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'PressStart2P',
+                          color: Colors.white),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: promptController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Custom Prompt (Optional)",
-                    hintStyle: TextStyle(
-                        fontSize: 12,
-                        fontFamily: 'PressStart2P',
-                        color: Colors.white),
+                  const SizedBox(height: 10),
+                  TextField(
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    controller: promptController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Custom Prompt (Optional)",
+                      hintStyle: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'PressStart2P',
+                          color: Colors.white),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                buildRetroButton(
-                  'Generate Questions from Text',
-                  getShade(widget.color, 300),
-                  () async {
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    await generateQuestionsFromText(
-                        textController.text, promptController.text);
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  },
-                ),
+                  const SizedBox(height: 10),
+                  buildRetroButton(
+                    'Generate Questions from Text',
+                    getShade(widget.color, 300),
+                    () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await generateQuestionsFromText(
+                          textController.text, promptController.text);
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    },
+                  ),
+                ],
                 const SizedBox(height: 16),
-                const Text(
-                  "Extracted Questions:",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
                 questionsAndAnswers.isNotEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: questionsAndAnswers.length,
-                        itemBuilder: (context, index) {
-                          final qa = questionsAndAnswers[index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    qa['question'] ?? '',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(qa['answer'] ?? ''),
-                                ],
-                              ),
+                    ? Column(
+                        children: [
+                          const Text(
+                            "Extracted Questions:",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontFamily: 'PressStart2P',
                             ),
-                          );
-                        },
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: questionsAndAnswers.length,
+                            itemBuilder: (context, index) {
+                              final qa = questionsAndAnswers[index];
+                              return Card(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        qa['question'] ?? '',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(qa['answer'] ?? ''),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       )
-                    : const Text("No questions generated."),
-                const SizedBox(height: 16),
+                    : Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Lottie.asset(
+                                'assets/makequiz.json',
+                              ),
+                              const Text(
+                                'Generate by copy and pasting your notes in textfield then press the "Generate Questions from Text", then wait for few seconds.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'PressStart2P',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                const SizedBox(height: 10),
                 if (questionsAndAnswers.isNotEmpty)
                   buildRetroButton(
                     'Save to Folder',

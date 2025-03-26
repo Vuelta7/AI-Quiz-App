@@ -126,7 +126,7 @@ class _FlashCardModelState extends State<FlashCardModel>
             style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Colors.white,
             ),
             textAlign: TextAlign.center,
             maxLines: 3,
@@ -149,7 +149,7 @@ class _FlashCardModelState extends State<FlashCardModel>
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 17,
-              color: Colors.black,
+              color: Colors.white,
             ),
             textAlign: TextAlign.center,
           ),

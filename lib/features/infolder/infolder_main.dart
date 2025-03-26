@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/features/infolder/flashcard%20widgets/add_flashcard_page.dart';
+import 'package:learn_n/features/infolder/flashcard%20widgets/edit_library_button.dart';
 import 'package:learn_n/features/infolder/infolder%20page/flashcards_page.dart';
 import 'package:learn_n/features/infolder/infolder%20page/leaderboards_page.dart';
 import 'package:learn_n/features/infolder/infolder%20page/play_page.dart';
@@ -167,40 +167,9 @@ class _InFolderMainState extends State<InFolderMain>
         ),
         backgroundColor: widget.headerColor,
         actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 6.0,
-              horizontal: 6.0,
-            ),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddFlashCardPage(
-                      folderId: widget.folderId,
-                      color: widget.headerColor,
-                    ),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                'Add Flashcard',
-                style: TextStyle(
-                  fontFamily: 'PressStart2P',
-                  fontSize: 10,
-                  color: getShade(widget.headerColor, 800),
-                ),
-              ),
-            ),
+          EditLibraryButton(
+            color: widget.headerColor,
+            folderId: widget.folderId,
           ),
         ],
       ),
@@ -223,8 +192,15 @@ class _InFolderMainState extends State<InFolderMain>
                   final questions = await getQuestions();
                   if (questions.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('No questions available in this folder.'),
+                      SnackBar(
+                        content: Text(
+                          'No questions available in this folder.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'PressStart2P',
+                            color: widget.headerColor,
+                          ),
+                        ),
                       ),
                     );
                   } else {
