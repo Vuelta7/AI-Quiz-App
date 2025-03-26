@@ -81,75 +81,78 @@ class _HomeMainState extends ConsumerState<HomeMain>
       body = const FolderPage();
     }
 
-    return Scaffold(
-      extendBody: true,
-      key: _scaffoldKey,
-      resizeToAvoidBottomInset: true,
-      body: body,
-      floatingActionButton: _selectedIndex == 1
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AddFolderPage()),
-                );
-              },
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.add_rounded,
-                color: getShade(userColor, 800),
-                size: 30,
-              ),
-            )
-          : null,
-      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        itemCount: 3,
-        tabBuilder: (int index, bool isActive) {
-          const color = Colors.white;
-          final showLabel = isActive || _selectedIndex == index;
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        extendBody: true,
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: true,
+        body: body,
+        floatingActionButton: _selectedIndex == 1
+            ? FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddFolderPage()),
+                  );
+                },
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.add_rounded,
+                  color: getShade(userColor, 800),
+                  size: 30,
+                ),
+              )
+            : null,
+        bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+          itemCount: 3,
+          tabBuilder: (int index, bool isActive) {
+            const color = Colors.white;
+            final showLabel = isActive || _selectedIndex == index;
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                index == 0
-                    ? Icons.school_rounded
-                    : index == 1
-                        ? Icons.folder_rounded
-                        : Icons.attractions_rounded,
-                size: 55,
-                color: color,
-              ),
-              if (showLabel)
-                Text(
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
                   index == 0
-                      ? 'Activity'
+                      ? Icons.school_rounded
                       : index == 1
-                          ? 'Library'
-                          : 'Options',
-                  style: const TextStyle(
-                    color: color,
-                    fontSize: 8,
-                    fontFamily: 'PressStart2P',
-                  ),
-                )
-            ],
-          );
-        },
-        backgroundColor: userColor,
-        height: 70,
-        activeIndex: _selectedIndex,
-        splashColor: Colors.black,
-        notchAndCornersAnimation: borderRadiusAnimation,
-        splashSpeedInMilliseconds: 100,
-        notchSmoothness: NotchSmoothness.defaultEdge,
-        gapLocation: GapLocation.none,
-        leftCornerRadius: 32,
-        rightCornerRadius: 32,
-        onTap: _onItemTapped,
-        hideAnimationController: _hideBottomBarAnimationController,
+                          ? Icons.folder_rounded
+                          : Icons.attractions_rounded,
+                  size: 55,
+                  color: color,
+                ),
+                if (showLabel)
+                  Text(
+                    index == 0
+                        ? 'Activity'
+                        : index == 1
+                            ? 'Library'
+                            : 'Options',
+                    style: const TextStyle(
+                      color: color,
+                      fontSize: 8,
+                      fontFamily: 'PressStart2P',
+                    ),
+                  )
+              ],
+            );
+          },
+          backgroundColor: userColor,
+          height: 70,
+          activeIndex: _selectedIndex,
+          splashColor: Colors.black,
+          notchAndCornersAnimation: borderRadiusAnimation,
+          splashSpeedInMilliseconds: 100,
+          notchSmoothness: NotchSmoothness.defaultEdge,
+          gapLocation: GapLocation.none,
+          leftCornerRadius: 32,
+          rightCornerRadius: 32,
+          onTap: _onItemTapped,
+          hideAnimationController: _hideBottomBarAnimationController,
+        ),
       ),
     );
   }

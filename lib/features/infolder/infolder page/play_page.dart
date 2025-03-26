@@ -253,21 +253,19 @@ class _PlayPageState extends State<PlayPage> {
                     const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () async {
-                        await _addPointsToUser(5);
-                        await _updateLeaderboard(timeSpent);
-                        await _updateHeatmapData();
-                        _finishQuiz();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => InFolderMain(
-                              folderId: widget.folderId,
                               folderName: widget.folderName,
+                              folderId: widget.folderId,
                               headerColor: widget.headerColor,
                               isImported: widget.isImported,
                             ),
                           ),
                         );
+                        await _addPointsToUser(20);
+                        await _updateLeaderboard(timeSpent);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -342,29 +340,6 @@ class _PlayPageState extends State<PlayPage> {
         });
       }
     }
-  }
-
-  Future<void> _updateHeatmapData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
-    if (userId != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(userId);
-      final userSnapshot = await userDoc.get();
-      final heatmapData = userSnapshot.data()?['heatmap'] ?? {};
-
-      final today = DateTime.now();
-      final todayKey = '${today.year}-${today.month}-${today.day}';
-      final playCount = (heatmapData[todayKey] ?? 0) + 1;
-
-      heatmapData[todayKey] = playCount;
-
-      await userDoc.update({'heatmap': heatmapData});
-    }
-  }
-
-  void _finishQuiz() {
-    Navigator.pop(context);
   }
 
   void _toggleMode() {

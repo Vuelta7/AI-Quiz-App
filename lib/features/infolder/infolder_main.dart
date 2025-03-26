@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/features/home/home_main.dart';
 import 'package:learn_n/features/infolder/flashcard%20widgets/edit_library_button.dart';
 import 'package:learn_n/features/infolder/infolder%20page/flashcards_page.dart';
 import 'package:learn_n/features/infolder/infolder%20page/leaderboards_page.dart';
@@ -146,136 +147,146 @@ class _InFolderMainState extends State<InFolderMain>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      appBar: AppBar(
-        title: Text(
-          widget.folderName,
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: 'PressStart2P',
-            fontSize: 16,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        extendBody: true,
+        appBar: AppBar(
+          title: Text(
+            widget.folderName,
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'PressStart2P',
+              fontSize: 16,
+            ),
           ),
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            size: 30,
-            color: Colors.white,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              size: 30,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeMain(),
+                ),
+              );
+            },
           ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: widget.headerColor,
-        actions: [
-          EditLibraryButton(
-            color: widget.headerColor,
-            folderId: widget.folderId,
-          ),
-        ],
-      ),
-      backgroundColor: getShade(widget.headerColor, 700),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: onScrollNotification,
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: [
-            _flashcardsPage,
-            _leaderboardPage,
+          backgroundColor: widget.headerColor,
+          actions: [
+            EditLibraryButton(
+              color: widget.headerColor,
+              folderId: widget.folderId,
+            ),
           ],
         ),
-      ),
-      floatingActionButton: _selectedIndex == 0
-          ? FadeTransition(
-              opacity: _hideFabAnimationController,
-              child: FloatingActionButton(
-                onPressed: () async {
-                  final questions = await getQuestions();
-                  if (questions.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'No questions available in this folder.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'PressStart2P',
-                            color: widget.headerColor,
+        backgroundColor: getShade(widget.headerColor, 700),
+        body: NotificationListener<ScrollNotification>(
+          onNotification: onScrollNotification,
+          child: IndexedStack(
+            index: _selectedIndex,
+            children: [
+              _flashcardsPage,
+              _leaderboardPage,
+            ],
+          ),
+        ),
+        floatingActionButton: _selectedIndex == 0
+            ? FadeTransition(
+                opacity: _hideFabAnimationController,
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    final questions = await getQuestions();
+                    if (questions.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'No questions available in this folder.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'PressStart2P',
+                              color: widget.headerColor,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PlayPage(
-                          folderName: widget.folderName,
-                          folderId: widget.folderId,
-                          headerColor: widget.headerColor,
-                          questions: questions,
-                          isImported: widget.isImported,
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PlayPage(
+                            folderName: widget.folderName,
+                            folderId: widget.folderId,
+                            headerColor: widget.headerColor,
+                            questions: questions,
+                            isImported: widget.isImported,
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                },
-                backgroundColor: Colors.white,
-                shape: const CircleBorder(),
-                child: AnimatedBuilder(
-                  animation: _wiggleController,
-                  builder: (context, child) {
-                    return Transform.rotate(
-                      angle: 0.2 * _wiggleController.value,
-                      child: Icon(
-                        Icons.play_arrow_rounded,
-                        size: 45,
-                        color: getShade(widget.headerColor, 800),
-                      ),
-                    );
+                      );
+                    }
                   },
-                ),
-              ),
-            )
-          : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        itemCount: 2,
-        tabBuilder: (int index, bool isActive) {
-          const color = Colors.white;
-          final showLabel = isActive || _selectedIndex == index;
-
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                index == 0 ? Icons.question_answer_rounded : Icons.people,
-                size: 45,
-                color: color,
-              ),
-              if (showLabel)
-                Text(
-                  index == 0 ? 'Flashcards' : 'Learners',
-                  style: const TextStyle(
-                    color: color,
-                    fontSize: 10,
-                    fontFamily: 'PressStart2P',
+                  backgroundColor: Colors.white,
+                  shape: const CircleBorder(),
+                  child: AnimatedBuilder(
+                    animation: _wiggleController,
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: 0.2 * _wiggleController.value,
+                        child: Icon(
+                          Icons.play_arrow_rounded,
+                          size: 45,
+                          color: getShade(widget.headerColor, 800),
+                        ),
+                      );
+                    },
                   ),
-                )
-            ],
-          );
-        },
-        height: 70,
-        backgroundColor: getShade(widget.headerColor, 800),
-        activeIndex: _selectedIndex,
-        splashColor: widget.headerColor,
-        notchAndCornersAnimation: borderRadiusAnimation,
-        splashSpeedInMilliseconds: 100,
-        notchSmoothness: NotchSmoothness.defaultEdge,
-        gapLocation: GapLocation.center,
-        leftCornerRadius: 32,
-        rightCornerRadius: 32,
-        onTap: (index) => setState(() => _selectedIndex = index),
-        hideAnimationController: _hideBottomBarAnimationController,
+                ),
+              )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+          itemCount: 2,
+          tabBuilder: (int index, bool isActive) {
+            const color = Colors.white;
+            final showLabel = isActive || _selectedIndex == index;
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  index == 0 ? Icons.question_answer_rounded : Icons.people,
+                  size: 45,
+                  color: color,
+                ),
+                if (showLabel)
+                  Text(
+                    index == 0 ? 'Flashcards' : 'Learners',
+                    style: const TextStyle(
+                      color: color,
+                      fontSize: 10,
+                      fontFamily: 'PressStart2P',
+                    ),
+                  )
+              ],
+            );
+          },
+          height: 70,
+          backgroundColor: getShade(widget.headerColor, 800),
+          activeIndex: _selectedIndex,
+          splashColor: widget.headerColor,
+          notchAndCornersAnimation: borderRadiusAnimation,
+          splashSpeedInMilliseconds: 100,
+          notchSmoothness: NotchSmoothness.defaultEdge,
+          gapLocation: GapLocation.center,
+          leftCornerRadius: 32,
+          rightCornerRadius: 32,
+          onTap: (index) => setState(() => _selectedIndex = index),
+          hideAnimationController: _hideBottomBarAnimationController,
+        ),
       ),
     );
   }
