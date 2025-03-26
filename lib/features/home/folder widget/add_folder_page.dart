@@ -126,7 +126,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
         ),
         color: _selectedColor,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: _selectedColor,
       body: Stack(
         children: [
           Column(
@@ -146,12 +146,14 @@ class _AddFolderPageState extends State<AddFolderPage> {
                             : Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(
-                          'Add Folder',
+                          'Add',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color:
-                                _isAddingFolder ? Colors.white : Colors.black,
+                            color: _isAddingFolder
+                                ? Colors.white
+                                : getShade(_selectedColor, 600),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'PressStart2P',
                           ),
                         ),
                       ),
@@ -170,12 +172,14 @@ class _AddFolderPageState extends State<AddFolderPage> {
                             : Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(
-                          'Import Folder',
+                          'Import',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color:
-                                !_isAddingFolder ? Colors.white : Colors.black,
+                            color: !_isAddingFolder
+                                ? Colors.white
+                                : getShade(_selectedColor, 600),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'PressStart2P',
                           ),
                         ),
                       ),
@@ -301,7 +305,7 @@ class _AddFolderPageState extends State<AddFolderPage> {
                             onFieldSubmitted: (_) {},
                             descriptionFocusNode: descriptionFocusNode,
                             onChanged: (value) {
-                              setState(() {}); // Update form validation state
+                              setState(() {});
                             },
                           ),
                   ),

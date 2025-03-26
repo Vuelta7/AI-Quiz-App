@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/utils/general_utils.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
+import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -44,13 +45,9 @@ class SplashScreenState extends ConsumerState<SplashScreen>
         loadingText = 'Loading${'.' * ((timer.tick % 3) + 1)}';
       });
     });
-    _loadUserId();
+    loadUserId(ref);
+    loadUserColor(ref);
     Future.delayed(const Duration(seconds: 3), _checkAuthState);
-  }
-
-  Future<void> _loadUserId() async {
-    final userId = await UserIdRepository().getUserId();
-    ref.read(userIdProvider.notifier).state = userId;
   }
 
   Future<void> _checkAuthState() async {

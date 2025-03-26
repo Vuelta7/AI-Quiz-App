@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 Widget buildRetroButton(String text, Color color, VoidCallback? onPressed,
-    {double width = double.infinity, IconData? icon, double? height}) {
+    {double width = double.infinity,
+    IconData? icon,
+    double? height,
+    Color textColor = Colors.white}) {
   return SizedBox(
     width: width,
     height: height,
@@ -24,10 +27,10 @@ Widget buildRetroButton(String text, Color color, VoidCallback? onPressed,
       label: Text(
         text,
         textAlign: TextAlign.center,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'PressStart2P',
           fontSize: 13,
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: textColor,
         ),
       ),
     ),

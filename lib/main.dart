@@ -93,8 +93,7 @@ class MyApp extends StatelessWidget {
 
 // Mighty Creation of Uriel
 // TODO:
-// WebPage fix//
+// WebPage fix
 // create the dnd mechanics
 // make conditions and info how to update streakpet
-// add local storage
 // add providers
