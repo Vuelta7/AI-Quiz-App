@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/features/home/setting%20widget/dnd_page.dart';
+import 'package:learn_n/features/home/setting%20widget/feedback.dart';
 import 'package:learn_n/features/home/setting%20widget/info_page.dart';
 import 'package:learn_n/features/home/setting%20widget/themes_page.dart';
 import 'package:learn_n/features/introduction/liquid_swipe.dart';
@@ -191,24 +192,11 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
                     ),
                   );
                 }),
-                _buildTile(context, 'Feedback and Questions', Icons.feedback,
-                    () {
+                _buildTile(context, 'Feedback', Icons.feedback, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => InfoPage(
-                        title: 'Feedback and Questions',
-                        description: '''
-We value your feedback! If you have any questions, suggestions, or concerns, feel free to reach out.
-
-Customer Service: LearnNCustomerServices@gmail.com
-
-I am Uriel Vuelta, the creator and developer of this application. Your input helps us improve and provide the best experience possible. Thank you for your support!
-
-Contact me: urielvuelta@gmail.com  
-''',
-                        color: color,
-                      ),
+                      builder: (context) => FeedbackPage(color: color),
                     ),
                   );
                 }),
