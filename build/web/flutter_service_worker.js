@@ -3,13 +3,11 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"main.dart.wasm": "6df03051032e1bf6ecd1152496ccfcec",
-"flutter.js": "76f08d47ff9f5715220992f993002504",
+const RESOURCES = {"flutter.js": "76f08d47ff9f5715220992f993002504",
 "index.html": "13d162ea437e01b881806015564c5850",
 "/": "13d162ea437e01b881806015564c5850",
 "manifest.json": "936f7ab4d46d04726ef773ee25d6c0ec",
 "main.dart.js": "ccf9128d1415967fc36ec06224fa672e",
-"main.dart.mjs": "da343806cd3c02b07d46f6df0915f5e4",
 "version.json": "c344d4ec2a7481a952f560382c0822a6",
 "canvaskit/canvaskit.js.symbols": "68eb703b9a609baef8ee0e413b442f33",
 "canvaskit/skwasm_st.js.symbols": "c7e7aac7cd8b612defd62b43e3050bdd",
@@ -23,7 +21,7 @@ const RESOURCES = {"main.dart.wasm": "6df03051032e1bf6ecd1152496ccfcec",
 "canvaskit/skwasm.js": "f2ad9363618c5f62e813740099a80e63",
 "canvaskit/skwasm.js.symbols": "80806576fa1056b43dd6d0b445b4b6f7",
 "canvaskit/skwasm_st.js": "d1326ceef381ad382ab492ba5d96f04d",
-"flutter_bootstrap.js": "3b28cdec696db4ef5b00a34d459ae021",
+"flutter_bootstrap.js": "b2effd63d410abeb6dd6cc2101d53c57",
 "assets/FontManifest.json": "af72817180f1600c6ad8d83aa72f0a98",
 "assets/AssetManifest.bin": "60ee4eb7875fb437aab5c7049b149d7a",
 "assets/AssetManifest.json": "038d6b6fa716c9b1fa762138df248623",
@@ -58,8 +56,6 @@ const RESOURCES = {"main.dart.wasm": "6df03051032e1bf6ecd1152496ccfcec",
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
-"main.dart.wasm",
-"main.dart.mjs",
 "index.html",
 "flutter_bootstrap.js",
 "assets/AssetManifest.bin.json",
