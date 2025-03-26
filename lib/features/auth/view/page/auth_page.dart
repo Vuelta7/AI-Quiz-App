@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
+import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/auth/view/widgets/auth_textfield.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   final bool isLogin;
 
   const AuthScreen({super.key, required this.isLogin});
@@ -17,10 +19,10 @@ class AuthScreen extends StatefulWidget {
       );
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   final TextEditingController usernameController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
@@ -45,6 +47,11 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.isLogin) {
+      Future.delayed(Duration.zero, () {
+        loadUserColor(ref);
+      });
+    }
   }
 
   Future<void> authenticateUser() async {
@@ -80,6 +87,8 @@ class _AuthScreenState extends State<AuthScreen> {
     final userCredential = await FirebaseAuth.instance.signInAnonymously();
     final firebaseUser = userCredential.user;
 
+    const defaultColorHex = 'f48fb1';
+
     await FirebaseFirestore.instance
         .collection('users')
         .doc(firebaseUser!.uid)
@@ -90,12 +99,14 @@ class _AuthScreenState extends State<AuthScreen> {
       'rankpoints': 0,
       'hints': 0,
       'heatmap': {},
-      'selectedColor': 'f48fb1',
+      'selectedColor': defaultColorHex,
     });
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userId', firebaseUser.uid);
-    await prefs.setString('selectedColor', 'f48fb1');
+
+    await UserColorRepository().saveUserColor(defaultColorHex);
+    ref.read(userColorProvider.notifier).state = const Color(0xFFF48FB1);
 
     setState(() => errorMessage = null);
     Navigator.pushReplacement(
@@ -120,10 +131,13 @@ class _AuthScreenState extends State<AuthScreen> {
       final userDoc = querySnapshot.docs.first;
       final userId = userDoc.id;
       final userData = userDoc.data();
+      final userColorHex = userData['selectedColor'] ?? 'f48fb1';
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userId', userId);
-      await prefs.setString('selectedColor', userData['selectedColor']);
+
+      await UserColorRepository().saveUserColor(userColorHex);
+      await loadUserColor(ref);
 
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => HomeMain(userId: userId)));

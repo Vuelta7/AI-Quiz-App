@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 
-class FeedbackPage extends StatefulWidget {
-  final Color color;
-  const FeedbackPage({super.key, required this.color});
+class FeedbackPage extends ConsumerStatefulWidget {
+  const FeedbackPage({super.key});
 
   @override
-  State<FeedbackPage> createState() => _FeedbackPageState();
+  ConsumerState<FeedbackPage> createState() => _FeedbackPageState();
 }
 
-class _FeedbackPageState extends State<FeedbackPage> {
+class _FeedbackPageState extends ConsumerState<FeedbackPage> {
   final TextEditingController _feedbackController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -29,6 +30,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userColor = ref.watch(userColorProvider);
     return Scaffold(
       appBar: AppBar(
         title: Image.asset(
@@ -37,7 +39,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         ),
         toolbarHeight: 70,
         centerTitle: true,
-        backgroundColor: widget.color,
+        backgroundColor: userColor,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
@@ -59,7 +61,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: widget.color,
+                  color: userColor,
                 ),
               ),
               const SizedBox(height: 16),
@@ -74,7 +76,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
               const SizedBox(height: 16),
               buildRetroButton(
                 'Submit',
-                widget.color,
+                userColor,
                 _submitFeedback,
                 width: double.infinity,
               ),

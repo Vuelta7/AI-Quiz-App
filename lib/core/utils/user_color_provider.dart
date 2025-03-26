@@ -1,74 +1,26 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final userColorProvider = FutureProvider<Color>((ref) async {
-  return await UserColorRepository().getUserColor();
-});
+final userColorProvider =
+    StateProvider<Color>((ref) => const Color(0xFFF48FB1));
 
 class UserColorRepository {
   Future<Color> getUserColor() async {
     final prefs = await SharedPreferences.getInstance();
-    final String? userId = prefs.getString('userId');
-
-    if (userId == null) return Colors.blue;
-
-    try {
-      if (await _isConnected()) {
-        final doc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .get();
-
-        if (doc.exists && doc.data()?['selectedColor'] != null) {
-          String colorHex = doc.data()?['selectedColor'];
-          await _saveToLocal(colorHex);
-          return hexToColor(colorHex);
-        }
-      }
-
-      return await _getFromLocal();
-    } catch (e) {
-      print("Error fetching user color: $e");
-      return Colors.blue;
-    }
+    final colorString = prefs.getString('selectedColor') ?? 'f48fb1';
+    return Color(int.parse('0xFF$colorString'));
   }
 
-  Future<void> updateUserColor(String userId, String colorHex) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .update({'selectedColor': colorHex});
-
-      await _saveToLocal(colorHex);
-    } catch (e) {
-      print("Error updating user color: $e");
-    }
-  }
-
-  Future<bool> _isConnected() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  Future<void> _saveToLocal(String colorHex) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> saveUserColor(String colorHex) async {
+    final prefs = await SharedPreferences.getInstance();
     await prefs.setString('selectedColor', colorHex);
   }
+}
 
-  Future<Color> _getFromLocal() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String colorHex = prefs.getString('selectedColor') ?? rgbToHex(Colors.blue);
-    return hexToColor(colorHex);
-  }
+Future<void> loadUserColor(WidgetRef ref) async {
+  final color = await UserColorRepository().getUserColor();
+  ref.read(userColorProvider.notifier).state = color;
 }
 
 Color strengthenColor(Color color, double factor) {

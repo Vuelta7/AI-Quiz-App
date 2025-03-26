@@ -1,13 +1,13 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/features/home/folder%20widget/add_folder_page.dart';
+import 'package:learn_n/features/home/home%20pages/acrivity_page.dart';
 import 'package:learn_n/features/home/home%20pages/folder_page.dart';
 import 'package:learn_n/features/home/home%20pages/setting_page.dart';
-import 'package:learn_n/features/home/home%20pages/acrivity_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeMain extends StatefulWidget {
+class HomeMain extends ConsumerStatefulWidget {
   final String userId;
 
   const HomeMain({super.key, required this.userId});
@@ -16,19 +16,19 @@ class HomeMain extends StatefulWidget {
   _HomeMainState createState() => _HomeMainState();
 }
 
-class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
+class _HomeMainState extends ConsumerState<HomeMain>
+    with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 1;
   late AnimationController _borderRadiusAnimationController;
   late Animation<double> borderRadiusAnimation;
   late CurvedAnimation borderRadiusCurve;
   late AnimationController _hideBottomBarAnimationController;
-  Color? _selectedColor;
 
   @override
   void initState() {
     super.initState();
-    _loadSelectedColor();
+
     _borderRadiusAnimationController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
@@ -53,14 +53,6 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
     );
   }
 
-  Future<void> _loadSelectedColor() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? colorHex = prefs.getString('selectedColor');
-    setState(() {
-      _selectedColor = colorHex != null ? hexToColor(colorHex) : Colors.blue;
-    });
-  }
-
   @override
   void dispose() {
     _borderRadiusAnimationController.dispose();
@@ -78,17 +70,17 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final mainColor = _selectedColor ?? Colors.blue;
+    final userColor = ref.watch(userColorProvider);
 
     Widget body;
     if (_selectedIndex == 0) {
-      body = ActivtyPage(userId: widget.userId, color: mainColor);
+      body = ActivtyPage(userId: widget.userId);
     } else if (_selectedIndex == 1) {
-      body = FolderPage(userId: widget.userId, color: mainColor);
+      body = FolderPage(userId: widget.userId);
     } else if (_selectedIndex == 2) {
-      body = SettingPage(userId: widget.userId, color: mainColor);
+      body = SettingPage(userId: widget.userId);
     } else {
-      body = FolderPage(userId: widget.userId, color: mainColor);
+      body = FolderPage(userId: widget.userId);
     }
 
     return Scaffold(
@@ -108,7 +100,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
               backgroundColor: Colors.white,
               child: Icon(
                 Icons.add_rounded,
-                color: getShade(mainColor, 800),
+                color: getShade(userColor, 800),
                 size: 30,
               ),
             )
@@ -148,7 +140,7 @@ class _HomeMainState extends State<HomeMain> with TickerProviderStateMixin {
             ],
           );
         },
-        backgroundColor: mainColor,
+        backgroundColor: userColor,
         height: 70,
         activeIndex: _selectedIndex,
         splashColor: Colors.black,

@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/folder%20widget/folder_model_ken.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FolderPage extends StatefulWidget {
+class FolderPage extends ConsumerStatefulWidget {
   final String userId;
-  final Color color;
 
-  const FolderPage({super.key, required this.userId, required this.color});
+  const FolderPage({super.key, required this.userId});
 
   @override
   _FolderPageState createState() => _FolderPageState();
 }
 
-class _FolderPageState extends State<FolderPage> {
+class _FolderPageState extends ConsumerState<FolderPage> {
   final TextEditingController _searchController = TextEditingController();
   List<DocumentSnapshot> _folders = [];
   String searchQuery = '';
@@ -79,15 +79,16 @@ class _FolderPageState extends State<FolderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userColor = ref.watch(userColorProvider);
     return Scaffold(
-      backgroundColor: getShade(widget.color, 600),
+      backgroundColor: getShade(userColor, 600),
       body: Column(
         children: [
           Container(
             width: double.infinity,
             height: 80,
             decoration: BoxDecoration(
-              color: widget.color,
+              color: userColor,
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(32),
                 bottomRight: Radius.circular(32),
@@ -115,7 +116,7 @@ class _FolderPageState extends State<FolderPage> {
                       color: Colors.white,
                     ),
                     filled: true,
-                    fillColor: getShade(widget.color, 600),
+                    fillColor: getShade(userColor, 600),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(

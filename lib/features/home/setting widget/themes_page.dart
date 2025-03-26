@@ -1,43 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ThemesPage extends StatefulWidget {
+class ThemesPage extends ConsumerStatefulWidget {
   const ThemesPage({super.key});
 
   @override
   _ThemesPageState createState() => _ThemesPageState();
 }
 
-class _ThemesPageState extends State<ThemesPage> {
-  Color selectedColor = Colors.blue;
-
+class _ThemesPageState extends ConsumerState<ThemesPage> {
   Future<void> updateUserColor(String userId, String colorHex) async {
     try {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
           .update({'selectedColor': colorHex});
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('selectedColor', colorHex);
+      await UserColorRepository().saveUserColor(colorHex);
     } catch (e) {
       print('Error updating user color: $e');
     }
   }
 
   void onColorChanged(Color color) {
-    setState(() {
-      selectedColor = color;
-    });
+    ref.read(userColorProvider.notifier).state = color;
   }
 
   @override
   Widget build(BuildContext context) {
+    final selectedColor = ref.watch(userColorProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

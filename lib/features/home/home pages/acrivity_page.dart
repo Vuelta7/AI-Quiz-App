@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/home/folder%20widget/folder_model.dart';
 import 'package:lottie/lottie.dart';
 
-class ActivtyPage extends StatefulWidget {
+class ActivtyPage extends ConsumerStatefulWidget {
   final String userId;
-  final Color color;
 
-  const ActivtyPage({super.key, required this.userId, required this.color});
+  const ActivtyPage({super.key, required this.userId});
 
   @override
   _ActivtyPageState createState() => _ActivtyPageState();
 }
 
-class _ActivtyPageState extends State<ActivtyPage> {
+class _ActivtyPageState extends ConsumerState<ActivtyPage> {
   String _petName = '';
 
   @override
@@ -36,8 +36,9 @@ class _ActivtyPageState extends State<ActivtyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userColor = ref.watch(userColorProvider);
     return Scaffold(
-      backgroundColor: getShade(widget.color, 300),
+      backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -71,7 +72,7 @@ class _ActivtyPageState extends State<ActivtyPage> {
             Container(
               padding: const EdgeInsets.fromLTRB(13, 0, 13, 10),
               decoration: BoxDecoration(
-                color: getShade(widget.color, 600),
+                color: getShade(userColor, 600),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(36),
                   topRight: Radius.circular(36),
@@ -97,7 +98,7 @@ class _ActivtyPageState extends State<ActivtyPage> {
                     description:
                         'This Folder helps you to learn the basics of programming terms.',
                     isImported: true,
-                    headerColor: getShade(widget.color, 900),
+                    headerColor: getShade(userColor, 900),
                     userId: widget.userId,
                     isActivity: true,
                   ),
@@ -110,7 +111,7 @@ class _ActivtyPageState extends State<ActivtyPage> {
                     description:
                         'This Folder helps you to learn the basics of Database terms.',
                     isImported: true,
-                    headerColor: getShade(widget.color, 900),
+                    headerColor: getShade(userColor, 900),
                     userId: widget.userId,
                     isActivity: true,
                   ),
@@ -149,7 +150,7 @@ class _ActivtyPageState extends State<ActivtyPage> {
                             const SizedBox(height: 20),
                             buildRetroButton(
                               'Buy Hint (50 points)',
-                              widget.color,
+                              userColor,
                               currencyPoints >= 50
                                   ? () async {
                                       await FirebaseFirestore.instance
@@ -165,12 +166,12 @@ class _ActivtyPageState extends State<ActivtyPage> {
                             const SizedBox(height: 20),
                             buildRetroButton(
                               'Change Streak Pet Name (100 points)',
-                              widget.color,
+                              userColor,
                               currencyPoints >= 100
                                   ? () async {
                                       String newName =
                                           await _showChangePetNameDialog(
-                                              context);
+                                              context, userColor);
                                       if (newName.isNotEmpty) {
                                         await FirebaseFirestore.instance
                                             .collection('users')
@@ -187,12 +188,12 @@ class _ActivtyPageState extends State<ActivtyPage> {
                             const SizedBox(height: 20),
                             buildRetroButton(
                               'Change Username (1000 points)',
-                              widget.color,
+                              userColor,
                               currencyPoints >= 500
                                   ? () async {
                                       String newUsername =
                                           await _showChangeUsernameDialog(
-                                              context);
+                                              context, userColor);
                                       if (newUsername.isNotEmpty) {
                                         await FirebaseFirestore.instance
                                             .collection('users')
@@ -221,14 +222,15 @@ class _ActivtyPageState extends State<ActivtyPage> {
     );
   }
 
-  Future<String> _showChangePetNameDialog(BuildContext context) async {
+  Future<String> _showChangePetNameDialog(
+      BuildContext context, userColor) async {
     String newName = '';
     await showDialog(
       context: context,
       builder: (context) {
         final TextEditingController controller = TextEditingController();
         return AlertDialog(
-          backgroundColor: widget.color,
+          backgroundColor: userColor,
           title: const Text(
             'Change Pet Name',
             style: TextStyle(
@@ -251,7 +253,7 @@ class _ActivtyPageState extends State<ActivtyPage> {
                 color: Colors.white,
               ),
               filled: true,
-              fillColor: getShade(widget.color, 600),
+              fillColor: getShade(userColor, 600),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(
@@ -306,14 +308,15 @@ class _ActivtyPageState extends State<ActivtyPage> {
     return newName;
   }
 
-  Future<String> _showChangeUsernameDialog(BuildContext context) async {
+  Future<String> _showChangeUsernameDialog(
+      BuildContext context, userColor) async {
     String newUsername = '';
     await showDialog(
       context: context,
       builder: (context) {
         final TextEditingController controller = TextEditingController();
         return AlertDialog(
-          backgroundColor: widget.color,
+          backgroundColor: userColor,
           title: const Text(
             'Change Username',
             style: TextStyle(
@@ -336,7 +339,7 @@ class _ActivtyPageState extends State<ActivtyPage> {
                 color: Colors.white,
               ),
               filled: true,
-              fillColor: getShade(widget.color, 600),
+              fillColor: getShade(userColor, 600),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(

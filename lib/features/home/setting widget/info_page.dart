@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_n/core/utils/user_color_provider.dart';
 
-class InfoPage extends StatelessWidget {
+class InfoPage extends ConsumerWidget {
   final String title;
   final String description;
-  final Color color;
+
   const InfoPage({
     super.key,
     required this.title,
     required this.description,
-    required this.color,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userColor = ref.watch(userColorProvider);
     return Scaffold(
       appBar: AppBar(
         title: Image.asset(
@@ -21,7 +23,7 @@ class InfoPage extends StatelessWidget {
         ),
         toolbarHeight: 70,
         centerTitle: true,
-        backgroundColor: color,
+        backgroundColor: userColor,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
@@ -45,7 +47,7 @@ class InfoPage extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: color),
+                        color: userColor),
                   ),
                   const SizedBox(height: 16),
                   Text(

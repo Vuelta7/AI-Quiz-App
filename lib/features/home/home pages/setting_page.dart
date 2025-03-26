@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/features/home/setting%20widget/dnd_page.dart';
 import 'package:learn_n/features/home/setting%20widget/feedback.dart';
@@ -8,15 +9,16 @@ import 'package:learn_n/features/home/setting%20widget/themes_page.dart';
 import 'package:learn_n/features/introduction/liquid_swipe.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends ConsumerWidget {
   final String userId;
-  final Color color;
-  const SettingPage({super.key, required this.userId, required this.color});
+
+  const SettingPage({super.key, required this.userId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userColor = ref.watch(userColorProvider);
     return Scaffold(
-      backgroundColor: getShade(color, 300),
+      backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -24,7 +26,7 @@ class SettingPage extends StatelessWidget {
               child: Container(
                 width: 150,
                 decoration: BoxDecoration(
-                  color: color,
+                  color: userColor,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(32),
                     bottomRight: Radius.circular(32),
@@ -66,7 +68,7 @@ class SettingPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => InfoPage(
+                      builder: (context) => const InfoPage(
                         title: 'About Us',
                         description: '''
 We are students from STI Malolos College, specifically from section ITMAWD12B. This project was developed with a mission to simplify learning applications and eliminate unnecessary complications.
@@ -75,7 +77,6 @@ Many existing apps are difficult to navigate and filled with intrusive advertise
 
 With this app, we strive to create an efficient and accessible platform that makes studying easier and more enjoyable. Thank you for supporting our project!
 ''',
-                        color: color,
                       ),
                     ),
                   );
@@ -84,7 +85,7 @@ With this app, we strive to create an efficient and accessible platform that mak
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => InfoPage(
+                      builder: (context) => const InfoPage(
                         title: 'Our Team',
                         description: '''
 Developer – Mark Uriel "The King" Vuelta
@@ -105,7 +106,6 @@ Detects and addresses bugs and technical flaws by rigorously testing the applica
 Generalists – Kyle Raine & Mikko Dela Cruz  
 Take on various tasks essential for the company’s operations.  
 ''',
-                        color: color,
                       ),
                     ),
                   );
@@ -114,7 +114,7 @@ Take on various tasks essential for the company’s operations.
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => InfoPage(
+                      builder: (context) => const InfoPage(
                         title: 'Our Purpose',
                         description: '''
 Vision  
@@ -135,7 +135,6 @@ Core Values
 - Efficient and effective learning.  
 - Prioritizing student feedback.  
 ''',
-                        color: color,
                       ),
                     ),
                   );
@@ -144,7 +143,7 @@ Core Values
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => InfoPage(
+                      builder: (context) => const InfoPage(
                         title: 'Privacy Policy',
                         description: '''
 Welcome to Learn-N! Your privacy is important to us, and we are committed to protecting your data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our application.
@@ -187,7 +186,6 @@ If you have any questions or concerns about this Privacy Policy, feel free to re
 
 By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experience while we handle your data responsibly!
 ''',
-                        color: color,
                       ),
                     ),
                   );
@@ -196,7 +194,7 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FeedbackPage(color: color),
+                      builder: (context) => const FeedbackPage(),
                     ),
                   );
                 }),
@@ -206,7 +204,7 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DoNotDisturbPage(color: color),
+                      builder: (context) => const DoNotDisturbPage(),
                     ),
                   );
                 }),

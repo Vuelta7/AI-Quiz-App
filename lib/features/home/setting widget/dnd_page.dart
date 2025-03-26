@@ -1,19 +1,19 @@
 import 'package:do_not_disturb/do_not_disturb_plugin.dart';
 import 'package:do_not_disturb/types.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:lottie/lottie.dart';
 
-class DoNotDisturbPage extends StatefulWidget {
-  final Color color;
-  const DoNotDisturbPage({super.key, required this.color});
+class DoNotDisturbPage extends ConsumerStatefulWidget {
+  const DoNotDisturbPage({super.key});
 
   @override
-  State<DoNotDisturbPage> createState() => _DoNotDisturbPageState();
+  ConsumerState<DoNotDisturbPage> createState() => _DoNotDisturbPageState();
 }
 
-class _DoNotDisturbPageState extends State<DoNotDisturbPage>
+class _DoNotDisturbPageState extends ConsumerState<DoNotDisturbPage>
     with WidgetsBindingObserver {
   final _dndPlugin = DoNotDisturbPlugin();
 
@@ -36,13 +36,14 @@ class _DoNotDisturbPageState extends State<DoNotDisturbPage>
 
   @override
   Widget build(BuildContext context) {
+    final userColor = ref.watch(userColorProvider);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: getShade(widget.color, 300),
+        backgroundColor: getShade(userColor, 300),
         title: Text(
           'DND Settings',
           style: TextStyle(
-            color: widget.color,
+            color: userColor,
             fontFamily: 'PressStart2P',
             fontSize: 20,
           ),
@@ -50,14 +51,14 @@ class _DoNotDisturbPageState extends State<DoNotDisturbPage>
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_rounded,
-            color: widget.color,
+            color: userColor,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
-      backgroundColor: widget.color,
+      backgroundColor: userColor,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -81,13 +82,13 @@ class _DoNotDisturbPageState extends State<DoNotDisturbPage>
               if (!_notifPolicyAccess)
                 buildRetroButton(
                   'Open Notification Policy Access Settings',
-                  getShade(widget.color, 300),
+                  getShade(userColor, 300),
                   _openNotificationPolicyAccessSettings,
                 ),
               if (_notifPolicyAccess)
                 buildRetroButton(
                   'Toggle DND mode',
-                  getShade(widget.color, 300),
+                  getShade(userColor, 300),
                   () async {
                     await _checkNotificationPolicyAccessGranted();
                     await Future.delayed(const Duration(milliseconds: 50));
