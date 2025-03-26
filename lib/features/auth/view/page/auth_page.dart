@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/auth/view/widgets/auth_textfield.dart';
-import 'package:learn_n/features/home/home_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
@@ -111,12 +111,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     ref.read(userColorProvider.notifier).state = const Color(0xFFF48FB1);
 
     setState(() => errorMessage = null);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeMain(),
-      ),
-    );
+    GoRouter.of(context).go('/home');
   }
 
   Future<void> loginUser() async {
@@ -142,8 +137,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       await UserColorRepository().saveUserColor(userColorHex);
       await loadUserColor(ref);
 
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const HomeMain()));
+      GoRouter.of(context).go('/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

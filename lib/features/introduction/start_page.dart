@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
-import 'package:learn_n/features/auth/view/page/auth_page.dart';
 
-class StartPage extends StatefulWidget {
+class StartPage extends StatelessWidget {
   const StartPage({super.key});
-
-  @override
-  _StartPageState createState() => _StartPageState();
-}
-
-class _StartPageState extends State<StartPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +24,7 @@ class _StartPageState extends State<StartPage> {
                 'Register',
                 Colors.black,
                 () {
-                  Navigator.push(context, AuthScreen.route(isLogin: false));
+                  context.go('/auth/false');
                 },
               ),
               const SizedBox(height: 20),
@@ -42,7 +32,7 @@ class _StartPageState extends State<StartPage> {
                 'Log In',
                 Colors.black,
                 () {
-                  Navigator.push(context, AuthScreen.route(isLogin: true));
+                  context.go('/auth/true');
                 },
               ),
             ],

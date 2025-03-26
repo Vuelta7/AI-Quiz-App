@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:learn_n/core/utils/general_utils.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
-import 'package:learn_n/features/home/home_main.dart';
-import 'package:learn_n/features/introduction/liquid_swipe.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -48,10 +48,6 @@ class SplashScreenState extends ConsumerState<SplashScreen>
     Future.delayed(const Duration(seconds: 3), _checkAuthState);
   }
 
-  bool isMobileWeb(BuildContext context) {
-    return kIsWeb && MediaQuery.of(context).size.width < 800;
-  }
-
   Future<void> _loadUserId() async {
     final userId = await UserIdRepository().getUserId();
     ref.read(userIdProvider.notifier).state = userId;
@@ -59,16 +55,14 @@ class SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _checkAuthState() async {
     final userId = ref.read(userIdProvider);
-    if (userId != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeMain()),
-      );
+    if (userId != null && kIsWeb) {
+      GoRouter.of(context).go('/home');
+    } else if (kIsWeb) {
+      GoRouter.of(context).go('/web');
+    } else if (userId != null) {
+      GoRouter.of(context).go('/home');
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LiquidSwipeIntro()),
-      );
+      GoRouter.of(context).go('/intro');
     }
   }
 

@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
-import 'package:learn_n/features/home/home_main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WebMain extends ConsumerStatefulWidget {
@@ -41,14 +41,9 @@ class _WebMainState extends ConsumerState<WebMain> {
   void navigateToStartPage() {
     final userId = ref.read(userIdProvider);
     if (userId != '') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) {
-          return const HomeMain();
-        }),
-      );
+      GoRouter.of(context).go('/home');
     } else {
-      Navigator.pushNamed(context, '/startPage');
+      GoRouter.of(context).go('/start');
     }
   }
 
