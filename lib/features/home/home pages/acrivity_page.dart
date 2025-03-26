@@ -2,15 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/home/folder%20widget/folder_model.dart';
 import 'package:lottie/lottie.dart';
 
 class ActivtyPage extends ConsumerStatefulWidget {
-  final String userId;
-
-  const ActivtyPage({super.key, required this.userId});
+  const ActivtyPage({super.key});
 
   @override
   _ActivtyPageState createState() => _ActivtyPageState();
@@ -20,23 +19,31 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
   String _petName = '';
 
   @override
-  void initState() {
-    super.initState();
-    _fetchPetName();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final userId = ref.watch(userIdProvider);
+    if (userId != null) {
+      _fetchPetName(userId);
+    }
   }
 
-  Future<void> _fetchPetName() async {
-    final userDoc =
-        FirebaseFirestore.instance.collection('users').doc(widget.userId);
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _fetchPetName(String userId) async {
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
     final userSnapshot = await userDoc.get();
     setState(() {
-      _petName = userSnapshot.data()?['petName'] ?? 'Augy chan';
+      _petName = userSnapshot.data()?['petName'] ?? '';
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final userColor = ref.watch(userColorProvider);
+    final userId = ref.watch(userIdProvider);
     return Scaffold(
       backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
@@ -99,7 +106,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                         'This Folder helps you to learn the basics of programming terms.',
                     isImported: true,
                     headerColor: getShade(userColor, 900),
-                    userId: widget.userId,
+                    userId: userId!,
                     isActivity: true,
                   ),
                   const SizedBox(
@@ -112,14 +119,14 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                         'This Folder helps you to learn the basics of Database terms.',
                     isImported: true,
                     headerColor: getShade(userColor, 900),
-                    userId: widget.userId,
+                    userId: userId,
                     isActivity: true,
                   ),
                   Lottie.asset('assets/hints.json'),
                   StreamBuilder<DocumentSnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('users')
-                        .doc(widget.userId)
+                        .doc(userId)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -155,7 +162,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                                   ? () async {
                                       await FirebaseFirestore.instance
                                           .collection('users')
-                                          .doc(widget.userId)
+                                          .doc(userId)
                                           .update({
                                         'currencypoints': currencyPoints - 50,
                                         'hints': hints + 1,
@@ -175,7 +182,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                                       if (newName.isNotEmpty) {
                                         await FirebaseFirestore.instance
                                             .collection('users')
-                                            .doc(widget.userId)
+                                            .doc(userId)
                                             .update({
                                           'currencypoints':
                                               currencyPoints - 100,
@@ -197,7 +204,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                                       if (newUsername.isNotEmpty) {
                                         await FirebaseFirestore.instance
                                             .collection('users')
-                                            .doc(widget.userId)
+                                            .doc(userId)
                                             .update({
                                           'currencypoints':
                                               currencyPoints - 1000,

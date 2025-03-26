@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
+import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:learn_n/features/introduction/liquid_swipe.dart';
-import 'package:learn_n/features/web/web_main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
   SplashScreenState createState() => SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen>
+class SplashScreenState extends ConsumerState<SplashScreen>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _progress;
@@ -44,7 +44,7 @@ class SplashScreenState extends State<SplashScreen>
         loadingText = 'Loading${'.' * ((timer.tick % 3) + 1)}';
       });
     });
-
+    _loadUserId();
     Future.delayed(const Duration(seconds: 3), _checkAuthState);
   }
 
@@ -52,25 +52,17 @@ class SplashScreenState extends State<SplashScreen>
     return kIsWeb && MediaQuery.of(context).size.width < 800;
   }
 
+  Future<void> _loadUserId() async {
+    final userId = await UserIdRepository().getUserId();
+    ref.read(userIdProvider.notifier).state = userId;
+  }
+
   Future<void> _checkAuthState() async {
-    if (!mounted) return;
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
-
-    if (kIsWeb) {
+    final userId = ref.read(userIdProvider);
+    if (userId != null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => WebMain(
-            userId: userId ?? '',
-          ),
-        ),
-      );
-    } else if (userId != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeMain(userId: userId)),
+        MaterialPageRoute(builder: (context) => const HomeMain()),
       );
     } else {
       Navigator.pushReplacement(

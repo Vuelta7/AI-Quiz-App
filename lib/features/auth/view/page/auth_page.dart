@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/auth/view/widgets/auth_textfield.dart';
 import 'package:learn_n/features/home/home_main.dart';
@@ -104,6 +105,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userId', firebaseUser.uid);
+    ref.read(userIdProvider.notifier).state = firebaseUser.uid;
 
     await UserColorRepository().saveUserColor(defaultColorHex);
     ref.read(userColorProvider.notifier).state = const Color(0xFFF48FB1);
@@ -112,7 +114,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => HomeMain(userId: firebaseUser.uid),
+        builder: (context) => const HomeMain(),
       ),
     );
   }
@@ -135,12 +137,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userId', userId);
+      ref.read(userIdProvider.notifier).state = userId;
 
       await UserColorRepository().saveUserColor(userColorHex);
       await loadUserColor(ref);
 
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => HomeMain(userId: userId)));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomeMain()));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

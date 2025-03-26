@@ -8,9 +8,7 @@ import 'package:learn_n/features/home/home%20pages/folder_page.dart';
 import 'package:learn_n/features/home/home%20pages/setting_page.dart';
 
 class HomeMain extends ConsumerStatefulWidget {
-  final String userId;
-
-  const HomeMain({super.key, required this.userId});
+  const HomeMain({super.key});
 
   @override
   _HomeMainState createState() => _HomeMainState();
@@ -74,13 +72,13 @@ class _HomeMainState extends ConsumerState<HomeMain>
 
     Widget body;
     if (_selectedIndex == 0) {
-      body = ActivtyPage(userId: widget.userId);
+      body = const ActivtyPage();
     } else if (_selectedIndex == 1) {
-      body = FolderPage(userId: widget.userId);
+      body = const FolderPage();
     } else if (_selectedIndex == 2) {
-      body = SettingPage(userId: widget.userId);
+      body = const SettingPage();
     } else {
-      body = FolderPage(userId: widget.userId);
+      body = const FolderPage();
     }
 
     return Scaffold(

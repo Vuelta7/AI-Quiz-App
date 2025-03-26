@@ -10,9 +10,7 @@ import 'package:learn_n/features/introduction/liquid_swipe.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends ConsumerWidget {
-  final String userId;
-
-  const SettingPage({super.key, required this.userId});
+  const SettingPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -2,15 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/folder%20widget/folder_model_ken.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FolderPage extends ConsumerStatefulWidget {
-  final String userId;
-
-  const FolderPage({super.key, required this.userId});
+  const FolderPage({super.key});
 
   @override
   _FolderPageState createState() => _FolderPageState();
@@ -26,7 +25,15 @@ class _FolderPageState extends ConsumerState<FolderPage> {
   void initState() {
     super.initState();
     _searchController.addListener(_updateSearchQuery);
-    _loadFolderOrder();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final userId = ref.watch(userIdProvider);
+    if (userId != null) {
+      _loadFolderOrder(userId);
+    }
   }
 
   void _updateSearchQuery() {
@@ -35,9 +42,9 @@ class _FolderPageState extends ConsumerState<FolderPage> {
     });
   }
 
-  Future<void> _loadFolderOrder() async {
+  Future<void> _loadFolderOrder(userId) async {
     final prefs = await SharedPreferences.getInstance();
-    final folderOrder = prefs.getStringList('folderOrder_${widget.userId}');
+    final folderOrder = prefs.getStringList('folderOrder_$userId');
     if (folderOrder != null) {
       setState(() {
         _folderPositions = {
@@ -48,15 +55,16 @@ class _FolderPageState extends ConsumerState<FolderPage> {
     }
   }
 
-  Future<void> _saveFolderOrder() async {
+  Future<void> _saveFolderOrder(userId) async {
     final prefs = await SharedPreferences.getInstance();
     final folderOrder = _folderPositions.entries
         .map((entry) => '${entry.key}:${entry.value}')
         .toList();
-    await prefs.setStringList('folderOrder_${widget.userId}', folderOrder);
+    await prefs.setStringList('folderOrder_$userId', folderOrder);
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    final userId = ref.watch(userIdProvider);
     setState(() {
       if (newIndex > oldIndex) newIndex--;
       final item = _folders.removeAt(oldIndex);
@@ -66,7 +74,7 @@ class _FolderPageState extends ConsumerState<FolderPage> {
         _folderPositions[_folders[i].id] = i;
       }
     });
-    _saveFolderOrder();
+    _saveFolderOrder(userId);
   }
 
   List<DocumentSnapshot> _filterFolders(List<DocumentSnapshot> docs) {
@@ -80,6 +88,7 @@ class _FolderPageState extends ConsumerState<FolderPage> {
   @override
   Widget build(BuildContext context) {
     final userColor = ref.watch(userColorProvider);
+    final userId = ref.watch(userIdProvider);
     return Scaffold(
       backgroundColor: getShade(userColor, 600),
       body: Column(
@@ -143,8 +152,8 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                   final folderData = folderDoc.data() as Map<String, dynamic>;
                   final accessUsers =
                       List<String>.from(folderData['accessUsers']);
-                  return folderData['creator'] == widget.userId ||
-                      accessUsers.contains(widget.userId);
+                  return folderData['creator'] == userId ||
+                      accessUsers.contains(userId);
                 }).toList());
 
                 _folders.sort((a, b) {
@@ -176,14 +185,21 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                 }
 
                 return ReorderableListView.builder(
-                  itemCount: _folders.length,
+                  itemCount: _folders.length + 1,
                   onReorder: _onReorder,
                   itemBuilder: (context, index) {
+                    if (index == _folders.length) {
+                      return const ListTile(
+                        key: ValueKey('dummy_space'),
+                        title: SizedBox(height: 50),
+                      );
+                    }
+
                     final folderDoc = _folders[index];
                     final folderData = folderDoc.data() as Map<String, dynamic>;
                     final isImported =
                         List<String>.from(folderData['accessUsers'])
-                            .contains(widget.userId);
+                            .contains(userId);
 
                     return ListTile(
                       key: ValueKey(folderDoc.id),
@@ -193,7 +209,7 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                         folderName: folderData['folderName'],
                         description: folderData['description'],
                         isImported: isImported,
-                        userId: widget.userId,
+                        userId: userId!,
                       ),
                     );
                   },

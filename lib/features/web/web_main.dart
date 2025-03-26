@@ -1,19 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class WebMain extends StatefulWidget {
-  final String userId;
-  const WebMain({super.key, required this.userId});
+class WebMain extends ConsumerStatefulWidget {
+  const WebMain({super.key});
 
   @override
-  State<WebMain> createState() => _WebMainState();
+  ConsumerState<WebMain> createState() => _WebMainState();
 }
 
-class _WebMainState extends State<WebMain> {
+class _WebMainState extends ConsumerState<WebMain> {
   bool showCursor = true;
 
   @override
@@ -38,13 +39,12 @@ class _WebMainState extends State<WebMain> {
   }
 
   void navigateToStartPage() {
-    if (widget.userId != '') {
+    final userId = ref.read(userIdProvider);
+    if (userId != '') {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) {
-          return HomeMain(
-            userId: widget.userId,
-          );
+          return const HomeMain();
         }),
       );
     } else {

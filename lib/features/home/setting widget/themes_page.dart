@@ -3,10 +3,10 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemesPage extends ConsumerStatefulWidget {
   const ThemesPage({super.key});
@@ -72,16 +72,13 @@ class _ThemesPageState extends ConsumerState<ThemesPage> {
               'Change Theme Color',
               selectedColor,
               () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                String userId = prefs.getString('userId') ?? '';
+                final userId = ref.watch(userIdProvider);
                 String colorHex = rgbToHex(selectedColor);
-                await updateUserColor(userId, colorHex);
+                await updateUserColor(userId!, colorHex);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HomeMain(
-                      userId: userId,
-                    ),
+                    builder: (context) => const HomeMain(),
                   ),
                 );
               },
