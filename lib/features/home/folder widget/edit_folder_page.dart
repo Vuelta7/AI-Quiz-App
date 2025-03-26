@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/custom_appbar.dart';
 import 'package:learn_n/core/widgets/folder_form.dart';
+import 'package:learn_n/core/widgets/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditFolderPage extends StatefulWidget {
@@ -128,7 +129,7 @@ class _EditFolderPageState extends State<EditFolderPage> {
         ),
         color: _selectedColor,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: _selectedColor,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -219,7 +220,7 @@ class _EditFolderPageState extends State<EditFolderPage> {
           ),
           if (_isLoading)
             const Center(
-              child: CircularProgressIndicator(),
+              child: Loading(),
             ),
         ],
       ),

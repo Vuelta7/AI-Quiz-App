@@ -1,9 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/general_utils.dart';
-import 'package:learn_n/core/utils/introduction_utils.dart';
 
 class Loading extends StatefulWidget {
   final double size;
@@ -55,19 +52,6 @@ class LoadingState extends State<Loading> with TickerProviderStateMixin {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          kIsWeb && !isMobileWeb(context)
-              ? Image.asset(
-                  'assets/logo.png',
-                  width: 500,
-                  color: Colors.white,
-                )
-              : Column(
-                  children: [
-                    buildLogo(Colors.white),
-                    buildTitleText('Learn-N', Colors.white),
-                  ],
-                ),
-          const SizedBox(height: 10),
           Text(
             loadingText,
             style: const TextStyle(
