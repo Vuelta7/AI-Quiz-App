@@ -2,9 +2,9 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/features/home/folder%20widget/add_folder_page.dart';
+import 'package:learn_n/features/home/folder%20page/folder%20widget/add_folder_page.dart';
+import 'package:learn_n/features/home/folder%20page/folder_page.dart';
 import 'package:learn_n/features/home/home%20pages/acrivity_page.dart';
-import 'package:learn_n/features/home/home%20pages/folder_page.dart';
 import 'package:learn_n/features/home/home%20pages/setting_page.dart';
 
 class HomeMain extends ConsumerStatefulWidget {

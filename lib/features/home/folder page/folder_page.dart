@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
-import 'package:learn_n/features/home/folder%20widget/folder_model_ken.dart';
+import 'package:learn_n/features/home/folder%20page/folder%20provider/folder_provider.dart';
+import 'package:learn_n/features/home/folder%20page/folder%20widget/folder_model_ken.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -89,6 +90,8 @@ class _FolderPageState extends ConsumerState<FolderPage> {
   Widget build(BuildContext context) {
     final userColor = ref.watch(userColorProvider);
     final userId = ref.watch(userIdProvider);
+    final folderSnapshot = ref.watch(folderStreamProvider);
+
     return Scaffold(
       backgroundColor: getShade(userColor, 600),
       body: Column(
@@ -139,17 +142,11 @@ class _FolderPageState extends ConsumerState<FolderPage> {
             ),
           ),
           Flexible(
-            child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('folders').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Loading();
-                }
-
-                _folders =
-                    _filterFolders(snapshot.data!.docs.where((folderDoc) {
-                  final folderData = folderDoc.data() as Map<String, dynamic>;
+            child: folderSnapshot.when(
+              data: (snapshot) {
+                final docs = snapshot.docs;
+                _folders = _filterFolders(docs.where((folderDoc) {
+                  final folderData = folderDoc.data();
                   final accessUsers =
                       List<String>.from(folderData['accessUsers']);
                   return folderData['creator'] == userId ||
@@ -216,6 +213,9 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                   },
                 );
               },
+              loading: () => const Loading(),
+              error: (error, stackTrace) =>
+                  Center(child: Text('Error: $error')),
             ),
           ),
         ],
