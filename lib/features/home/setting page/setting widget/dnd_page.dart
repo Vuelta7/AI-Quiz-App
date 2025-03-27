@@ -83,7 +83,20 @@ class _DoNotDisturbPageState extends ConsumerState<DoNotDisturbPage>
                 buildRetroButton(
                   'Open Notification Policy Access Settings',
                   getShade(userColor, 300),
-                  _openNotificationPolicyAccessSettings,
+                  () async {
+                    await _openNotificationPolicyAccessSettings();
+                    await Future.delayed(
+                      const Duration(seconds: 4),
+                    );
+                    if (context.mounted) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DoNotDisturbPage(),
+                        ),
+                      );
+                    }
+                  },
                 ),
               if (_notifPolicyAccess)
                 buildRetroButton(
