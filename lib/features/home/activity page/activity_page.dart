@@ -5,7 +5,8 @@ import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
-import 'package:learn_n/features/home/folder%20page/folder%20widget/folder_model.dart';
+import 'package:learn_n/features/home/activity%20page/activity%20provider/activity_provider.dart';
+import 'package:learn_n/features/home/activity%20page/activity%20widget/folder_model.dart';
 import 'package:lottie/lottie.dart';
 
 class ActivtyPage extends ConsumerStatefulWidget {
@@ -16,15 +17,9 @@ class ActivtyPage extends ConsumerStatefulWidget {
 }
 
 class _ActivtyPageState extends ConsumerState<ActivtyPage> {
-  String _petName = '';
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final userId = ref.watch(userIdProvider);
-    if (userId != null) {
-      _fetchPetName(userId);
-    }
   }
 
   @override
@@ -32,18 +27,11 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
     super.initState();
   }
 
-  Future<void> _fetchPetName(String userId) async {
-    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
-    final userSnapshot = await userDoc.get();
-    setState(() {
-      _petName = userSnapshot.data()?['petName'] ?? '';
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final userColor = ref.watch(userColorProvider);
     final userId = ref.watch(userIdProvider);
+    final petNameAsync = ref.watch(petNameProvider);
     return Scaffold(
       backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
@@ -67,13 +55,17 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Text(
-                _petName,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              child: petNameAsync.when(
+                data: (petName) => Text(
+                  petName,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
+                loading: () => const Loading(),
+                error: (err, stack) => const Text('Error loading pet name'),
               ),
             ),
             Container(

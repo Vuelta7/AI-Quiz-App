@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/features/home/setting%20widget/dnd_page.dart';
-import 'package:learn_n/features/home/setting%20widget/feedback.dart';
-import 'package:learn_n/features/home/setting%20widget/info_page.dart';
-import 'package:learn_n/features/home/setting%20widget/themes_page.dart';
+import 'package:learn_n/features/home/setting%20page/setting%20widget/dnd_page.dart';
+import 'package:learn_n/features/home/setting%20page/setting%20widget/feedback.dart';
+import 'package:learn_n/features/home/setting%20page/setting%20widget/info_page.dart';
+import 'package:learn_n/features/home/setting%20page/setting%20widget/themes_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends ConsumerWidget {
