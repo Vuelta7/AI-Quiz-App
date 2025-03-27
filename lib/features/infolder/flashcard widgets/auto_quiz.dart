@@ -21,7 +21,6 @@ class AutoQuizPage extends StatefulWidget {
 class _AutoQuizPageState extends State<AutoQuizPage> {
   final GeminiService gemini = GeminiService();
   bool _isLoading = false;
-  String extractedText = "Select a PDF to extract text.";
   List<Map<String, String>> questionsAndAnswers = [];
   TextEditingController textController = TextEditingController();
   TextEditingController promptController = TextEditingController();
@@ -65,9 +64,7 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
         }
       }
     } catch (e) {
-      setState(() {
-        extractedText = "Failed to parse response: $e";
-      });
+      print(e) as String;
     }
   }
 
@@ -120,164 +117,163 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.save,
-              color: Colors.white,
+          if (questionsAndAnswers.isNotEmpty)
+            IconButton(
+              icon: const Icon(
+                Icons.save,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                for (var qa in questionsAndAnswers) {
+                  saveQuestionToFirestore(
+                      widget.folderId, qa['question']!, qa['answer']!);
+                }
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Questions saved!')),
+                );
+              },
             ),
-            onPressed: () {
-              for (var qa in questionsAndAnswers) {
-                saveQuestionToFirestore(
-                    widget.folderId, qa['question']!, qa['answer']!);
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Questions saved!')),
-              );
-            },
-          ),
         ],
       ),
       backgroundColor: widget.color,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: SingleChildScrollView(
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              children: [
-                if (questionsAndAnswers.isEmpty) ...[
-                  TextField(
-                    controller: textController,
-                    maxLines: 7,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Paste your text here",
-                      hintStyle: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'PressStart2P',
-                          color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                    controller: promptController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Custom Prompt (Optional)",
-                      hintStyle: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'PressStart2P',
-                          color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  buildRetroButton(
-                    'Generate Questions from Text',
-                    getShade(widget.color, 300),
-                    () async {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      await generateQuestionsFromText(
-                          textController.text, promptController.text);
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    },
-                  ),
-                ],
-                const SizedBox(height: 16),
-                questionsAndAnswers.isNotEmpty
-                    ? Column(
-                        children: [
-                          const Text(
-                            "Extracted Questions:",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontFamily: 'PressStart2P',
-                            ),
+      body: _isLoading
+          ? const Center(
+              child: Loading(),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      if (questionsAndAnswers.isEmpty) ...[
+                        TextField(
+                          controller: textController,
+                          maxLines: 7,
+                          style: const TextStyle(
+                            color: Colors.white,
                           ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: questionsAndAnswers.length,
-                            itemBuilder: (context, index) {
-                              final qa = questionsAndAnswers[index];
-                              return Card(
-                                margin: const EdgeInsets.symmetric(vertical: 8),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        qa['question'] ?? '',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(qa['answer'] ?? ''),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(40.0),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Lottie.asset(
-                                'assets/makequiz.json',
-                              ),
-                              const Text(
-                                'Generate by copy and pasting your notes in textfield then press the "Generate Questions from Text", then wait for few seconds.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'PressStart2P',
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Paste your text here",
+                            hintStyle: TextStyle(
+                                fontSize: 12,
+                                fontFamily: 'PressStart2P',
+                                color: Colors.white),
                           ),
                         ),
-                      ),
-                const SizedBox(height: 10),
-                if (questionsAndAnswers.isNotEmpty)
-                  buildRetroButton(
-                    'Save to Folder',
-                    getShade(widget.color, 300),
-                    () {
-                      for (var qa in questionsAndAnswers) {
-                        saveQuestionToFirestore(
-                            widget.folderId, qa['question']!, qa['answer']!);
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Questions saved!')),
-                      );
-                    },
+                        const SizedBox(height: 10),
+                        TextField(
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          controller: promptController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Custom Prompt (Optional)",
+                            hintStyle: TextStyle(
+                                fontSize: 12,
+                                fontFamily: 'PressStart2P',
+                                color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        buildRetroButton(
+                          'Generate Questions from Text',
+                          getShade(widget.color, 300),
+                          () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            await generateQuestionsFromText(
+                                textController.text, promptController.text);
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(40.0),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Lottie.asset(
+                                  'assets/makequiz.json',
+                                ),
+                                const Text(
+                                  'Generate by copy and pasting your notes in textfield then press the "Generate Questions from Text", then wait for few seconds.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'PressStart2P',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 16),
+                      if (questionsAndAnswers.isNotEmpty) ...[
+                        const Text(
+                          "Extracted Questions:",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: 'PressStart2P',
+                          ),
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: questionsAndAnswers.length,
+                          itemBuilder: (context, index) {
+                            final qa = questionsAndAnswers[index];
+                            return Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      qa['question'] ?? '',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(qa['answer'] ?? ''),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        buildRetroButton(
+                          'Save to Folder',
+                          getShade(widget.color, 300),
+                          () {
+                            for (var qa in questionsAndAnswers) {
+                              saveQuestionToFirestore(widget.folderId,
+                                  qa['question']!, qa['answer']!);
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Questions saved!')),
+                            );
+                          },
+                        ),
+                      ],
+                    ],
                   ),
-                if (_isLoading) const Loading(),
-              ],
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
