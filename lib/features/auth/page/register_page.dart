@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,67 +7,84 @@ import 'package:learn_n/core/utils/introduction_utils.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
-import 'package:learn_n/features/auth/view/widgets/auth_textfield.dart';
-import 'package:learn_n/features/auth/view/widgets/text_gesture_detector.dart';
+import 'package:learn_n/features/auth/widgets/auth_textfield.dart';
+import 'package:learn_n/features/auth/widgets/text_gesture_detector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({super.key});
 
   static route() => MaterialPageRoute(
-        builder: (context) => const LoginPage(),
+        builder: (context) => const RegisterPage(),
       );
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController petnameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   String? errorMessage;
   bool isLoading = false;
   final FocusNode passwordFocusNode = FocusNode();
+  final FocusNode usernameFocusNode = FocusNode();
 
   @override
   void dispose() {
     usernameController.dispose();
     passwordController.dispose();
+    petnameController.dispose();
     super.dispose();
   }
 
-  Future<void> loginUser() async {
+  Future<void> registerUser() async {
     if (formKey.currentState?.validate() ?? false) {
       setState(() => isLoading = true);
       try {
         final username = usernameController.text.trim().toLowerCase();
         final password = passwordController.text.trim();
+        final petname = petnameController.text.trim();
 
         final querySnapshot = await FirebaseFirestore.instance
             .collection('users')
             .where('username', isEqualTo: username)
-            .where('password', isEqualTo: password)
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
-          final userDoc = querySnapshot.docs.first;
-          final userId = userDoc.id;
-          final userData = userDoc.data();
-          final userColorHex = userData['selectedColor'] ?? 'f48fb1';
-
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('userId', userId);
-          ref.read(userIdProvider.notifier).state = userId;
-
-          await UserColorRepository().saveUserColor(userColorHex);
-          await loadUserColor(ref);
-
-          setState(() => errorMessage = null);
-          GoRouter.of(context).go('/home');
-        } else {
-          setState(() => errorMessage = 'Invalid username or password.');
+          setState(() => errorMessage =
+              'Username already exists. Please choose another one.');
+          return;
         }
+
+        final userCredential = await FirebaseAuth.instance.signInAnonymously();
+        final firebaseUser = userCredential.user;
+
+        const defaultColorHex = 'f48fb1';
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseUser!.uid)
+            .set({
+          'username': username,
+          'password': password,
+          'petName': petname,
+          'currencypoints': 0,
+          'hints': 0,
+          'selectedColor': defaultColorHex,
+        });
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', firebaseUser.uid);
+        ref.read(userIdProvider.notifier).state = firebaseUser.uid;
+
+        await UserColorRepository().saveUserColor(defaultColorHex);
+        ref.read(userColorProvider.notifier).state = const Color(0xFFF48FB1);
+
+        setState(() => errorMessage = null);
+        GoRouter.of(context).go('/home');
       } finally {
         setState(() => isLoading = false);
       }
@@ -90,7 +108,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 buildTitleText('Learn-N', Colors.black),
                 const SizedBox(height: 20),
                 const Text(
-                  'Login',
+                  'Register',
                   style: TextStyle(
                     fontFamily: 'PressStart2P',
                     color: Colors.black,
@@ -103,8 +121,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   key: formKey,
                   child: Column(
                     children: [
+                      authTextFormField('Pet name',
+                          controller: petnameController, validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Petname is required';
+                        }
+                        return null;
+                      }, onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(usernameFocusNode);
+                      }),
+                      const SizedBox(height: 10),
                       authTextFormField('Username',
-                          controller: usernameController, validator: (value) {
+                          controller: usernameController,
+                          focusNode: usernameFocusNode, validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Username is required';
                         }
@@ -119,10 +148,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           focusNode: passwordFocusNode, validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Password is required';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
                         }
                         return null;
                       }, onFieldSubmitted: (_) {
-                        loginUser();
+                        registerUser();
                       }),
                       const SizedBox(height: 20),
                       if (errorMessage != null)
@@ -135,12 +166,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           ),
                         ),
                       buildRetroButton(
-                        isLoading ? 'Loading...' : 'Login',
+                        isLoading ? 'Loading...' : 'Register',
                         Colors.black,
-                        isLoading ? null : loginUser,
+                        isLoading ? null : registerUser,
                       ),
                       const SizedBox(height: 20),
-                      buildGestureDetector(context, isLogin: true),
+                      buildGestureDetector(context, isLogin: false),
                     ],
                   ),
                 ),
