@@ -25,15 +25,18 @@ class RegisterPage extends ConsumerStatefulWidget {
 class _RegisterPageState extends ConsumerState<RegisterPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController petnameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   String? errorMessage;
   bool isLoading = false;
   final FocusNode passwordFocusNode = FocusNode();
+  final FocusNode usernameFocusNode = FocusNode();
 
   @override
   void dispose() {
     usernameController.dispose();
     passwordController.dispose();
+    petnameController.dispose();
     super.dispose();
   }
 
@@ -43,6 +46,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       try {
         final username = usernameController.text.trim().toLowerCase();
         final password = passwordController.text.trim();
+        final petname = petnameController.text.trim();
 
         final querySnapshot = await FirebaseFirestore.instance
             .collection('users')
@@ -66,6 +70,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             .set({
           'username': username,
           'password': password,
+          'petName': petname,
           'currencypoints': 0,
           'rankpoints': 0,
           'hints': 0,
@@ -118,8 +123,19 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   key: formKey,
                   child: Column(
                     children: [
+                      authTextFormField('Pet name',
+                          controller: petnameController, validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Petname is required';
+                        }
+                        return null;
+                      }, onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(usernameFocusNode);
+                      }),
+                      const SizedBox(height: 10),
                       authTextFormField('Username',
-                          controller: usernameController, validator: (value) {
+                          controller: usernameController,
+                          focusNode: usernameFocusNode, validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Username is required';
                         }

@@ -27,7 +27,7 @@ class StartPage extends StatelessWidget {
                   context.go('/register');
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               buildRetroButton(
                 'Log In',
                 Colors.black,
