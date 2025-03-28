@@ -24,3 +24,19 @@ Widget buildGestureDetector(BuildContext context, {required bool isLogin}) {
     ),
   );
 }
+
+Widget buildDetectorForForgotAccount(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      context.go('/forgot-account');
+    },
+    child: const Text(
+      'Forgot your account?',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+        fontSize: 17,
+      ),
+    ),
+  );
+}

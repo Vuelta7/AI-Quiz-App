@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/utils/themes.dart';
 import 'package:learn_n/features/auth/page/login_page.dart';
 import 'package:learn_n/features/auth/page/register_page.dart';
+import 'package:learn_n/features/auth/widgets/forgot_account.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:learn_n/features/introduction/liquid_swipe.dart';
 import 'package:learn_n/features/introduction/splash_page.dart';
@@ -73,6 +74,10 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/register',
       builder: (context, state) => const RegisterPage(),
+    ),
+    GoRoute(
+      path: '/forgot-account',
+      builder: (context, state) => const ForgotPassword(),
     ),
   ],
 );

@@ -171,6 +171,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         isLoading ? null : registerUser,
                       ),
                       const SizedBox(height: 20),
+                      const Divider(thickness: 3),
                       buildGestureDetector(context, isLogin: false),
                     ],
                   ),

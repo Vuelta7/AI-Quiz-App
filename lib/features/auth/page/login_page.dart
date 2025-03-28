@@ -28,6 +28,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   String? errorMessage;
   bool isLoading = false;
   final FocusNode passwordFocusNode = FocusNode();
+  int failedAttempts = 0; // Track failed login attempts
+  bool showForgotAccount =
+      false; // Control visibility of "Forgot your account?" detector
 
   @override
   void dispose() {
@@ -62,10 +65,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           await UserColorRepository().saveUserColor(userColorHex);
           await loadUserColor(ref);
 
-          setState(() => errorMessage = null);
+          setState(() {
+            errorMessage = null;
+            failedAttempts = 0;
+            showForgotAccount = false;
+          });
           GoRouter.of(context).go('/home');
         } else {
-          setState(() => errorMessage = 'Invalid username or password.');
+          failedAttempts++;
+          setState(() {
+            errorMessage = 'Invalid username or password.';
+            if (failedAttempts >= 1) {
+              showForgotAccount = true;
+            }
+          });
         }
       } finally {
         setState(() => isLoading = false);
@@ -139,7 +152,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         Colors.black,
                         isLoading ? null : loginUser,
                       ),
-                      const SizedBox(height: 20),
+                      if (showForgotAccount) ...[
+                        const SizedBox(height: 10),
+                        buildDetectorForForgotAccount(context),
+                      ],
+                      const SizedBox(height: 10),
+                      const Divider(thickness: 3),
                       buildGestureDetector(context, isLogin: true),
                     ],
                   ),
