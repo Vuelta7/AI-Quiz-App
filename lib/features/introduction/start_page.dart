@@ -24,7 +24,7 @@ class StartPage extends StatelessWidget {
                 'Register',
                 Colors.black,
                 () {
-                  context.go('/auth/false');
+                  context.go('/register');
                 },
               ),
               const SizedBox(height: 20),
@@ -32,7 +32,7 @@ class StartPage extends StatelessWidget {
                 'Log In',
                 Colors.black,
                 () {
-                  context.go('/auth/true');
+                  context.go('/login');
                 },
               ),
             ],

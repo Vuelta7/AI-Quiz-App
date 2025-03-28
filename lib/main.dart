@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/utils/themes.dart';
-import 'package:learn_n/features/auth/view/page/auth_page.dart';
+import 'package:learn_n/features/auth/view/page/login_page.dart';
+import 'package:learn_n/features/auth/view/page/register_page.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:learn_n/features/introduction/liquid_swipe.dart';
 import 'package:learn_n/features/introduction/splash_page.dart';
@@ -66,11 +67,12 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => const HomeMain(),
     ),
     GoRoute(
-      path: '/auth/:isLogin',
-      builder: (context, state) {
-        final isLogin = state.pathParameters['isLogin'] == 'true';
-        return AuthScreen(isLogin: isLogin);
-      },
+      path: '/login',
+      builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterPage(),
     ),
   ],
 );
@@ -100,4 +102,4 @@ class MyApp extends StatelessWidget {
 // create the dnd mechanics
 // make conditions and info how to update streakpet
 // add providers
-// add forgot password(to know if the user really forgot the password ask about petname, points, hints)
+// add forgot password(to know if the user really forgot the password ask about petname, points, hints count)

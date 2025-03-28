@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/features/auth/view/page/auth_page.dart';
 
 Widget buildLogo([Color color = Colors.black]) {
   return ColorFiltered(
@@ -25,30 +24,6 @@ Widget buildTitleText(String text,
       fontSize: fontSize,
       letterSpacing: 2.0,
       fontWeight: FontWeight.bold,
-    ),
-  );
-}
-
-Widget buildGestureDetector(BuildContext context, {required bool isLogin}) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(context, AuthScreen.route(isLogin: !isLogin));
-    },
-    child: RichText(
-      text: TextSpan(
-        text:
-            isLogin ? 'Don\'t have an account? ' : 'Already have an account? ',
-        style: Theme.of(context).textTheme.titleMedium,
-        children: [
-          TextSpan(
-            text: isLogin ? 'Register' : 'Login',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ],
-      ),
     ),
   );
 }

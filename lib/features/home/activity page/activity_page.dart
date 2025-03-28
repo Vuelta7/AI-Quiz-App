@@ -5,8 +5,8 @@ import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
-import 'package:learn_n/features/home/activity%20page/activity%20provider/activity_provider.dart';
-import 'package:learn_n/features/home/activity%20page/activity%20widget/folder_model.dart';
+import 'package:learn_n/features/home/activity%20page/provider/activity_provider.dart';
+import 'package:learn_n/features/home/activity%20page/widget/folder_model.dart';
 import 'package:lottie/lottie.dart';
 
 class ActivtyPage extends ConsumerStatefulWidget {

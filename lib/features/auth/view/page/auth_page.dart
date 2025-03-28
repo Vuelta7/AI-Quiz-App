@@ -8,6 +8,7 @@ import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/auth/view/widgets/auth_textfield.dart';
+import 'package:learn_n/features/auth/view/widgets/text_gesture_detector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {

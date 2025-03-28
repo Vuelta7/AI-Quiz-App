@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:learn_n/features/home/folder%20page/folder%20widget/edit_folder_page.dart';
+import 'package:learn_n/features/home/folder%20page/widget/edit_folder_page.dart';
 import 'package:learn_n/features/infolder/infolder_main.dart';
 
 class FolderModelKen extends StatelessWidget {

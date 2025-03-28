@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/features/home/activity%20page/activity_page.dart';
-import 'package:learn_n/features/home/folder%20page/folder%20widget/add_folder_page.dart';
 import 'package:learn_n/features/home/folder%20page/folder_page.dart';
+import 'package:learn_n/features/home/folder%20page/widget/add_folder_page.dart';
 import 'package:learn_n/features/home/setting%20page/setting_page.dart';
 
 class HomeMain extends ConsumerStatefulWidget {
