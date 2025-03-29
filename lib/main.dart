@@ -107,4 +107,3 @@ class MyApp extends StatelessWidget {
 // create the dnd mechanics
 // make conditions and info how to update streakpet
 // add providers
-// add forgot password(to know if the user really forgot the password ask about petname, points, hints count)
