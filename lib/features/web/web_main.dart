@@ -47,6 +47,7 @@ class _WebMainState extends ConsumerState<WebMain> {
     }
   }
 
+  //TODO: add condition if computer user ken design
   @override
   Widget build(BuildContext context) {
     return Scaffold(
