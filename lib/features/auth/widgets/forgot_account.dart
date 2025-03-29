@@ -26,6 +26,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     "What is your pet's name?",
     "How many points do you have?",
     "How many hint counts do you have?",
+    "How many streak points do you have?",
   ];
 
   Future<void> _verifyAnswers() async {
@@ -42,6 +43,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           "What is your pet's name?": userData['petName'] ?? '',
           "How many points do you have?": userData['currencypoints'].toString(),
           "How many hint counts do you have?": userData['hints'].toString(),
+          "How many streak points do you have?":
+              userData['streakPoints'].toString(),
         };
 
         if (storedAnswers[_selectedQuestion1] == _answer1.trim() &&

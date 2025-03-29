@@ -1,7 +1,9 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/features/home/activity%20page/activity_page.dart';
 import 'package:learn_n/features/home/folder%20page/folder_page.dart';
 import 'package:learn_n/features/home/folder%20page/widget/add_folder_page.dart';
@@ -48,6 +50,48 @@ class _HomeMainState extends ConsumerState<HomeMain>
     Future.delayed(
       const Duration(milliseconds: 100),
       () => _borderRadiusAnimationController.forward(),
+    );
+
+    _checkStreakWarning();
+  }
+
+  Future<void> _checkStreakWarning() async {
+    final userId = ref.read(userIdProvider);
+    if (userId == null) return;
+
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+    final userSnapshot = await userDoc.get();
+
+    if (userSnapshot.exists) {
+      final data = userSnapshot.data()!;
+      final streakPoints = data['streakPoints'] ?? 0;
+      final warning = data['warning'] ?? false;
+
+      if (warning) {
+        _showWarningDialog();
+        if (streakPoints >= 2) {
+          await userDoc.update({'warning': false});
+        }
+      }
+    }
+  }
+
+  void _showWarningDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Warning'),
+          content: const Text(
+              'You missed a day! If you miss another day, your streak points will reset to 0.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 
