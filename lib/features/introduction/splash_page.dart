@@ -53,6 +53,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   //TODO: not working
+  // update StreakPoints not working
   Future<void> _updateStreakPoints() async {
     final userId = ref.read(userIdProvider);
     if (userId == null) return;
@@ -68,13 +69,10 @@ class SplashScreenState extends ConsumerState<SplashScreen>
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
 
-      if (lastActiveDate == null ||
-          lastActiveDate.isBefore(today.subtract(const Duration(days: 1)))) {
-        await userDoc.update({'warning': true});
-      } else if (lastActiveDate.isBefore(today)) {
+      if (lastActiveDate == null || lastActiveDate.isBefore(today)) {
         await userDoc.update({
           'streakPoints': streakPoints + 1,
-          'lastActiveDate': today,
+          'lastActiveDate': now,
           'warning': false,
         });
       }
