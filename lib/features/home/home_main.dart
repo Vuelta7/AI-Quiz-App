@@ -8,6 +8,7 @@ import 'package:learn_n/features/home/activity%20page/activity_page.dart';
 import 'package:learn_n/features/home/folder%20page/folder_page.dart';
 import 'package:learn_n/features/home/folder%20page/widget/add_folder_page.dart';
 import 'package:learn_n/features/home/setting%20page/setting_page.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeMain extends ConsumerStatefulWidget {
   const HomeMain({super.key});
@@ -68,7 +69,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
       final warning = data['warning'] ?? false;
 
       if (warning) {
-        _showWarningDialog();
+        _showWarningDialog(context, ref.read(userColorProvider));
         if (streakPoints >= 2) {
           await userDoc.update({'warning': false});
         }
@@ -76,18 +77,47 @@ class _HomeMainState extends ConsumerState<HomeMain>
     }
   }
 
-  void _showWarningDialog() {
+  void _showWarningDialog(context, Color color) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Warning'),
-          content: const Text(
-              'You missed a day! If you miss another day, your streak points will reset to 0.'),
+          backgroundColor: color,
+          title: const Text(
+            'Warning',
+            style: TextStyle(
+              fontSize: 24,
+              fontFamily: 'press',
+              color: Colors.white,
+            ),
+          ),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset('assets/sadstar.json'),
+              const Text(
+                'You missed a day! If you miss another day, your streak points will reset to 0.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'press',
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'press',
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         );
