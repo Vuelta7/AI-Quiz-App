@@ -50,12 +50,12 @@ class FolderModel extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(16)),
           border: Border.all(
             width: 2,
-            color: headerColor.withOpacity(0.8),
+            color: const Color.fromARGB(34, 0, 0, 0),
           ),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              offset: const Offset(0, 8),
+              color: Color.fromARGB(34, 0, 0, 0),
+              offset: Offset(0, 8),
               blurRadius: 10,
               spreadRadius: 1,
             ),

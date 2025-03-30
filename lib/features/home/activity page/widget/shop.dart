@@ -31,7 +31,7 @@ class Shop extends ConsumerWidget {
           Product(
             name: 'Buy Hint',
             price: 50,
-            image: 'assets/logo_icon.png',
+            icon: Icons.lightbulb,
             bgColor: Colors.blue,
             onTap: currencyPoints >= 50
                 ? () async {
@@ -48,10 +48,10 @@ class Shop extends ConsumerWidget {
           ),
           Product(
             name: 'Change Pet Name',
-            price: 100,
-            image: 'assets/logo_icon.png',
+            price: 1000,
+            icon: Icons.pets,
             bgColor: Colors.green,
-            onTap: currencyPoints >= 100
+            onTap: currencyPoints >= 1000
                 ? () async {
                     print('Change Pet Name tapped');
                     String newName =
@@ -61,7 +61,7 @@ class Shop extends ConsumerWidget {
                           .collection('users')
                           .doc(userId)
                           .update({
-                        'currencypoints': currencyPoints - 100,
+                        'currencypoints': currencyPoints - 1000,
                         'petName': newName,
                       });
                     }
@@ -71,7 +71,7 @@ class Shop extends ConsumerWidget {
           Product(
             name: 'Change Username',
             price: 1000,
-            image: 'assets/logo_icon.png',
+            icon: Icons.person,
             bgColor: Colors.red,
             onTap: currencyPoints >= 1000
                 ? () async {
@@ -96,13 +96,14 @@ class Shop extends ConsumerWidget {
           height: 1200,
           child: Column(
             children: [
-              Lottie.asset('assets/hints.json', height: 150),
+              Lottie.asset('assets/hints.json', height: 300),
               Text(
                 'Points: $currencyPoints',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.white,
+                  fontFamily: 'PressStart2P',
                 ),
               ),
               const SizedBox(height: 16),
@@ -134,18 +135,20 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDisabled = product.onTap == null;
+
     return GestureDetector(
-      onTap: product.onTap,
+      onTap: isDisabled ? null : product.onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: product.bgColor,
+          color: isDisabled ? Colors.grey : product.bgColor,
           borderRadius: BorderRadius.circular(24),
           boxShadow: const [
             BoxShadow(
-              color: Colors.black,
+              color: Color.fromARGB(34, 0, 0, 0),
+              offset: Offset(0, 8),
               blurRadius: 10,
               spreadRadius: 1,
-              offset: Offset(2, 2),
             ),
           ],
         ),
@@ -155,14 +158,18 @@ class ProductCard extends StatelessWidget {
           children: [
             Expanded(
               child: Center(
-                child: Image.asset(product.image, fit: BoxFit.contain),
+                child: Icon(
+                  product.icon,
+                  size: 48,
+                  color: isDisabled ? Colors.black38 : Colors.white,
+                ),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               product.name,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isDisabled ? Colors.black38 : Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -170,8 +177,8 @@ class ProductCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               '${product.price} Points',
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isDisabled ? Colors.black38 : Colors.white,
                 fontSize: 14,
               ),
             ),
@@ -185,14 +192,14 @@ class ProductCard extends StatelessWidget {
 class Product {
   final String name;
   final int price;
-  final String image;
+  final IconData icon;
   final Color bgColor;
   final VoidCallback? onTap;
 
   Product({
     required this.name,
     required this.price,
-    required this.image,
+    required this.icon,
     required this.bgColor,
     this.onTap,
   });
