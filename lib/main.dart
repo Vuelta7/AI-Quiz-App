@@ -9,6 +9,7 @@ import 'package:learn_n/features/auth/page/login_page.dart';
 import 'package:learn_n/features/auth/page/register_page.dart';
 import 'package:learn_n/features/auth/widgets/forgot_account.dart';
 import 'package:learn_n/features/home/home_main.dart';
+import 'package:learn_n/features/home/setting%20page/provider/dnd_provider.dart';
 import 'package:learn_n/features/introduction/liquid_swipe.dart';
 import 'package:learn_n/features/introduction/splash_page.dart';
 import 'package:learn_n/features/introduction/start_page.dart';
@@ -34,7 +35,9 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
   usePathUrlStrategy();
+
   runApp(
     const ProviderScope(child: MyApp()),
   );
@@ -43,9 +46,6 @@ void main() async {
 final GoRouter _router = GoRouter(
   routerNeglect: true,
   initialLocation: '/',
-  redirect: (context, state) {
-    return null;
-  },
   routes: [
     GoRoute(
       path: '/',
@@ -82,8 +82,37 @@ final GoRouter _router = GoRouter(
   ],
 );
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
+
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    Future.microtask(() => ref.read(dndProvider));
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final dndController = ref.read(dndProvider);
+    if (state == AppLifecycleState.resumed) {
+      dndController.toggleDnd();
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      dndController.toggleDnd();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

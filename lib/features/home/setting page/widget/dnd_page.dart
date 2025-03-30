@@ -1,42 +1,18 @@
-import 'package:do_not_disturb/do_not_disturb_plugin.dart';
-import 'package:do_not_disturb/types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
+import 'package:learn_n/features/home/setting%20page/provider/dnd_provider.dart';
 import 'package:lottie/lottie.dart';
 
-class DoNotDisturbPage extends ConsumerStatefulWidget {
+class DoNotDisturbPage extends ConsumerWidget {
   const DoNotDisturbPage({super.key});
 
   @override
-  ConsumerState<DoNotDisturbPage> createState() => _DoNotDisturbPageState();
-}
-
-class _DoNotDisturbPageState extends ConsumerState<DoNotDisturbPage>
-    with WidgetsBindingObserver {
-  final _dndPlugin = DoNotDisturbPlugin();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _checkNotificationPolicyAccessGranted();
-    _checkDndEnabled();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  bool _isDndEnabled = false;
-  bool _notifPolicyAccess = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final userColor = ref.watch(userColorProvider);
+    final dndController = ref.watch(dndProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: getShade(userColor, 300),
@@ -68,8 +44,8 @@ class _DoNotDisturbPageState extends ConsumerState<DoNotDisturbPage>
               Lottie.asset('assets/dnd.json'),
               const SizedBox(height: 20),
               Text(
-                _notifPolicyAccess
-                    ? 'DND mode is ${_isDndEnabled ? 'enabled' : 'disabled'}'
+                dndController.notifPolicyAccess
+                    ? 'DND mode is ${dndController.isDndEnabled ? 'enabled' : 'disabled'}'
                     : 'App is not allowed to access DND settings. To enable DND mode, give the app access to DND settings.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -79,43 +55,20 @@ class _DoNotDisturbPageState extends ConsumerState<DoNotDisturbPage>
                 ),
               ),
               const SizedBox(height: 20),
-              if (!_notifPolicyAccess)
+              if (!dndController.notifPolicyAccess)
                 buildRetroButton(
                   'Open Notification Policy Access Settings',
                   getShade(userColor, 300),
                   () async {
-                    await _openNotificationPolicyAccessSettings();
-                    await Future.delayed(
-                      const Duration(seconds: 4),
-                    );
-                    if (context.mounted) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DoNotDisturbPage(),
-                        ),
-                      );
-                    }
+                    await dndController.openNotificationPolicyAccessSettings();
                   },
                 ),
-              if (_notifPolicyAccess)
+              if (dndController.notifPolicyAccess)
                 buildRetroButton(
                   'Toggle DND mode',
                   getShade(userColor, 300),
                   () async {
-                    await _checkNotificationPolicyAccessGranted();
-                    await Future.delayed(const Duration(milliseconds: 50));
-                    if (!_notifPolicyAccess) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content:
-                              Text('Notification Policy Access not granted')));
-                      return;
-                    }
-                    if (_isDndEnabled) {
-                      _setInterruptionFilter(InterruptionFilter.all);
-                    } else {
-                      _setInterruptionFilter(InterruptionFilter.alarms);
-                    }
+                    await dndController.toggleDnd();
                   },
                 ),
             ],
@@ -123,47 +76,5 @@ class _DoNotDisturbPageState extends ConsumerState<DoNotDisturbPage>
         ),
       ),
     );
-  }
-
-  Future<void> _checkNotificationPolicyAccessGranted() async {
-    try {
-      final bool isNotificationPolicyAccessGranted =
-          await _dndPlugin.isNotificationPolicyAccessGranted();
-      setState(() {
-        _notifPolicyAccess = isNotificationPolicyAccessGranted;
-      });
-    } catch (e) {
-      print('Error checking notification policy access: $e');
-    }
-  }
-
-  Future<void> _checkDndEnabled() async {
-    try {
-      final bool isDndEnabled = await _dndPlugin.isDndEnabled();
-      setState(() {
-        _isDndEnabled = isDndEnabled;
-      });
-    } catch (e) {
-      print('Error checking DND status: $e');
-    }
-  }
-
-  Future<void> _openNotificationPolicyAccessSettings() async {
-    try {
-      await _dndPlugin.openNotificationPolicyAccessSettings();
-      _checkNotificationPolicyAccessGranted();
-      _checkDndEnabled();
-    } catch (e) {
-      print('Error opening notification policy access settings: $e');
-    }
-  }
-
-  Future<void> _setInterruptionFilter(InterruptionFilter filter) async {
-    try {
-      await _dndPlugin.setInterruptionFilter(filter);
-      _checkDndEnabled();
-    } catch (e) {
-      print('Error setting interruption filter: $e');
-    }
   }
 }
