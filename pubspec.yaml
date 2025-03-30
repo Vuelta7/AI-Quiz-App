@@ -74,7 +74,9 @@ flutter:
     - assets/award.json
     - assets/loading.json
     - assets/sti_logo.webp
-    - assets/screenshot.webp
+    - assets/1.webp
+    - assets/2.webp
+    - assets/3.webp
 
 flutter_icons:
   android: true

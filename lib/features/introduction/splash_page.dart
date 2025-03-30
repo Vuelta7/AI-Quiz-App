@@ -52,8 +52,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
     _updateStreakPoints();
   }
 
-  //TODO: not working
-  // update StreakPoints not working
+  //TODO: StreakPoints not working
   Future<void> _updateStreakPoints() async {
     final userId = ref.read(userIdProvider);
     if (userId == null) return;
