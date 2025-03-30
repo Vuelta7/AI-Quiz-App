@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
+import 'package:learn_n/core/provider/dnd_provider.dart';
 import 'package:learn_n/core/utils/themes.dart';
 import 'package:learn_n/features/auth/page/login_page.dart';
 import 'package:learn_n/features/auth/page/register_page.dart';
 import 'package:learn_n/features/auth/widgets/forgot_account.dart';
 import 'package:learn_n/features/home/home_main.dart';
-import 'package:learn_n/features/home/setting%20page/provider/dnd_provider.dart';
 import 'package:learn_n/features/introduction/liquid_swipe.dart';
 import 'package:learn_n/features/introduction/splash_page.dart';
 import 'package:learn_n/features/introduction/start_page.dart';
@@ -39,7 +39,9 @@ void main() async {
   usePathUrlStrategy();
 
   runApp(
-    const ProviderScope(child: MyApp()),
+    const ProviderScope(
+      child: MyApp(),
+    ),
   );
 }
 
@@ -129,10 +131,3 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
 // web       1:1031285993587:web:3ad51e4e6c175372133a06
 // android   1:1031285993587:android:f7d84d73551d5de6133a06
 // ios       1:1031285993587:ios:1e0b9df9f80d8983133a06
-
-// Mighty Creation of Uriel
-// TODO:
-// WebPage fix
-// create the dnd mechanics
-// make conditions and info how to update streakpet
-// add providers

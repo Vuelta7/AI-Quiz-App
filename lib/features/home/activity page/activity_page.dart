@@ -26,6 +26,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
     super.initState();
   }
 
+  //TODO make conditions and info how to update streakpet
   @override
   Widget build(BuildContext context) {
     final userColor = ref.watch(userColorProvider);
