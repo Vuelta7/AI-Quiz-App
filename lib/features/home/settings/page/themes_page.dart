@@ -82,6 +82,7 @@ class _ThemesPageState extends ConsumerState<ThemesPage> {
                   ),
                 );
               },
+              textColor: getColorForTextAndIcon(selectedColor),
             ),
           ],
         ),

@@ -9,6 +9,7 @@ import 'package:learn_n/features/infolder/page/leaderboards_page.dart';
 import 'package:learn_n/features/infolder/page/play_page.dart';
 import 'package:learn_n/features/infolder/widgets/edit_library_button.dart';
 
+//TODO: add getColorForTextAndIcons function
 class InFolderMain extends StatefulWidget {
   final String folderId;
   final String folderName;

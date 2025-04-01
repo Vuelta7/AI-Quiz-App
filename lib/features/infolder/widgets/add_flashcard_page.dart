@@ -7,6 +7,7 @@ import 'package:learn_n/features/infolder/widgets/auto_quiz.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uuid/uuid.dart';
 
+//TODO: make the add flashcard design nicer
 class AddFlashCardPage extends StatefulWidget {
   final String folderId;
   final Color color;
