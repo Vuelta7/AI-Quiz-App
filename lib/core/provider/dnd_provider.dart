@@ -29,11 +29,16 @@ class DndController extends ChangeNotifier with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      _recheckNotificationPolicyAccessOnResume();
       _enableDnd();
     } else if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
       _disableDnd();
     }
+  }
+
+  Future<void> _recheckNotificationPolicyAccessOnResume() async {
+    await _checkNotificationPolicyAccessGranted();
   }
 
   Future<void> _checkNotificationPolicyAccessGranted() async {
@@ -69,5 +74,9 @@ class DndController extends ChangeNotifier with WidgetsBindingObserver {
 
   Future<void> openNotificationPolicyAccessSettings() async {
     await _dndPlugin.openNotificationPolicyAccessSettings();
+  }
+
+  Future<void> recheckNotificationPolicyAccess() async {
+    await _checkNotificationPolicyAccessGranted();
   }
 }

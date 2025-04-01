@@ -12,7 +12,6 @@ class DoNotDisturbPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userColor = ref.watch(userColorProvider);
     final dndController = ref.watch(dndProvider);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: getShade(userColor, 300),
