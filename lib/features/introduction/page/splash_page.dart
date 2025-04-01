@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,37 +52,9 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   //TODO: StreakPoints not working
-  Future<void> _updateStreakPoints() async {
-    final userId = ref.read(userIdProvider);
-    if (userId == null) return;
+  Future<void> _updateStreakPoints() async {}
 
-    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
-    final userSnapshot = await userDoc.get();
-
-    if (userSnapshot.exists) {
-      final data = userSnapshot.data()!;
-      final lastActiveDate = (data['lastActiveDate'] as Timestamp?)?.toDate();
-      final streakPoints = data['streakPoints'] ?? 0;
-
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-
-      if (lastActiveDate == null || lastActiveDate.isBefore(today)) {
-        await userDoc.update({
-          'streakPoints': streakPoints + 1,
-          'lastActiveDate': now,
-          'warning': false,
-        });
-      }
-    } else {
-      await userDoc.set({
-        'streakPoints': 1,
-        'lastActiveDate': DateTime.now(),
-        'warning': false,
-      });
-    }
-  }
-
+  //TODO: fix web
   Future<void> _checkAuthState() async {
     final userId = ref.read(userIdProvider);
 

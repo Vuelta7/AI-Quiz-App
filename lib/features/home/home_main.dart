@@ -1,13 +1,11 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/core/utils/user_provider.dart';
-import 'package:learn_n/features/home/activity%20page/activity_page.dart';
-import 'package:learn_n/features/home/folder%20page/folder_page.dart';
-import 'package:learn_n/features/home/folder%20page/widget/add_folder_page.dart';
-import 'package:learn_n/features/home/setting%20page/setting_page.dart';
+import 'package:learn_n/features/home/activity/page/activity_page.dart';
+import 'package:learn_n/features/home/folder/page/folder_page.dart';
+import 'package:learn_n/features/home/folder/widget/add_folder_page.dart';
+import 'package:learn_n/features/home/settings/setting_page.dart';
 import 'package:lottie/lottie.dart';
 
 class HomeMain extends ConsumerStatefulWidget {
@@ -57,24 +55,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
   }
 
   Future<void> _checkStreakWarning() async {
-    final userId = ref.read(userIdProvider);
-    if (userId == null) return;
-
-    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
-    final userSnapshot = await userDoc.get();
-
-    if (userSnapshot.exists) {
-      final data = userSnapshot.data()!;
-      final streakPoints = data['streakPoints'] ?? 0;
-      final warning = data['warning'] ?? false;
-
-      if (warning) {
-        _showWarningDialog(context, ref.read(userColorProvider));
-        if (streakPoints >= 2) {
-          await userDoc.update({'warning': false});
-        }
-      }
-    }
+    _showWarningDialog(context, ref.read(userColorProvider));
   }
 
   void _showWarningDialog(context, Color color) {

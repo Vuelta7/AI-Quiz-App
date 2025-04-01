@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/features/infolder/flashcard%20widgets/add_flashcard_page.dart';
+import 'package:learn_n/features/infolder/widgets/add_flashcard_page.dart';
 
 class EditLibraryButton extends StatelessWidget {
   final Color color;

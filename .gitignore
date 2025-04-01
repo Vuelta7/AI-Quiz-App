@@ -51,3 +51,6 @@ build/*
 # Ignore specific files or subdirectories within lib/components/
 lib/components/some_temp_file.dart
 lib/components/some_temp_directory/
+
+# Ignore API key file
+lib/services/api_key.dart

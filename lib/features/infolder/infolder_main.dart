@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/features/home/home_main.dart';
-import 'package:learn_n/features/infolder/flashcard%20widgets/edit_library_button.dart';
-import 'package:learn_n/features/infolder/infolder%20page/flashcards_page.dart';
-import 'package:learn_n/features/infolder/infolder%20page/leaderboards_page.dart';
-import 'package:learn_n/features/infolder/infolder%20page/play_page.dart';
+import 'package:learn_n/features/infolder/page/flashcards_page.dart';
+import 'package:learn_n/features/infolder/page/leaderboards_page.dart';
+import 'package:learn_n/features/infolder/page/play_page.dart';
+import 'package:learn_n/features/infolder/widgets/edit_library_button.dart';
 
 class InFolderMain extends StatefulWidget {
   final String folderId;

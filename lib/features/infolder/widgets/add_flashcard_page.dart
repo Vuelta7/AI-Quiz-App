@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
-import 'package:learn_n/features/infolder/flashcard%20widgets/auto_quiz.dart';
+import 'package:learn_n/features/infolder/widgets/auto_quiz.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uuid/uuid.dart';
 

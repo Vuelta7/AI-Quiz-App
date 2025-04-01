@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/core/widgets/loading.dart';
-import 'package:learn_n/features/infolder/flashcard%20widgets/flashcard_model.dart';
+import 'package:learn_n/features/infolder/widgets/flashcard_model.dart';
 import 'package:lottie/lottie.dart';
 
 class FlashcardsPage extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:learn_n/features/introduction/master_intro_page.dart';
-import 'package:learn_n/features/introduction/start_page.dart';
+import 'package:learn_n/features/introduction/page/start_page.dart';
+import 'package:learn_n/features/introduction/widget/swipe_pages.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 
 class LiquidSwipeIntro extends StatefulWidget {

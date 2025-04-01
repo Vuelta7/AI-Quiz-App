@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
-import 'package:learn_n/features/home/activity%20page/provider/activity_provider.dart';
-import 'package:learn_n/features/home/activity%20page/widget/folder_model.dart';
-import 'package:learn_n/features/home/activity%20page/widget/shop.dart';
+import 'package:learn_n/features/home/activity/provider/activity_provider.dart';
+import 'package:learn_n/features/home/activity/widget/folder_model.dart';
+import 'package:learn_n/features/home/activity/widget/shop.dart';
 import 'package:lottie/lottie.dart';
 
 class ActivtyPage extends ConsumerStatefulWidget {

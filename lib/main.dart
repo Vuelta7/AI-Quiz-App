@@ -10,9 +10,9 @@ import 'package:learn_n/features/auth/page/login_page.dart';
 import 'package:learn_n/features/auth/page/register_page.dart';
 import 'package:learn_n/features/auth/widgets/forgot_account.dart';
 import 'package:learn_n/features/home/home_main.dart';
-import 'package:learn_n/features/introduction/liquid_swipe.dart';
-import 'package:learn_n/features/introduction/splash_page.dart';
-import 'package:learn_n/features/introduction/start_page.dart';
+import 'package:learn_n/features/introduction/page/liquid_swipe.dart';
+import 'package:learn_n/features/introduction/page/splash_page.dart';
+import 'package:learn_n/features/introduction/page/start_page.dart';
 import 'package:learn_n/features/web/web_main.dart';
 import 'package:learn_n/services/firebase_options.dart';
 

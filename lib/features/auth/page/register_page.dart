@@ -74,9 +74,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           'currencypoints': 0,
           'hints': 0,
           'selectedColor': defaultColorHex,
-          'streakPoints': 0,
-          'lastActiveDate': Timestamp.now(),
-          'warning': false,
+          'streakDays': Timestamp.now(),
         });
 
         final prefs = await SharedPreferences.getInstance();
