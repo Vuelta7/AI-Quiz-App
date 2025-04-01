@@ -74,6 +74,7 @@ flutter:
     - assets/1.webp
     - assets/2.webp
     - assets/3.webp
+    - assets/sadstar.json
 
 flutter_icons:
   android: true

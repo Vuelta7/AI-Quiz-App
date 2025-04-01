@@ -1,10 +1,12 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/features/home/activity/page/activity_page.dart';
+import 'package:learn_n/features/home/folder/page/add_folder_page.dart';
 import 'package:learn_n/features/home/folder/page/folder_page.dart';
-import 'package:learn_n/features/home/folder/widget/add_folder_page.dart';
 import 'package:learn_n/features/home/settings/setting_page.dart';
 import 'package:lottie/lottie.dart';
 
@@ -51,11 +53,28 @@ class _HomeMainState extends ConsumerState<HomeMain>
       () => _borderRadiusAnimationController.forward(),
     );
 
+    _updateStreakPoints();
     _checkStreakWarning();
   }
 
   Future<void> _checkStreakWarning() async {
-    _showWarningDialog(context, ref.read(userColorProvider));
+    Future.delayed(Duration.zero, () {
+      _showWarningDialog(context, ref.read(userColorProvider));
+    });
+  }
+
+  Future<void> _updateStreakPoints() async {
+    final userId = ref.read(userIdProvider);
+    if (userId == null) return;
+
+    final today = DateTime.now();
+    final formattedDate = '${today.year}-${today.month}-${today.day}';
+
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+
+    await userDoc.update({
+      'streakDays': FieldValue.arrayUnion([formattedDate]),
+    });
   }
 
   void _showWarningDialog(context, Color color) {
@@ -68,7 +87,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
             'Warning',
             style: TextStyle(
               fontSize: 24,
-              fontFamily: 'press',
+              fontFamily: 'PressStart2P',
               color: Colors.white,
             ),
           ),
@@ -81,8 +100,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
                 'You missed a day! If you miss another day, your streak points will reset to 0.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'press',
+                  fontSize: 16,
                   color: Colors.white,
                 ),
               ),

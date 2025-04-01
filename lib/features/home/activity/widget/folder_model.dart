@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
-import 'package:learn_n/features/home/folder/widget/edit_folder_page.dart';
+import 'package:learn_n/features/home/folder/page/edit_folder_page.dart';
 import 'package:learn_n/features/infolder/infolder_main.dart';
 
 class FolderModel extends StatelessWidget {

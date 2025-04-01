@@ -6,7 +6,7 @@ import 'package:learn_n/core/utils/user_color_provider.dart';
 import 'package:learn_n/features/home/settings/page/dnd_page.dart';
 import 'package:learn_n/features/home/settings/page/feedback.dart';
 import 'package:learn_n/features/home/settings/page/themes_page.dart';
-import 'package:learn_n/features/home/settings/widget/info_page.dart';
+import 'package:learn_n/features/home/settings/widget/info_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends ConsumerWidget {

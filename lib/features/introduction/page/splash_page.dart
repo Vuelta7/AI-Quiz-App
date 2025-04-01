@@ -48,13 +48,8 @@ class SplashScreenState extends ConsumerState<SplashScreen>
     loadUserId(ref);
     loadUserColor(ref);
     Future.delayed(const Duration(seconds: 3), _checkAuthState);
-    _updateStreakPoints();
   }
 
-  //TODO: StreakPoints not working
-  Future<void> _updateStreakPoints() async {}
-
-  //TODO: fix web
   Future<void> _checkAuthState() async {
     final userId = ref.read(userIdProvider);
 
