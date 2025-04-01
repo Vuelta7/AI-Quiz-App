@@ -2,7 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/features/home/home_main.dart';
 import 'package:learn_n/features/infolder/page/flashcards_page.dart';
 import 'package:learn_n/features/infolder/page/leaderboards_page.dart';

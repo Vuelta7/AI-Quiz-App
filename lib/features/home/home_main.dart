@@ -2,8 +2,8 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/core/utils/user_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/features/home/activity/page/activity_page.dart';
 import 'package:learn_n/features/home/folder/page/add_folder_page.dart';
 import 'package:learn_n/features/home/folder/page/folder_page.dart';
@@ -57,35 +57,90 @@ class _HomeMainState extends ConsumerState<HomeMain>
     _checkStreakWarning();
   }
 
-  Future<void> _checkStreakWarning() async {
-    Future.delayed(Duration.zero, () {
-      _showWarningDialog(context, ref.read(userColorProvider));
-    });
-  }
-
   Future<void> _updateStreakPoints() async {
     final userId = ref.read(userIdProvider);
     if (userId == null) return;
 
     final today = DateTime.now();
-    final formattedDate = '${today.year}-${today.month}-${today.day}';
 
     final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
 
     await userDoc.update({
-      'streakDays': FieldValue.arrayUnion([formattedDate]),
+      'streakDays': FieldValue.arrayUnion([today.toIso8601String()]),
     });
   }
 
-  void _showWarningDialog(context, Color color) {
+  Future<void> _checkStreakWarning() async {
+    final userId = ref.read(userIdProvider);
+    if (userId == null) return;
+
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+    final snapshot = await userDoc.get();
+    final data = snapshot.data();
+
+    final streakDays = (data?['streakDays'] as List<dynamic>?) ?? [];
+    final warningGiven = data?['warningGiven'] as bool? ?? false;
+
+    final today = DateTime.now();
+    final yesterday = today.subtract(const Duration(days: 1));
+
+    if (streakDays.isEmpty) return;
+
+    final lastStreakDate = DateTime.parse(streakDays.last);
+    print('lastStreakDate: $lastStreakDate');
+
+    if (warningGiven) {
+      if (lastStreakDate.isBefore(yesterday)) {
+        await userDoc.update({'streakDays': [], 'warningGiven': false});
+
+        Future.delayed(Duration.zero, () {
+          _showWarningDialog(
+              context,
+              ref.read(userColorProvider),
+              'Streak Lost!',
+              'You didn’t log in for too long, and your streak has been reset to 0.');
+        });
+
+        return;
+      }
+
+      if (streakDays.length >= 2) {
+        await userDoc.update({'warningGiven': false});
+      }
+    }
+
+    if (lastStreakDate.isBefore(yesterday)) {
+      if (lastStreakDate.isBefore(today.subtract(const Duration(days: 2)))) {
+        await userDoc.update({'streakDays': []});
+
+        Future.delayed(Duration.zero, () {
+          _showWarningDialog(
+              context,
+              ref.read(userColorProvider),
+              'Streak Lost!',
+              'You didn’t log in for too long, and your streak has been reset to 0.');
+        });
+      } else {
+        await userDoc.update({'warningGiven': true});
+
+        Future.delayed(Duration.zero, () {
+          _showWarningDialog(context, ref.read(userColorProvider), 'Warning',
+              'You missed a day! If you miss another day, your streak points will reset to 0.');
+        });
+      }
+    }
+  }
+
+  void _showWarningDialog(
+      BuildContext context, Color color, String title, String message) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           backgroundColor: color,
-          title: const Text(
-            'Warning',
-            style: TextStyle(
+          title: Text(
+            title,
+            style: const TextStyle(
               fontSize: 24,
               fontFamily: 'PressStart2P',
               color: Colors.white,
@@ -96,10 +151,10 @@ class _HomeMainState extends ConsumerState<HomeMain>
             mainAxisSize: MainAxisSize.min,
             children: [
               Lottie.asset('assets/sadstar.json'),
-              const Text(
-                'You missed a day! If you miss another day, your streak points will reset to 0.',
+              Text(
+                message,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   color: Colors.white,
                 ),

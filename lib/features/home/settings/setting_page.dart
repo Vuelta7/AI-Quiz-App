@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/features/home/settings/page/dnd_page.dart';
 import 'package:learn_n/features/home/settings/page/feedback.dart';
 import 'package:learn_n/features/home/settings/page/themes_page.dart';

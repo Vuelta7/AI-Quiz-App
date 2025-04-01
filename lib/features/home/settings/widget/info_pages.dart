@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 
 class InfoPage extends ConsumerWidget {
   final String title;

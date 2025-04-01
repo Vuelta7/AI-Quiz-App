@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 
 class FeedbackPage extends ConsumerStatefulWidget {

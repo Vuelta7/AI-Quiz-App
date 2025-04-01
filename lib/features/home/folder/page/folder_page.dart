@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/core/utils/user_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/folder/provider/folder_provider.dart';
 import 'package:learn_n/features/home/folder/widget/folder_model_ken.dart';

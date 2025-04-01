@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/features/infolder/widgets/add_flashcard_page.dart';
 
 class EditLibraryButton extends StatelessWidget {

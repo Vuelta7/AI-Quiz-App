@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/widgets/custom_appbar.dart';
 import 'package:learn_n/core/widgets/folder_form.dart';
 import 'package:learn_n/core/widgets/loading.dart';

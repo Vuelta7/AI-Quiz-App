@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/utils/introduction_utils.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/core/utils/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/auth/widgets/auth_textfield.dart';
 import 'package:learn_n/features/auth/widgets/text_gesture_detector.dart';
@@ -75,6 +75,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           'hints': 0,
           'selectedColor': defaultColorHex,
           'streakDays': [],
+          'warningGiven': false,
         });
 
         final prefs = await SharedPreferences.getInstance();

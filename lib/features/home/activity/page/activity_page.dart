@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_n/core/utils/user_color_provider.dart';
-import 'package:learn_n/core/utils/user_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
+import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/activity/provider/activity_provider.dart';
 import 'package:learn_n/features/home/activity/widget/folder_model.dart';
@@ -32,6 +32,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
     final userColor = ref.watch(userColorProvider);
     final userId = ref.watch(userIdProvider);
     final petNameAsync = ref.watch(petNameProvider);
+    final streakPointsAsync = ref.watch(streakPointsProvider);
     return Scaffold(
       backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
@@ -55,17 +56,34 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: petNameAsync.when(
-                data: (petName) => Text(
-                  petName,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  streakPointsAsync.when(
+                    data: (streakPoints) => Text(
+                      'Streak: $streakPoints',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    loading: () => const Loading(),
+                    error: (err, stack) => const Text('Error loading pet name'),
                   ),
-                ),
-                loading: () => const Loading(),
-                error: (err, stack) => const Text('Error loading pet name'),
+                  petNameAsync.when(
+                    data: (petName) => Text(
+                      'Name: $petName',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    loading: () => const Loading(),
+                    error: (err, stack) => const Text('Error loading pet name'),
+                  ),
+                ],
               ),
             ),
             Container(

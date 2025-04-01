@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_n/core/utils/user_provider.dart';
+import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
