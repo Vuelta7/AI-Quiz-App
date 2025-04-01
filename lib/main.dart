@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/provider/dnd_provider.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/utils/themes.dart';
 import 'package:learn_n/features/auth/page/login_page.dart';
 import 'package:learn_n/features/auth/page/register_page.dart';
@@ -121,7 +122,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Learn-N',
-      theme: learnNThemes,
+      theme: buildLearnNThemes(ref.watch(textIconColorProvider)),
       routerConfig: _router,
     );
   }

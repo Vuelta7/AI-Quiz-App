@@ -15,6 +15,7 @@ class SettingPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userColor = ref.watch(userColorProvider);
+    final textIconColor = ref.watch(textIconColorProvider);
     return Scaffold(
       backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
@@ -34,8 +35,8 @@ class SettingPage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ColorFiltered(
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
+                      colorFilter: ColorFilter.mode(
+                        textIconColor,
                         BlendMode.srcIn,
                       ),
                       child: Image.asset(
@@ -44,10 +45,10 @@ class SettingPage extends ConsumerWidget {
                         width: 100,
                       ),
                     ),
-                    const Text(
+                    Text(
                       'Learn-N',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: textIconColor,
                         fontSize: 16,
                         fontFamily: 'PressStart2P',
                       ),
@@ -62,30 +63,40 @@ class SettingPage extends ConsumerWidget {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 const Divider(),
-                _buildTile(context, 'About Us', Icons.info, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InfoPage(
-                        title: 'About Us',
-                        description: '''
+                _buildTile(
+                  context,
+                  'About Us',
+                  Icons.info,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InfoPage(
+                          title: 'About Us',
+                          description: '''
 We are students from STI Malolos College, specifically from section ITMAWD12B. This project was developed with a mission to simplify learning applications and eliminate unnecessary complications.
 
 Many existing apps are difficult to navigate and filled with intrusive advertisements, making the learning experience frustrating. Our goal is to provide a minimalist and user-friendly experience, ensuring that users can focus on learning without distractions.
 
 With this app, we strive to create an efficient and accessible platform that makes studying easier and more enjoyable. Thank you for supporting our project!
 ''',
+                        ),
                       ),
-                    ),
-                  );
-                }),
-                _buildTile(context, 'Our Team', Icons.group, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InfoPage(
-                        title: 'Our Team',
-                        description: '''
+                    );
+                  },
+                  textIconColor,
+                ),
+                _buildTile(
+                  context,
+                  'Our Team',
+                  Icons.group,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InfoPage(
+                          title: 'Our Team',
+                          description: '''
 Developer – Mark Uriel "The King" Vuelta
 Leads the development and continuous improvement of the application.  
 
@@ -104,17 +115,23 @@ Detects and addresses bugs and technical flaws by rigorously testing the applica
 Generalists – Kyle Raine & Mikko Dela Cruz  
 Take on various tasks essential for the company’s operations.  
 ''',
+                        ),
                       ),
-                    ),
-                  );
-                }),
-                _buildTile(context, 'Our Purpose', Icons.lightbulb, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InfoPage(
-                        title: 'Our Purpose',
-                        description: '''
+                    );
+                  },
+                  textIconColor,
+                ),
+                _buildTile(
+                  context,
+                  'Our Purpose',
+                  Icons.lightbulb,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InfoPage(
+                          title: 'Our Purpose',
+                          description: '''
 Vision  
 Learn-N helps students improve their learning by making studying easier and more effective.
 
@@ -133,17 +150,23 @@ Core Values
 - Efficient and effective learning.  
 - Prioritizing student feedback.  
 ''',
+                        ),
                       ),
-                    ),
-                  );
-                }),
-                _buildTile(context, 'Privacy Policy', Icons.privacy_tip, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InfoPage(
-                        title: 'Privacy Policy',
-                        description: '''
+                    );
+                  },
+                  textIconColor,
+                ),
+                _buildTile(
+                  context,
+                  'Privacy Policy',
+                  Icons.privacy_tip,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InfoPage(
+                          title: 'Privacy Policy',
+                          description: '''
 Welcome to Learn-N! Your privacy is important to us, and we are committed to protecting your data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our application.
 
 1. Information We Collect
@@ -184,36 +207,54 @@ If you have any questions or concerns about this Privacy Policy, feel free to re
 
 By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experience while we handle your data responsibly!
 ''',
+                        ),
                       ),
-                    ),
-                  );
-                }),
-                _buildTile(context, 'Feedback', Icons.feedback, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const FeedbackPage(),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                  textIconColor,
+                ),
                 _buildTile(
-                    context, 'Focus Mode', Icons.do_not_disturb_alt_rounded,
-                    () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DoNotDisturbPage(),
-                    ),
-                  );
-                }),
-                _buildTile(context, 'Themes', Icons.color_lens, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ThemesPage(),
-                    ),
-                  );
-                }),
+                  context,
+                  'Feedback',
+                  Icons.feedback,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FeedbackPage(),
+                      ),
+                    );
+                  },
+                  textIconColor,
+                ),
+                _buildTile(
+                  context,
+                  'Focus Mode',
+                  Icons.do_not_disturb_alt_rounded,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DoNotDisturbPage(),
+                      ),
+                    );
+                  },
+                  textIconColor,
+                ),
+                _buildTile(
+                  context,
+                  'Themes',
+                  Icons.color_lens,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ThemesPage(),
+                      ),
+                    );
+                  },
+                  textIconColor,
+                ),
                 const Divider(),
                 ListTile(
                   leading: const Icon(
@@ -243,13 +284,21 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
   }
 
   Widget _buildTile(
-      BuildContext context, String title, IconData icon, VoidCallback onTap) {
+    BuildContext context,
+    String title,
+    IconData icon,
+    VoidCallback onTap,
+    textIconColor,
+  ) {
     return ListTile(
-      leading: Icon(icon, color: Colors.white),
+      leading: Icon(
+        icon,
+        color: textIconColor,
+      ),
       title: Text(
         title,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: textIconColor,
           fontWeight: FontWeight.bold,
         ),
       ),

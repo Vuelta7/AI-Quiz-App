@@ -197,6 +197,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
   @override
   Widget build(BuildContext context) {
     final userColor = ref.watch(userColorProvider);
+    final textIconColor = ref.watch(textIconColorProvider);
 
     Widget body;
     if (_selectedIndex == 0) {
@@ -225,7 +226,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
                         builder: (context) => const AddFolderPage()),
                   );
                 },
-                backgroundColor: Colors.white,
+                backgroundColor: textIconColor,
                 child: Icon(
                   Icons.add_rounded,
                   color: getShade(userColor, 800),
@@ -236,7 +237,6 @@ class _HomeMainState extends ConsumerState<HomeMain>
         bottomNavigationBar: AnimatedBottomNavigationBar.builder(
           itemCount: 3,
           tabBuilder: (int index, bool isActive) {
-            const color = Colors.white;
             final showLabel = isActive || _selectedIndex == index;
 
             return Column(
@@ -250,7 +250,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
                           ? Icons.folder_rounded
                           : Icons.attractions_rounded,
                   size: 55,
-                  color: color,
+                  color: textIconColor,
                 ),
                 if (showLabel)
                   Text(
@@ -259,8 +259,8 @@ class _HomeMainState extends ConsumerState<HomeMain>
                         : index == 1
                             ? 'Library'
                             : 'Options',
-                    style: const TextStyle(
-                      color: color,
+                    style: TextStyle(
+                      color: textIconColor,
                       fontSize: 8,
                       fontFamily: 'PressStart2P',
                     ),

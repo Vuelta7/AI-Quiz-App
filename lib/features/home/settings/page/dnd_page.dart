@@ -12,6 +12,8 @@ class DoNotDisturbPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userColor = ref.watch(userColorProvider);
     final dndController = ref.watch(dndProvider);
+    final textIconColor = ref.watch(textIconColorProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: getShade(userColor, 300),
@@ -47,8 +49,8 @@ class DoNotDisturbPage extends ConsumerWidget {
                     ? 'DND mode is ${dndController.isDndEnabled ? 'enabled' : 'disabled'}'
                     : 'App is not allowed to access DND settings. To enable DND mode, give the app access to DND settings.',
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: textIconColor,
                   fontFamily: 'PressStart2P',
                   fontSize: 20,
                 ),
@@ -63,13 +65,10 @@ class DoNotDisturbPage extends ConsumerWidget {
                   },
                 ),
               if (dndController.notifPolicyAccess)
-                buildRetroButton(
-                  'Toggle DND mode',
-                  getShade(userColor, 300),
-                  () async {
-                    await dndController.toggleDnd();
-                  },
-                ),
+                buildRetroButton('Toggle DND mode', getShade(userColor, 300),
+                    () async {
+                  await dndController.toggleDnd();
+                }, textColor: userColor),
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:lottie/lottie.dart';
@@ -11,6 +12,8 @@ class Shop extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(userIdProvider);
+    final textIconColor = ref.watch(textIconColorProvider);
+
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
@@ -99,10 +102,10 @@ class Shop extends ConsumerWidget {
               Lottie.asset('assets/hints.json', height: 300),
               Text(
                 'Points: $currencyPoints',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: textIconColor,
                   fontFamily: 'PressStart2P',
                 ),
               ),
@@ -116,7 +119,10 @@ class Shop extends ConsumerWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(12.0),
                   children: products
-                      .map((product) => ProductCard(product: product))
+                      .map((product) => ProductCard(
+                            product: product,
+                            textIconColor: textIconColor,
+                          ))
                       .toList(),
                 ),
               ),
@@ -130,8 +136,13 @@ class Shop extends ConsumerWidget {
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final Color textIconColor;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.textIconColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +172,7 @@ class ProductCard extends StatelessWidget {
                 child: Icon(
                   product.icon,
                   size: 48,
-                  color: isDisabled ? Colors.black38 : Colors.white,
+                  color: isDisabled ? Colors.black38 : textIconColor,
                 ),
               ),
             ),
@@ -169,7 +180,7 @@ class ProductCard extends StatelessWidget {
             Text(
               product.name,
               style: TextStyle(
-                color: isDisabled ? Colors.black38 : Colors.white,
+                color: isDisabled ? Colors.black38 : textIconColor,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -178,7 +189,7 @@ class ProductCard extends StatelessWidget {
             Text(
               '${product.price} Points',
               style: TextStyle(
-                color: isDisabled ? Colors.black38 : Colors.white,
+                color: isDisabled ? Colors.black38 : textIconColor,
                 fontSize: 14,
               ),
             ),

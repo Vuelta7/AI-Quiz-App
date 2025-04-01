@@ -74,7 +74,7 @@ class FolderModel extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: _getTextColorForBackground(headerColor),
+                      color: getColorForTextAndIcon(headerColor),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -82,7 +82,7 @@ class FolderModel extends StatelessWidget {
                     description,
                     style: TextStyle(
                       fontSize: 16,
-                      color: _getTextColorForBackground(headerColor),
+                      color: getColorForTextAndIcon(headerColor),
                     ),
                   ),
                 ],
@@ -120,7 +120,7 @@ class FolderModel extends StatelessWidget {
                         PopupMenuItem(
                           child: MenuItemButton(
                             leadingIcon: Icon(Icons.edit,
-                                color: _getTextColorForBackground(headerColor)),
+                                color: getColorForTextAndIcon(headerColor)),
                             child: const Text('Edit Folder'),
                             onPressed: () {
                               Navigator.pop(context);
@@ -151,7 +151,7 @@ class FolderModel extends StatelessWidget {
                         PopupMenuItem(
                           child: MenuItemButton(
                             leadingIcon: Icon(Icons.delete,
-                                color: _getTextColorForBackground(headerColor)),
+                                color: getColorForTextAndIcon(headerColor)),
                             child: const Text('Delete Folder'),
                             onPressed: () {
                               Navigator.pop(context);
@@ -243,7 +243,7 @@ class FolderModel extends StatelessWidget {
                         PopupMenuItem(
                           child: MenuItemButton(
                             leadingIcon: Icon(Icons.share,
-                                color: _getTextColorForBackground(headerColor)),
+                                color: getColorForTextAndIcon(headerColor)),
                             child: const Text('Share Folder'),
                             onPressed: () {
                               Navigator.pop(context);
@@ -319,7 +319,7 @@ class FolderModel extends StatelessWidget {
                   icon: Icon(
                     Icons.more_horiz_rounded,
                     size: 30,
-                    color: _getTextColorForBackground(headerColor),
+                    color: getColorForTextAndIcon(headerColor),
                   ),
                 ),
               ),
@@ -327,11 +327,5 @@ class FolderModel extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getTextColorForBackground(Color backgroundColor) {
-    return backgroundColor.computeLuminance() > 0.5
-        ? Colors.black
-        : Colors.white;
   }
 }

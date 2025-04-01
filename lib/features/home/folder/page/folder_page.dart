@@ -91,6 +91,7 @@ class _FolderPageState extends ConsumerState<FolderPage> {
     final userColor = ref.watch(userColorProvider);
     final userId = ref.watch(userIdProvider);
     final folderSnapshot = ref.watch(folderStreamProvider);
+    final textIconColor = ref.watch(textIconColorProvider);
 
     return Scaffold(
       backgroundColor: getShade(userColor, 600),
@@ -111,28 +112,28 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                 padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
                 child: TextFormField(
                   controller: _searchController,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Arial',
-                    color: Colors.white,
+                    color: textIconColor,
                     fontSize: 14,
                   ),
                   decoration: InputDecoration(
-                    focusColor: Colors.white,
+                    focusColor: textIconColor,
                     hintText: 'Search Folder',
                     hintStyle: TextStyle(
                       fontFamily: 'PressStart2P',
-                      color: userColor,
+                      color: textIconColor,
                     ),
-                    prefixIcon: const Icon(
+                    prefixIcon: Icon(
                       Icons.search,
-                      color: Colors.white,
+                      color: textIconColor,
                     ),
                     filled: true,
                     fillColor: getShade(userColor, 600),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.white,
+                      borderSide: BorderSide(
+                        color: textIconColor,
                         width: 2,
                       ),
                     ),
@@ -167,12 +168,12 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                         child: Column(
                           children: [
                             Lottie.asset('assets/folders.json'),
-                            const Text(
+                            Text(
                               'No Libraries here\nCreate one by clicking the\nAdd Button.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'PressStart2P',
-                                color: Colors.white,
+                                color: textIconColor,
                               ),
                             ),
                           ],

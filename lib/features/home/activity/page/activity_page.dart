@@ -33,12 +33,34 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
     final userId = ref.watch(userIdProvider);
     final petNameAsync = ref.watch(petNameProvider);
     final streakPointsAsync = ref.watch(streakPointsProvider);
+    final textIconColor = ref.watch(textIconColorProvider);
+
     return Scaffold(
       backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  streakPointsAsync.when(
+                    data: (streakPoints) => Text(
+                      'Streak: $streakPoints',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: textIconColor,
+                      ),
+                    ),
+                    loading: () => const Loading(),
+                    error: (err, stack) => const Text('Error loading pet name'),
+                  ),
+                  //TODO: add a button to update streak pet
+                ],
+              ),
+            ),
             Stack(
               children: [
                 Lottie.asset(
@@ -56,34 +78,17 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  streakPointsAsync.when(
-                    data: (streakPoints) => Text(
-                      'Streak: $streakPoints',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    loading: () => const Loading(),
-                    error: (err, stack) => const Text('Error loading pet name'),
+              child: petNameAsync.when(
+                data: (petName) => Text(
+                  petName,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: textIconColor,
                   ),
-                  petNameAsync.when(
-                    data: (petName) => Text(
-                      'Name: $petName',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    loading: () => const Loading(),
-                    error: (err, stack) => const Text('Error loading pet name'),
-                  ),
-                ],
+                ),
+                loading: () => const Loading(),
+                error: (err, stack) => const Text('Error loading pet name'),
               ),
             ),
             Container(
@@ -98,14 +103,14 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Weekly Library',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: textIconColor,
                       ),
                     ),
                   ),

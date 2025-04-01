@@ -52,6 +52,11 @@ Color getShade(Color color, int shade) {
   );
 }
 
-Color getTextColorForBackground(Color backgroundColor) {
+Color getColorForTextAndIcon(Color backgroundColor) {
   return backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 }
+
+final textIconColorProvider = StateProvider<Color>((ref) {
+  final userColor = ref.watch(userColorProvider);
+  return getColorForTextAndIcon(userColor);
+});
