@@ -32,7 +32,6 @@ class _AddFolderPageState extends State<AddFolderPage> {
   @override
   void initState() {
     super.initState();
-    _loadSelectedColor();
   }
 
   @override
@@ -101,15 +100,6 @@ class _AddFolderPageState extends State<AddFolderPage> {
     }
   }
 
-  Future<void> _loadSelectedColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    final colorString =
-        prefs.getString('selectedColor') ?? rgbToHex(Colors.blue);
-    setState(() {
-      _selectedColor = hexToColor(colorString);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,9 +109,9 @@ class _AddFolderPageState extends State<AddFolderPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_rounded,
-            color: Colors.white,
+            color: getColorForTextAndIcon(_selectedColor),
           ),
         ),
         color: _selectedColor,

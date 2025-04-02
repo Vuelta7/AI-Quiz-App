@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -19,8 +20,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(
         title,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: getColorForTextAndIcon(color),
           fontFamily: 'PressStart2P',
         ),
       ),

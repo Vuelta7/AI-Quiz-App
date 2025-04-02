@@ -120,10 +120,10 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: widget.color,
-        title: const Text(
+        title: Text(
           'Generate Quiz',
           style: TextStyle(
-            color: Colors.white,
+            color: getColorForTextAndIcon(widget.color),
             fontSize: 16,
             fontFamily: 'PressStart2P',
           ),
@@ -132,17 +132,17 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_rounded,
-            color: Colors.white,
+            color: getColorForTextAndIcon(widget.color),
           ),
         ),
         actions: [
           if (questionsAndAnswers.isNotEmpty)
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.save,
-                color: Colors.white,
+                color: getColorForTextAndIcon(widget.color),
               ),
               onPressed: () {
                 for (var qa in questionsAndAnswers) {
@@ -201,31 +201,33 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
                             TextField(
                               controller: textController,
                               maxLines: 7,
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: getColorForTextAndIcon(widget.color),
                               ),
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
                                 hintText: "Paste your text here",
                                 hintStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'PressStart2P',
-                                    color: Colors.white),
+                                  fontSize: 12,
+                                  fontFamily: 'PressStart2P',
+                                  color: getColorForTextAndIcon(widget.color),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),
                             TextField(
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: getColorForTextAndIcon(widget.color),
                               ),
                               controller: promptController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
                                 hintText: "Custom Prompt (Optional)",
                                 hintStyle: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: 'PressStart2P',
-                                    color: Colors.white),
+                                  fontSize: 12,
+                                  fontFamily: 'PressStart2P',
+                                  color: getColorForTextAndIcon(widget.color),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -252,12 +254,13 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
                                     Lottie.asset(
                                       'assets/makequiz.json',
                                     ),
-                                    const Text(
+                                    Text(
                                       'Generate by copy and pasting your notes in textfield then press the "Generate Questions from Text", then wait for few seconds.',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: 'PressStart2P',
-                                        color: Colors.white,
+                                        color: getColorForTextAndIcon(
+                                            widget.color),
                                       ),
                                     ),
                                   ],
@@ -267,13 +270,13 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
                           ],
                           const SizedBox(height: 16),
                           if (questionsAndAnswers.isNotEmpty) ...[
-                            const Text(
+                            Text(
                               "Extracted Questions:",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: getColorForTextAndIcon(widget.color),
                                 fontFamily: 'PressStart2P',
                               ),
                             ),

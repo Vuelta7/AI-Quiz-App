@@ -25,17 +25,33 @@ Widget buildFolderForm({
       const SizedBox(height: 10),
       if (!isImported) ...[
         TextFormField(
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Arial',
-            color: Colors.white,
+            color: getColorForTextAndIcon(selectedColor),
             fontSize: 14,
           ),
           controller: folderNameController,
-          cursorColor: selectedColor,
+          cursorColor: getColorForTextAndIcon(selectedColor),
           decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+                width: 2.0,
+              ),
+            ),
             hintText: 'Folder Name',
-            hintStyle: const TextStyle(
-              color: Colors.white,
+            hintStyle: TextStyle(
+              color: getColorForTextAndIcon(selectedColor),
               fontFamily: 'PressStart2P',
             ),
             filled: true,
@@ -46,17 +62,33 @@ Widget buildFolderForm({
         ),
         const SizedBox(height: 10),
         TextFormField(
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Arial',
-            color: Colors.white,
+            color: getColorForTextAndIcon(selectedColor),
             fontSize: 14,
           ),
           controller: descriptionController,
           cursorColor: selectedColor,
           decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+                width: 2.0,
+              ),
+            ),
             hintText: 'Description',
-            hintStyle: const TextStyle(
-              color: Colors.white,
+            hintStyle: TextStyle(
+              color: getColorForTextAndIcon(selectedColor),
               fontFamily: 'PressStart2P',
             ),
             filled: true,
@@ -73,10 +105,10 @@ Widget buildFolderForm({
           },
           color: selectedColor,
           onColorChanged: onColorChanged,
-          heading: const Text(
+          heading: Text(
             'Select color',
             style: TextStyle(
-              color: Colors.white,
+              color: getColorForTextAndIcon(selectedColor),
               fontFamily: 'PressStart2P',
             ),
           ),
@@ -91,7 +123,7 @@ Widget buildFolderForm({
         const SizedBox(height: 10),
         buildRetroButton(
           isAddScreen ? 'SUBMIT' : 'Save Changes',
-          isFormValid ? Colors.white : Colors.grey,
+          isFormValid ? getColorForTextAndIcon(selectedColor) : Colors.grey,
           isLoading || !isFormValid ? null : onSave,
           textColor: isFormValid ? selectedColor : getShade(selectedColor, 600),
         ),
@@ -100,9 +132,25 @@ Widget buildFolderForm({
           controller: folderIdController,
           cursorColor: selectedColor,
           decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: getColorForTextAndIcon(selectedColor),
+                width: 2.0,
+              ),
+            ),
             hintText: 'Code',
-            hintStyle: const TextStyle(
-              color: Colors.white,
+            hintStyle: TextStyle(
+              color: getColorForTextAndIcon(selectedColor),
               fontFamily: 'PressStart2P',
             ),
             filled: true,
@@ -115,7 +163,9 @@ Widget buildFolderForm({
           'IMPORT',
           isFormValid ? Colors.white : Colors.grey,
           isLoading || !isFormValid ? null : onImport,
-          textColor: isFormValid ? selectedColor : getShade(selectedColor, 600),
+          textColor: isFormValid
+              ? getColorForTextAndIcon(selectedColor)
+              : getShade(selectedColor, 600),
         ),
       ],
     ],

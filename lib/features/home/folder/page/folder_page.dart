@@ -204,7 +204,7 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                       key: ValueKey(folderDoc.id),
                       title: FolderModelKen(
                         folderId: folderDoc.id,
-                        headerColor: hexToColor(folderData['color']),
+                        folderColor: hexToColor(folderData['color']),
                         folderName: folderData['folderName'],
                         description: folderData['description'],
                         isImported: isImported,

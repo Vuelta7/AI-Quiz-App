@@ -127,10 +127,10 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: widget.color,
-        title: const Text(
+        title: Text(
           'Flashcard Manager',
           style: TextStyle(
-            color: Colors.white,
+            color: getColorForTextAndIcon(widget.color),
             fontSize: 16,
             fontFamily: 'PressStart2P',
           ),
@@ -139,9 +139,9 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_rounded,
-            color: Colors.white,
+            color: getColorForTextAndIcon(widget.color),
           ),
         ),
       ),
@@ -252,13 +252,13 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                const Text(
+                Text(
                   "Existing Flashcards:",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: getColorForTextAndIcon(widget.color),
                     fontFamily: 'PressStart2P',
                   ),
                 ),

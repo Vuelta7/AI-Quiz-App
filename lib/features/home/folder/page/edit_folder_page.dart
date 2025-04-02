@@ -122,9 +122,9 @@ class _EditFolderPageState extends State<EditFolderPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_rounded,
-            color: Colors.white,
+            color: getColorForTextAndIcon(widget.initialColor),
           ),
         ),
         color: _selectedColor,

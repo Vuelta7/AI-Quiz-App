@@ -4,11 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:learn_n/features/home/folder/page/edit_folder_page.dart';
 import 'package:learn_n/features/infolder/infolder_main.dart';
 
+//TODO: issue in deleting the folder
 class FolderModelKen extends StatelessWidget {
   final String folderId;
   final String folderName;
   final String description;
-  final Color headerColor;
+  final Color folderColor;
   final bool isImported;
   final String userId;
 
@@ -17,7 +18,7 @@ class FolderModelKen extends StatelessWidget {
     required this.folderId,
     required this.folderName,
     required this.description,
-    this.headerColor = const Color(0xFFBDBDBD),
+    this.folderColor = const Color(0xFFBDBDBD),
     required this.isImported,
     required this.userId,
   });
@@ -30,7 +31,7 @@ class FolderModelKen extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => InFolderMain(
-              headerColor: headerColor,
+              color: folderColor,
               folderId: folderId,
               folderName: folderName,
               isImported: isImported,
@@ -47,7 +48,7 @@ class FolderModelKen extends StatelessWidget {
               width: double.infinity,
               height: 200,
               decoration: BoxDecoration(
-                color: headerColor,
+                color: folderColor,
                 borderRadius: BorderRadius.circular(14),
               ),
             ),
@@ -77,7 +78,7 @@ class FolderModelKen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: headerColor,
+                        color: folderColor,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -85,7 +86,7 @@ class FolderModelKen extends StatelessWidget {
                       description,
                       style: TextStyle(
                         fontSize: 16,
-                        color: headerColor,
+                        color: folderColor,
                       ),
                     ),
                   ],
@@ -96,7 +97,7 @@ class FolderModelKen extends StatelessWidget {
                     icon: Icon(
                       Icons.arrow_drop_down_sharp,
                       size: 40,
-                      color: headerColor,
+                      color: folderColor,
                     ),
                     onSelected: (value) {
                       if (value == 'Edit') {
@@ -116,7 +117,7 @@ class FolderModelKen extends StatelessWidget {
                               folderId: folderId,
                               initialFolderName: folderName,
                               initialDescription: description,
-                              initialColor: headerColor,
+                              initialColor: folderColor,
                               isImported: isImported,
                             ),
                           ),
@@ -126,7 +127,7 @@ class FolderModelKen extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              backgroundColor: headerColor,
+                              backgroundColor: folderColor,
                               title: const Text(
                                 'Confirm Deletion',
                                 style: TextStyle(color: Colors.white),
@@ -200,7 +201,7 @@ class FolderModelKen extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              backgroundColor: headerColor,
+                              backgroundColor: folderColor,
                               title: const Text(
                                 'Share Folder',
                                 style: TextStyle(
@@ -238,7 +239,7 @@ class FolderModelKen extends StatelessWidget {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:
-                                          headerColor.withOpacity(0.8),
+                                          folderColor.withOpacity(0.8),
                                     ),
                                     child: const Text('Copy Folder ID'),
                                   ),

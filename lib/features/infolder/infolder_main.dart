@@ -9,18 +9,17 @@ import 'package:learn_n/features/infolder/page/leaderboards_page.dart';
 import 'package:learn_n/features/infolder/page/play_page.dart';
 import 'package:learn_n/features/infolder/widgets/edit_library_button.dart';
 
-//TODO: add getColorForTextAndIcons function
 class InFolderMain extends StatefulWidget {
   final String folderId;
   final String folderName;
-  final Color headerColor;
+  final Color color;
   final bool isImported;
 
   const InFolderMain({
     super.key,
     required this.folderId,
     required this.folderName,
-    required this.headerColor,
+    required this.color,
     this.isImported = true,
   });
 
@@ -94,7 +93,7 @@ class _InFolderMainState extends State<InFolderMain>
 
     _flashcardsPage = FlashcardsPage(
       folderId: widget.folderId,
-      color: widget.headerColor,
+      color: widget.color,
     );
     _leaderboardPage = LeaderboardPage(folderId: widget.folderId);
   }
@@ -155,17 +154,17 @@ class _InFolderMainState extends State<InFolderMain>
         appBar: AppBar(
           title: Text(
             widget.folderName,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: getColorForTextAndIcon(widget.color),
               fontFamily: 'PressStart2P',
               fontSize: 16,
             ),
           ),
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_rounded,
               size: 30,
-              color: Colors.white,
+              color: getColorForTextAndIcon(widget.color),
             ),
             onPressed: () {
               Navigator.push(
@@ -176,15 +175,15 @@ class _InFolderMainState extends State<InFolderMain>
               );
             },
           ),
-          backgroundColor: widget.headerColor,
+          backgroundColor: widget.color,
           actions: [
             EditLibraryButton(
-              color: widget.headerColor,
+              color: widget.color,
               folderId: widget.folderId,
             ),
           ],
         ),
-        backgroundColor: getShade(widget.headerColor, 700),
+        backgroundColor: getShade(widget.color, 700),
         body: NotificationListener<ScrollNotification>(
           onNotification: onScrollNotification,
           child: IndexedStack(
@@ -209,7 +208,7 @@ class _InFolderMainState extends State<InFolderMain>
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'PressStart2P',
-                              color: widget.headerColor,
+                              color: widget.color,
                             ),
                           ),
                         ),
@@ -221,7 +220,7 @@ class _InFolderMainState extends State<InFolderMain>
                           builder: (context) => PlayPage(
                             folderName: widget.folderName,
                             folderId: widget.folderId,
-                            headerColor: widget.headerColor,
+                            color: widget.color,
                             questions: questions,
                             isImported: widget.isImported,
                           ),
@@ -239,7 +238,7 @@ class _InFolderMainState extends State<InFolderMain>
                         child: Icon(
                           Icons.play_arrow_rounded,
                           size: 45,
-                          color: getShade(widget.headerColor, 800),
+                          color: getShade(widget.color, 800),
                         ),
                       );
                     },
@@ -276,9 +275,9 @@ class _InFolderMainState extends State<InFolderMain>
             );
           },
           height: 70,
-          backgroundColor: getShade(widget.headerColor, 800),
+          backgroundColor: getShade(widget.color, 800),
           activeIndex: _selectedIndex,
-          splashColor: widget.headerColor,
+          splashColor: widget.color,
           notchAndCornersAnimation: borderRadiusAnimation,
           splashSpeedInMilliseconds: 100,
           notchSmoothness: NotchSmoothness.defaultEdge,

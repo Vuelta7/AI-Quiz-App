@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 
 class FlashCardModel extends StatefulWidget {
   final String question;
@@ -123,10 +124,10 @@ class _FlashCardModelState extends State<FlashCardModel>
         child: Center(
           child: Text(
             widget.question,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: getColorForTextAndIcon(widget.color),
             ),
             textAlign: TextAlign.center,
             maxLines: 3,
@@ -146,10 +147,10 @@ class _FlashCardModelState extends State<FlashCardModel>
         child: Center(
           child: Text(
             widget.answer,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 17,
-              color: Colors.white,
+              color: getColorForTextAndIcon(widget.color),
             ),
             textAlign: TextAlign.center,
           ),

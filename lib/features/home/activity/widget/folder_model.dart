@@ -34,7 +34,7 @@ class FolderModel extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => InFolderMain(
-              headerColor: headerColor,
+              color: headerColor,
               folderId: folderId,
               folderName: folderName,
               isImported: isImported,
