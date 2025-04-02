@@ -57,7 +57,6 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                     loading: () => const Loading(),
                     error: (err, stack) => const Text('Error loading pet name'),
                   ),
-                  //TODO: add a button to update streak pet
                 ],
               ),
             ),
@@ -69,10 +68,25 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                   width: double.infinity,
                   height: 200,
                 ),
-                Lottie.asset(
-                  'assets/streakpet3.json',
-                  width: double.infinity,
-                  height: 300,
+                streakPointsAsync.when(
+                  data: (streakPoints) {
+                    String petAsset;
+                    if (streakPoints >= 50) {
+                      petAsset = 'assets/streakpet1.json';
+                    } else if (streakPoints >= 10) {
+                      petAsset = 'assets/streakpet2.json';
+                    } else {
+                      petAsset = 'assets/streakpet3.json';
+                    }
+
+                    return Lottie.asset(
+                      petAsset,
+                      width: double.infinity,
+                      height: 300,
+                    );
+                  },
+                  loading: () => const Loading(),
+                  error: (err, stack) => const Text('Error loading streak pet'),
                 ),
               ],
             ),
