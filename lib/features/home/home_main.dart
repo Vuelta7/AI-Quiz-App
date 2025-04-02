@@ -62,12 +62,31 @@ class _HomeMainState extends ConsumerState<HomeMain>
     if (userId == null) return;
 
     final today = DateTime.now();
+    final todayDateString =
+        DateTime(today.year, today.month, today.day).toIso8601String();
 
     final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+    final snapshot = await userDoc.get();
+    final userData = snapshot.data();
 
-    await userDoc.update({
-      'streakDays': FieldValue.arrayUnion([today.toIso8601String()]),
-    });
+    final streakDays = (userData?['streakDays'] as List<dynamic>?) ?? [];
+
+    bool containsToday = false;
+    for (final day in streakDays) {
+      final date = DateTime.parse(day);
+      if (date.year == today.year &&
+          date.month == today.month &&
+          date.day == today.day) {
+        containsToday = true;
+        break;
+      }
+    }
+
+    if (!containsToday) {
+      await userDoc.update({
+        'streakDays': FieldValue.arrayUnion([todayDateString]),
+      });
+    }
   }
 
   Future<void> _checkStreakWarning() async {
