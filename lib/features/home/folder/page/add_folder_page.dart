@@ -8,6 +8,7 @@ import 'package:learn_n/core/widgets/folder_form.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//TODO: add provider to handle errors and loading states
 class AddFolderPage extends StatefulWidget {
   const AddFolderPage({super.key});
 

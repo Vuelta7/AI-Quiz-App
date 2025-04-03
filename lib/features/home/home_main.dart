@@ -53,8 +53,8 @@ class _HomeMainState extends ConsumerState<HomeMain>
       () => _borderRadiusAnimationController.forward(),
     );
 
-    _updateStreakPoints();
     _checkStreakWarning();
+    _updateStreakPoints();
   }
 
   Future<void> _updateStreakPoints() async {
@@ -155,14 +155,15 @@ class _HomeMainState extends ConsumerState<HomeMain>
     showDialog(
       context: context,
       builder: (context) {
+        final textIconColor = ref.watch(textIconColorProvider);
         return AlertDialog(
           backgroundColor: color,
           title: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
               fontFamily: 'PressStart2P',
-              color: Colors.white,
+              color: textIconColor,
             ),
           ),
           content: Column(
@@ -173,9 +174,9 @@ class _HomeMainState extends ConsumerState<HomeMain>
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
-                  color: Colors.white,
+                  color: textIconColor,
                 ),
               ),
             ],
@@ -183,12 +184,12 @@ class _HomeMainState extends ConsumerState<HomeMain>
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
+              child: Text(
                 'OK',
                 style: TextStyle(
                   fontSize: 16,
                   fontFamily: 'press',
-                  color: Colors.white,
+                  color: textIconColor,
                 ),
               ),
             ),

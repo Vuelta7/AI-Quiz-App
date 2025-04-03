@@ -7,7 +7,6 @@ import 'package:learn_n/features/infolder/widgets/auto_quiz.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uuid/uuid.dart';
 
-//TODO: make the add flashcard design nicer
 class AddFlashCardPage extends StatefulWidget {
   final String folderId;
   final Color color;
@@ -163,14 +162,27 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('Add Flashcard'),
+                          backgroundColor: widget.color,
+                          title: Text(
+                            'Add Flashcard',
+                            style: TextStyle(
+                              color: getColorForTextAndIcon(widget.color),
+                              fontFamily: 'PressStart2P',
+                            ),
+                          ),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               TextFormField(
                                 controller: questionController,
-                                decoration: const InputDecoration(
+                                style: TextStyle(
+                                  color: getColorForTextAndIcon(widget.color),
+                                ),
+                                decoration: InputDecoration(
                                   hintText: 'Question or Definition',
+                                  hintStyle: TextStyle(
+                                    color: getColorForTextAndIcon(widget.color),
+                                  ),
                                 ),
                                 maxLines: null,
                                 keyboardType: TextInputType.multiline,
@@ -178,8 +190,14 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                               const SizedBox(height: 10),
                               TextFormField(
                                 controller: answerController,
-                                decoration: const InputDecoration(
+                                style: TextStyle(
+                                  color: getColorForTextAndIcon(widget.color),
+                                ),
+                                decoration: InputDecoration(
                                   hintText: 'Answer',
+                                  hintStyle: TextStyle(
+                                    color: getColorForTextAndIcon(widget.color),
+                                  ),
                                 ),
                               ),
                             ],
@@ -189,7 +207,13 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text('Cancel'),
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  color: getColorForTextAndIcon(widget.color),
+                                  fontFamily: 'PressStart2P',
+                                ),
+                              ),
                             ),
                             TextButton(
                               onPressed: () async {
@@ -225,7 +249,13 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
                                   });
                                 }
                               },
-                              child: const Text('submit'),
+                              child: Text(
+                                'Submit',
+                                style: TextStyle(
+                                  color: getColorForTextAndIcon(widget.color),
+                                  fontFamily: 'PressStart2P',
+                                ),
+                              ),
                             ),
                           ],
                         );
