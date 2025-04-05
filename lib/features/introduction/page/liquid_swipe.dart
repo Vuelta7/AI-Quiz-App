@@ -20,6 +20,7 @@ class _LiquidSwipeIntroState extends State<LiquidSwipeIntro> {
   final pages = [
     const WelcomePage(),
     const IntroPage(),
+    const StreakIntro(),
     const StartPage(),
   ];
 
