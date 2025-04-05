@@ -96,7 +96,6 @@ class _AddFlashCardPageState extends State<AddFlashCardPage> {
         "answer": answer.trim(),
       });
     } catch (e) {
-      print(e);
       rethrow;
     }
   }

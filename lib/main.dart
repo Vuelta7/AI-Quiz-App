@@ -38,7 +38,7 @@ void main() async {
   ]);
 
   usePathUrlStrategy();
-
+  // debugPaintSizeEnabled = true;
   runApp(
     const ProviderScope(
       child: MyApp(),

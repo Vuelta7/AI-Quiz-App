@@ -9,6 +9,7 @@ import 'package:learn_n/features/home/settings/page/themes_page.dart';
 import 'package:learn_n/features/home/settings/widget/info_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//TODO: add leaderboards
 class SettingPage extends ConsumerWidget {
   const SettingPage({super.key});
 

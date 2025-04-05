@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
+import 'package:learn_n/core/widgets/learnn_text.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/activity/provider/activity_provider.dart';
 import 'package:learn_n/features/home/activity/widget/folder_model.dart';
+import 'package:learn_n/features/home/activity/widget/liquid_wipe_streak.dart';
 import 'package:learn_n/features/home/activity/widget/shop.dart';
 import 'package:lottie/lottie.dart';
 
@@ -26,7 +28,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
     super.initState();
   }
 
-  //TODO info how to update streakpet
+  //TODO enhance the design of the page make the info button good
   @override
   Widget build(BuildContext context) {
     final userColor = ref.watch(userColorProvider);
@@ -41,72 +43,71 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  streakPointsAsync.when(
-                    data: (streakPoints) => Text(
-                      'Streak: $streakPoints',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+            streakPointsAsync.when(
+              data: (streakPoints) => SizedBox(
+                height: 330,
+                child: Stack(
+                  children: [
+                    Lottie.asset(
+                      'assets/effectbg.json',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 200,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: petNameAsync.when(
+                        data: (petName) => LearnNText(
+                          text: 'ཐི⋆$petName⋆ཋྀ $streakPoints',
+                          fontSize: 30,
+                          font: 'PressStart2P',
+                          color: textIconColor,
+                          backgroundColor: getShade(userColor, 900),
+                        ),
+                        loading: () => const Loading(),
+                        error: (err, stack) =>
+                            const Text('Error loading pet name'),
+                      ),
+                    ),
+                    Lottie.asset(
+                      streakPoints >= 30
+                          ? 'assets/streakpet1.json'
+                          : streakPoints >= 10
+                              ? 'assets/streakpet2.json'
+                              : 'assets/streakpet3.json',
+                      width: double.infinity,
+                      height: 300,
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.8,
+                                  child: const LiquidSwipeStreak(),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.info_rounded),
                         color: textIconColor,
                       ),
                     ),
-                    loading: () => const Loading(),
-                    error: (err, stack) => const Text('Error loading pet name'),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Stack(
-              children: [
-                Lottie.asset(
-                  'assets/effectbg.json',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 200,
-                ),
-                streakPointsAsync.when(
-                  data: (streakPoints) {
-                    String petAsset;
-                    if (streakPoints >= 50) {
-                      petAsset = 'assets/streakpet1.json';
-                    } else if (streakPoints >= 10) {
-                      petAsset = 'assets/streakpet2.json';
-                    } else {
-                      petAsset = 'assets/streakpet3.json';
-                    }
-
-                    return Lottie.asset(
-                      petAsset,
-                      width: double.infinity,
-                      height: 300,
-                    );
-                  },
-                  loading: () => const Loading(),
-                  error: (err, stack) => const Text('Error loading streak pet'),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: petNameAsync.when(
-                data: (petName) => Text(
-                  petName,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: textIconColor,
-                  ),
-                ),
-                loading: () => const Loading(),
-                error: (err, stack) => const Text('Error loading pet name'),
-              ),
+              loading: () => const Loading(),
+              error: (err, stack) => const Text('Error loading streak pet'),
             ),
             Container(
-              padding: const EdgeInsets.fromLTRB(13, 0, 13, 10),
+              padding: const EdgeInsets.fromLTRB(13, 10, 13, 10),
               decoration: BoxDecoration(
                 color: getShade(userColor, 600),
                 borderRadius: const BorderRadius.only(
