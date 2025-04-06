@@ -1,27 +1,23 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/widgets/custom_appbar.dart';
 import 'package:learn_n/core/widgets/folder_form.dart';
 import 'package:learn_n/core/widgets/loading.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:learn_n/features/home/folder/provider/folder_provider.dart';
 
-//TODO: add provider to handle errors and loading states
-class AddFolderPage extends StatefulWidget {
+class AddFolderPage extends ConsumerStatefulWidget {
   const AddFolderPage({super.key});
 
   @override
-  State<AddFolderPage> createState() => _AddFolderPageState();
+  ConsumerState<AddFolderPage> createState() => _AddFolderPageState();
 }
 
-class _AddFolderPageState extends State<AddFolderPage> {
+class _AddFolderPageState extends ConsumerState<AddFolderPage> {
   final folderNameController = TextEditingController();
   final descriptionController = TextEditingController();
   final folderIdController = TextEditingController();
   Color _selectedColor = Colors.blue;
-  bool _isLoading = false;
   bool _isAddingFolder = true;
   final FocusNode descriptionFocusNode = FocusNode();
 
@@ -44,65 +40,9 @@ class _AddFolderPageState extends State<AddFolderPage> {
     super.dispose();
   }
 
-  Future<String> _generateUnique4DigitCode() async {
-    final random = Random();
-    String code = '';
-    bool exists = true;
-
-    while (exists) {
-      code = (1000 + random.nextInt(9000)).toString();
-      final doc = await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(code)
-          .get();
-      if (!doc.exists) {
-        exists = false;
-      }
-    }
-
-    return code;
-  }
-
-  Future<void> uploadFolderToDb() async {
-    try {
-      final id = await _generateUnique4DigitCode();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('userId');
-      if (userId != null) {
-        await FirebaseFirestore.instance.collection("folders").doc(id).set({
-          "folderName": folderNameController.text.trim(),
-          "description": descriptionController.text.trim(),
-          "creator": userId,
-          "color": rgbToHex(_selectedColor),
-          "accessUsers": [],
-        });
-      }
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
-  Future<void> importFolder() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('userId');
-      if (userId != null) {
-        await FirebaseFirestore.instance
-            .collection("folders")
-            .doc(folderIdController.text.trim())
-            .update({
-          "accessUsers": FieldValue.arrayUnion([userId]),
-        });
-      }
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    var isLoading = ref.watch(folderControllerProvider);
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Add Folder',
@@ -118,195 +58,148 @@ class _AddFolderPageState extends State<AddFolderPage> {
         color: _selectedColor,
       ),
       backgroundColor: _selectedColor,
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isAddingFolder = true;
-                        });
-                      },
-                      child: Container(
-                        color: _isAddingFolder
-                            ? getShade(_selectedColor, 600)
-                            : Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Text(
-                          'Add',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: _isAddingFolder
-                                ? Colors.white
-                                : getShade(_selectedColor, 600),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'PressStart2P',
+      body: isLoading
+          ? const Loading()
+          : Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isAddingFolder = true;
+                          });
+                        },
+                        child: Container(
+                          color: _isAddingFolder
+                              ? getShade(_selectedColor, 600)
+                              : Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Text(
+                            'Add',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: _isAddingFolder
+                                  ? Colors.white
+                                  : getShade(_selectedColor, 600),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'PressStart2P',
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isAddingFolder = false;
-                        });
-                      },
-                      child: Container(
-                        color: !_isAddingFolder
-                            ? getShade(_selectedColor, 600)
-                            : Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Text(
-                          'Import',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: !_isAddingFolder
-                                ? Colors.white
-                                : getShade(_selectedColor, 600),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'PressStart2P',
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isAddingFolder = false;
+                          });
+                        },
+                        child: Container(
+                          color: !_isAddingFolder
+                              ? getShade(_selectedColor, 600)
+                              : Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Text(
+                            'Import',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: !_isAddingFolder
+                                  ? Colors.white
+                                  : getShade(_selectedColor, 600),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'PressStart2P',
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    child: _isAddingFolder
-                        ? buildFolderForm(
-                            context: context,
-                            isLoading: _isLoading,
-                            isFormValid: isFormValid,
-                            folderNameController: folderNameController,
-                            descriptionController: descriptionController,
-                            selectedColor: _selectedColor,
-                            onColorChanged: (Color color) {
-                              setState(() {
-                                _selectedColor = color;
-                              });
-                            },
-                            onSave: () async {
-                              if (folderNameController.text.trim().isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Please enter a folder name.'),
-                                  ),
-                                );
-                                return;
-                              }
-                              if (descriptionController.text.trim().isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Please enter a description.'),
-                                  ),
-                                );
-                                return;
-                              }
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              try {
-                                await uploadFolderToDb();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Folder added successfully!'),
-                                  ),
-                                );
-                                Navigator.pop(context);
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error: $e')),
-                                );
-                              } finally {
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      child: _isAddingFolder
+                          ? buildFolderForm(
+                              context: context,
+                              isLoading: isLoading,
+                              isFormValid: isFormValid,
+                              folderNameController: folderNameController,
+                              descriptionController: descriptionController,
+                              selectedColor: _selectedColor,
+                              onColorChanged: (Color color) {
                                 setState(() {
-                                  _isLoading = false;
+                                  _selectedColor = color;
                                 });
-                              }
-                            },
-                            isImported: false,
-                            folderIdController: folderIdController,
-                            onImport: () async {},
-                            isAddScreen: true,
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context)
-                                  .requestFocus(descriptionFocusNode);
-                              setState(() {});
-                            },
-                            descriptionFocusNode: descriptionFocusNode,
-                            onChanged: (value) {
-                              setState(() {});
-                            },
-                          )
-                        : buildFolderForm(
-                            context: context,
-                            isLoading: _isLoading,
-                            isFormValid:
-                                folderIdController.text.trim().isNotEmpty,
-                            folderNameController: folderNameController,
-                            descriptionController: descriptionController,
-                            selectedColor: _selectedColor,
-                            onColorChanged: (Color color) {},
-                            onSave: () async {},
-                            isImported: true,
-                            folderIdController: folderIdController,
-                            onImport: () async {
-                              if (folderIdController.text.trim().isEmpty) {
+                              },
+                              onSave: () async {
+                                await ref
+                                    .read(folderControllerProvider.notifier)
+                                    .uploadFolderToDb(
+                                      folderName:
+                                          folderNameController.text.trim(),
+                                      description:
+                                          descriptionController.text.trim(),
+                                      color: rgbToHex(_selectedColor),
+                                    );
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please enter a folder ID.'),
-                                  ),
-                                );
-                                return;
-                              }
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              try {
-                                await importFolder();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Folder imported successfully!'),
-                                  ),
-                                );
+                                    const SnackBar(
+                                        content: Text(
+                                            'Folder created successfully!')));
                                 Navigator.pop(context);
-                              } catch (e) {
+                              },
+                              isImported: false,
+                              folderIdController: folderIdController,
+                              onImport: () async {},
+                              isAddScreen: true,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context)
+                                    .requestFocus(descriptionFocusNode);
+                                setState(() {});
+                              },
+                              descriptionFocusNode: descriptionFocusNode,
+                              onChanged: (value) {
+                                setState(() {});
+                              },
+                            )
+                          : buildFolderForm(
+                              context: context,
+                              isLoading: isLoading,
+                              isFormValid:
+                                  folderIdController.text.trim().isNotEmpty,
+                              folderNameController: folderNameController,
+                              descriptionController: descriptionController,
+                              selectedColor: _selectedColor,
+                              onColorChanged: (Color color) {},
+                              onSave: () async {},
+                              isImported: true,
+                              folderIdController: folderIdController,
+                              onImport: () async {
+                                await ref
+                                    .read(folderControllerProvider.notifier)
+                                    .importFolder(
+                                        folderIdController.text.trim());
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error: $e')),
-                                );
-                              } finally {
-                                setState(() {
-                                  _isLoading = false;
-                                });
-                              }
-                            },
-                            isAddScreen: false,
-                            onFieldSubmitted: (_) {},
-                            descriptionFocusNode: descriptionFocusNode,
-                            onChanged: (value) {
-                              setState(() {});
-                            },
-                          ),
+                                    const SnackBar(
+                                        content: Text(
+                                            'Folder imported successfully!')));
+                                Navigator.pop(context);
+                              },
+                              isAddScreen: false,
+                              onFieldSubmitted: (_) {},
+                              descriptionFocusNode: descriptionFocusNode,
+                              onChanged: (value) {
+                                setState(() {});
+                              },
+                            ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          if (_isLoading) const Loading(),
-        ],
-      ),
+              ],
+            ),
     );
   }
 }

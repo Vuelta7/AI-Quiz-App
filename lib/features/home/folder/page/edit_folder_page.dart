@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/widgets/custom_appbar.dart';
 import 'package:learn_n/core/widgets/folder_form.dart';
-import 'package:learn_n/core/widgets/loading.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:learn_n/features/home/folder/provider/folder_provider.dart';
 
-class EditFolderPage extends StatefulWidget {
+class EditFolderPage extends ConsumerStatefulWidget {
   final String folderId;
   final String initialFolderName;
   final String initialDescription;
@@ -23,14 +22,13 @@ class EditFolderPage extends StatefulWidget {
   });
 
   @override
-  State<EditFolderPage> createState() => _EditFolderPageState();
+  ConsumerState<EditFolderPage> createState() => _EditFolderPageState();
 }
 
-class _EditFolderPageState extends State<EditFolderPage> {
+class _EditFolderPageState extends ConsumerState<EditFolderPage> {
   late TextEditingController folderNameController;
   late TextEditingController descriptionController;
   late Color _selectedColor;
-  bool _isLoading = false;
   final FocusNode descriptionFocusNode = FocusNode();
 
   @override
@@ -41,17 +39,6 @@ class _EditFolderPageState extends State<EditFolderPage> {
     descriptionController =
         TextEditingController(text: widget.initialDescription);
     _selectedColor = widget.initialColor;
-    _loadSelectedColor();
-  }
-
-  Future<void> _loadSelectedColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    final colorString = prefs.getString('selectedColor');
-    if (colorString != null) {
-      setState(() {
-        _selectedColor = Color(int.parse(colorString));
-      });
-    }
   }
 
   @override
@@ -62,52 +49,6 @@ class _EditFolderPageState extends State<EditFolderPage> {
     super.dispose();
   }
 
-  Future<void> editFolderToDb() async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(widget.folderId)
-          .update({
-        "folderName": folderNameController.text.trim(),
-        "description": descriptionController.text.trim(),
-        "color": rgbToHex(_selectedColor),
-      });
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
-  Future<void> deleteFolderFromDb() async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(widget.folderId)
-          .delete();
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
-  Future<void> removeFolderFromHomeBody() async {
-    try {
-      final userId = await SharedPreferences.getInstance()
-          .then((prefs) => prefs.getString('userId'));
-      if (userId != null) {
-        await FirebaseFirestore.instance
-            .collection("folders")
-            .doc(widget.folderId)
-            .update({
-          "accessUsers": FieldValue.arrayRemove([userId]),
-        });
-      }
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
   bool get _isFormValid {
     return folderNameController.text.trim().isNotEmpty &&
         descriptionController.text.trim().isNotEmpty;
@@ -115,6 +56,8 @@ class _EditFolderPageState extends State<EditFolderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(folderControllerProvider);
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Edit Folder',
@@ -124,105 +67,71 @@ class _EditFolderPageState extends State<EditFolderPage> {
           },
           icon: Icon(
             Icons.arrow_back_rounded,
-            color: getColorForTextAndIcon(widget.initialColor),
+            color: getColorForTextAndIcon(_selectedColor),
           ),
         ),
         color: _selectedColor,
       ),
       backgroundColor: _selectedColor,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: buildFolderForm(
-                context: context,
-                isLoading: _isLoading,
-                isFormValid: _isFormValid,
-                folderNameController: folderNameController,
-                descriptionController: descriptionController,
-                selectedColor: _selectedColor,
-                onColorChanged: (Color color) {
-                  setState(() {
-                    _selectedColor = color;
-                  });
-                },
-                onSave: () async {
-                  if (folderNameController.text.trim().isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please enter a folder name.'),
-                      ),
-                    );
-                    return;
-                  }
-                  if (descriptionController.text.trim().isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please enter a description.'),
-                      ),
-                    );
-                    return;
-                  }
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  try {
-                    await editFolderToDb();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Folder updated successfully!'),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error: $e')),
-                    );
-                  } finally {
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  }
-                },
-                isImported: widget.isImported,
-                onImport: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  try {
-                    await removeFolderFromHomeBody();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Folder removed successfully!'),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error: $e')),
-                    );
-                  } finally {
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  }
-                },
-                isAddScreen: false,
-                folderIdController: null,
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(descriptionFocusNode);
-                },
-                descriptionFocusNode: descriptionFocusNode,
-                onChanged: (String) {},
-              ),
-            ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: buildFolderForm(
+            context: context,
+            isLoading: isLoading,
+            isFormValid: _isFormValid,
+            folderNameController: folderNameController,
+            descriptionController: descriptionController,
+            selectedColor: _selectedColor,
+            onColorChanged: (color) {
+              setState(() {
+                _selectedColor = color;
+              });
+            },
+            onSave: () async {
+              if (!_isFormValid) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please fill in all fields.'),
+                  ),
+                );
+                return;
+              }
+
+              await ref.read(folderControllerProvider.notifier).editFolder(
+                    folderId: widget.folderId,
+                    folderName: folderNameController.text.trim(),
+                    description: descriptionController.text.trim(),
+                    color: rgbToHex(_selectedColor),
+                  );
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Folder updated successfully!')),
+              );
+              Navigator.pop(context);
+            },
+            isImported: widget.isImported,
+            onImport: () async {
+              await ref
+                  .read(folderControllerProvider.notifier)
+                  .removeFolderFromHome(folderId: widget.folderId);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Folder removed successfully!')),
+              );
+              Navigator.pop(context);
+            },
+            isAddScreen: false,
+            folderIdController: null,
+            onFieldSubmitted: (_) {
+              FocusScope.of(context).requestFocus(descriptionFocusNode);
+            },
+            descriptionFocusNode: descriptionFocusNode,
+            onChanged: (_) {
+              setState(() {});
+            },
           ),
-          if (_isLoading)
-            const Center(
-              child: Loading(),
-            ),
-        ],
+        ),
       ),
     );
   }

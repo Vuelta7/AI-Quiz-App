@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-ThemeData buildLearnNThemes(Color textIconColorProvider) {
+ThemeData buildLearnNThemes(Color textIconColorProvider, Color userColor) {
   return ThemeData(
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: textIconColorProvider,
@@ -34,11 +34,11 @@ ThemeData buildLearnNThemes(Color textIconColorProvider) {
         ),
       ),
     ),
-    snackBarTheme: const SnackBarThemeData(
-      shape: StadiumBorder(),
-      backgroundColor: Colors.white,
+    snackBarTheme: SnackBarThemeData(
+      shape: const StadiumBorder(),
+      backgroundColor: userColor,
       contentTextStyle: TextStyle(
-        color: Colors.black,
+        color: textIconColorProvider,
       ),
       behavior: SnackBarBehavior.floating,
     ),

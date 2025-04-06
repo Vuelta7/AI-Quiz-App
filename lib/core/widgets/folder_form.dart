@@ -164,7 +164,7 @@ Widget buildFolderForm({
           isFormValid ? Colors.white : Colors.grey,
           isLoading || !isFormValid ? null : onImport,
           textColor: isFormValid
-              ? getColorForTextAndIcon(selectedColor)
+              ? getShade(selectedColor, 900)
               : getShade(selectedColor, 600),
         ),
       ],

@@ -122,7 +122,8 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Learn-N',
-      theme: buildLearnNThemes(ref.watch(textIconColorProvider)),
+      theme: buildLearnNThemes(
+          ref.watch(textIconColorProvider), ref.watch(userColorProvider)),
       routerConfig: _router,
     );
   }
