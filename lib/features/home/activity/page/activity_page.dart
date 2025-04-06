@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
+import 'package:learn_n/core/widgets/learnn_icon.dart';
 import 'package:learn_n/core/widgets/learnn_text.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/activity/provider/activity_provider.dart';
@@ -28,7 +29,6 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
     super.initState();
   }
 
-  //TODO enhance the design of the page make the info button good
   @override
   Widget build(BuildContext context) {
     final userColor = ref.watch(userColorProvider);
@@ -96,8 +96,13 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                             },
                           );
                         },
-                        icon: const Icon(Icons.info_rounded),
-                        color: textIconColor,
+                        icon: CustomIcon(
+                          icon: Icons.info_rounded,
+                          color: textIconColor,
+                          shadowColor: getShade(userColor, 900),
+                          offset: const Offset(0, 0.3),
+                          size: 40,
+                        ),
                       ),
                     ),
                   ],

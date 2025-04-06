@@ -16,26 +16,24 @@ class _LiquidSwipeStreakState extends State<LiquidSwipeStreak> {
   late LiquidController liquidController;
 
   final pages = [
-    const StreakTutorialPage(
-      title: "Streak Pet 3",
+    StreakTutorialPage(
       description:
           "This is your default streak pet. Keep your streak for 10 days to upgrade to Streak Pet 2!",
       lottieAsset: 'assets/streakpet3.json',
       daysRequired: "0-9 Days",
+      color: Colors.purple[300]!,
     ),
     const StreakTutorialPage(
-      title: "Streak Pet 2",
-      description:
-          "Congratulations! You've reached Streak Pet 2. Keep your streak for 30 days to upgrade to Streak Pet 1!",
+      description: "Keep your streak for 30 days to upgrade to Streak Pet 1!",
       lottieAsset: 'assets/streakpet2.json',
       daysRequired: "10-29 Days",
+      color: Colors.teal,
     ),
     const StreakTutorialPage(
-      title: "Streak Pet 1",
-      description:
-          "Amazing! You've reached the ultimate Streak Pet 1. Keep your streak alive to maintain this pet!",
+      description: "Keep your streak alive to maintain this pet!",
       lottieAsset: 'assets/streakpet1.json',
       daysRequired: "30+ Days",
+      color: Colors.green,
     ),
   ];
 
@@ -134,41 +132,42 @@ class _LiquidSwipeStreakState extends State<LiquidSwipeStreak> {
 }
 
 class StreakTutorialPage extends StatelessWidget {
-  final String title;
   final String description;
   final String lottieAsset;
   final String? daysRequired;
+  final Color color;
 
   const StreakTutorialPage({
     super.key,
-    required this.title,
     required this.description,
     required this.lottieAsset,
+    required this.color,
     this.daysRequired,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.pinkAccent,
+      color: color,
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Lottie.asset(
-            lottieAsset,
+          SizedBox(
             width: 300,
             height: 300,
-          ),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'PressStart2P',
-            ),
+            child: Stack(children: [
+              Lottie.asset(
+                'assets/effectbg.json',
+                width: 300,
+                height: 300,
+              ),
+              Lottie.asset(
+                lottieAsset,
+                width: 300,
+                height: 300,
+              ),
+            ]),
           ),
           Text(
             description,
