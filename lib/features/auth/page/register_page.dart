@@ -77,6 +77,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           'streakDays': [],
           'warningGiven': false,
           'isVIP': false,
+          'donation': 0,
         });
 
         final prefs = await SharedPreferences.getInstance();

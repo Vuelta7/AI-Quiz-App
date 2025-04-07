@@ -6,6 +6,7 @@ import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:lottie/lottie.dart';
 
+//TODO: add design in dialog
 class Shop extends ConsumerWidget {
   const Shop({super.key});
 

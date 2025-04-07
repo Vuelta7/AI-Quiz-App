@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
+import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/settings/page/dnd_page.dart';
 import 'package:learn_n/features/home/settings/page/feedback.dart';
 import 'package:learn_n/features/home/settings/page/themes_page.dart';
+import 'package:learn_n/features/home/settings/provider/leaderboard_provider.dart';
 import 'package:learn_n/features/home/settings/widget/info_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//TODO: add leaderboards
 class SettingPage extends ConsumerWidget {
   const SettingPage({super.key});
 
@@ -17,6 +18,9 @@ class SettingPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userColor = ref.watch(userColorProvider);
     final textIconColor = ref.watch(textIconColorProvider);
+
+    final leaderboardData = ref.watch(leaderboardProvider);
+
     return Scaffold(
       backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
@@ -58,12 +62,81 @@ class SettingPage extends ConsumerWidget {
                 ),
               ),
             ),
+            const Divider(),
+            // Leaderboards section directly in settings page
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Leaderboards',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: textIconColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'PressStart2P',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Leaderboard content
+                  leaderboardData.when(
+                    data: (data) {
+                      final streakData =
+                          data['streakData'] as List<UserRanking>;
+                      final donationData =
+                          data['donationData'] as List<UserRanking>;
+                      final currentUserId = data['currentUserId'] as String;
+
+                      return Column(
+                        children: [
+                          Column(
+                            children: [
+                              LeaderboardWidget(
+                                title: 'Streak',
+                                rankings: streakData,
+                                currentUserId: currentUserId,
+                                valueLabel: 'days',
+                              ),
+                              const SizedBox(height: 10),
+                              LeaderboardWidget(
+                                title: 'Donation',
+                                rankings: donationData,
+                                currentUserId: currentUserId,
+                                valueLabel: '₱',
+                                valuePrefix: true,
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                    loading: () => const Center(child: Loading()),
+                    error: (error, _) => const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          'Could not load leaderboards. Try again later.',
+                          style: TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const Divider(),
+
+            // Regular settings list
             ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                const Divider(),
                 _buildTile(
                   context,
                   'About Us',
@@ -114,7 +187,7 @@ Tester – Justine Adriano
 Detects and addresses bugs and technical flaws by rigorously testing the application.  
 
 Generalists – Kyle Raine & Mikko Dela Cruz  
-Take on various tasks essential for the company’s operations.  
+Take on various tasks essential for the company's operations.  
 ''',
                         ),
                       ),
@@ -278,6 +351,7 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
                 ),
               ],
             ),
+            const SizedBox(height: 100),
           ],
         ),
       ),
