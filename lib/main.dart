@@ -14,7 +14,6 @@ import 'package:learn_n/features/home/home_main.dart';
 import 'package:learn_n/features/introduction/page/liquid_swipe.dart';
 import 'package:learn_n/features/introduction/page/splash_page.dart';
 import 'package:learn_n/features/introduction/page/start_page.dart';
-import 'package:learn_n/features/web/web_main.dart';
 import 'package:learn_n/services/firebase_options.dart';
 
 void main() async {
@@ -53,10 +52,6 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const SplashScreen(),
-    ),
-    GoRoute(
-      path: '/web',
-      builder: (context, state) => const WebMain(),
     ),
     GoRoute(
       path: '/start',

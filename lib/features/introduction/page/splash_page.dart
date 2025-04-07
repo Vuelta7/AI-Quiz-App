@@ -53,11 +53,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   Future<void> _checkAuthState() async {
     final userId = ref.read(userIdProvider);
 
-    if (userId != null && kIsWeb) {
-      GoRouter.of(context).go('/home');
-    } else if (kIsWeb) {
-      GoRouter.of(context).go('/web');
-    } else if (userId != null) {
+    if (userId != null) {
       GoRouter.of(context).go('/home');
     } else {
       GoRouter.of(context).go('/intro');
