@@ -76,6 +76,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           'selectedColor': defaultColorHex,
           'streakDays': [],
           'warningGiven': false,
+          'isVIP': false,
         });
 
         final prefs = await SharedPreferences.getInstance();
