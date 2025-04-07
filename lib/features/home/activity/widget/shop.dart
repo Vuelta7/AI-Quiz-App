@@ -96,7 +96,7 @@ class Shop extends ConsumerWidget {
         ];
 
         return SizedBox(
-          height: 1200,
+          height: 1000,
           child: Column(
             children: [
               Lottie.asset('assets/hints.json', height: 300),
@@ -113,9 +113,9 @@ class Shop extends ConsumerWidget {
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.8,
+                  crossAxisSpacing: 30,
+                  mainAxisSpacing: 30,
                   physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(12.0),
                   children: products

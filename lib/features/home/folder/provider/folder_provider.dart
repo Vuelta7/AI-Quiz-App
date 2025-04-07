@@ -1,4 +1,3 @@
-// current folder_provider.dart
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +16,8 @@ final folderControllerProvider = StateNotifierProvider<FolderController, bool>(
 class FolderController extends StateNotifier<bool> {
   FolderController() : super(false); // false = not loading
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   Future<String> _generateUnique4DigitCode() async {
     final random = Random();
     String code = '';
@@ -24,10 +25,7 @@ class FolderController extends StateNotifier<bool> {
 
     while (exists) {
       code = (1000 + random.nextInt(9000)).toString();
-      final doc = await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(code)
-          .get();
+      final doc = await _firestore.collection("folders").doc(code).get();
       if (!doc.exists) {
         exists = false;
       }
@@ -46,7 +44,7 @@ class FolderController extends StateNotifier<bool> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? userId = prefs.getString('userId');
       if (userId != null) {
-        await FirebaseFirestore.instance.collection("folders").doc(id).set({
+        await _firestore.collection("folders").doc(id).set({
           "folderName": folderName,
           "description": description,
           "creator": userId,
@@ -65,10 +63,7 @@ class FolderController extends StateNotifier<bool> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? userId = prefs.getString('userId');
       if (userId != null) {
-        await FirebaseFirestore.instance
-            .collection("folders")
-            .doc(folderId)
-            .update({
+        await _firestore.collection("folders").doc(folderId).update({
           "accessUsers": FieldValue.arrayUnion([userId]),
         });
       }
@@ -85,10 +80,7 @@ class FolderController extends StateNotifier<bool> {
   }) async {
     state = true;
     try {
-      await FirebaseFirestore.instance
-          .collection("folders")
-          .doc(folderId)
-          .update({
+      await _firestore.collection("folders").doc(folderId).update({
         "folderName": folderName,
         "description": description,
         "color": color,
@@ -98,21 +90,26 @@ class FolderController extends StateNotifier<bool> {
     }
   }
 
-  Future<void> removeFolderFromHome({
-    required String folderId,
-  }) async {
+  // ✅ Delete folder with subcollections
+  Future<void> deleteFolderWithSubcollections(String folderId) async {
     state = true;
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString('userId');
-      if (userId != null) {
-        await FirebaseFirestore.instance
-            .collection("folders")
-            .doc(folderId)
-            .update({
-          "accessUsers": FieldValue.arrayRemove([userId]),
-        });
+      final folderRef = _firestore.collection('folders').doc(folderId);
+
+      // Delete 'questions'
+      final questions = await folderRef.collection('questions').get();
+      for (final doc in questions.docs) {
+        await doc.reference.delete();
       }
+
+      // Delete 'leaderboard'
+      final leaderboard = await folderRef.collection('leaderboard').get();
+      for (final doc in leaderboard.docs) {
+        await doc.reference.delete();
+      }
+
+      // Delete the folder itself
+      await folderRef.delete();
     } finally {
       state = false;
     }

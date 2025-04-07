@@ -60,3 +60,9 @@ final textIconColorProvider = StateProvider<Color>((ref) {
   final userColor = ref.watch(userColorProvider);
   return getColorForTextAndIcon(userColor);
 });
+
+bool isColorCloseToRed(Color color) {
+  // HSL makes it easier to detect red hues
+  final hsl = HSLColor.fromColor(color);
+  return (hsl.hue >= 0 && hsl.hue <= 15) || (hsl.hue >= 345 && hsl.hue <= 360);
+}

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/features/home/folder/page/edit_folder_page.dart';
+import 'package:learn_n/features/home/folder/provider/folder_provider.dart';
 import 'package:learn_n/features/infolder/infolder_main.dart';
 
-//TODO: issue in deleting the folder
-class FolderModelKen extends StatelessWidget {
+class FolderModelKen extends ConsumerWidget {
   final String folderId;
   final String folderName;
   final String description;
@@ -24,7 +26,8 @@ class FolderModelKen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textColor = getColorForTextAndIcon(folderColor);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -123,27 +126,30 @@ class FolderModelKen extends StatelessWidget {
                           ),
                         );
                       } else if (value == 'Delete') {
+                        final bool isRedBackground =
+                            isColorCloseToRed(folderColor);
+
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               backgroundColor: folderColor,
-                              title: const Text(
+                              title: Text(
                                 'Confirm Deletion',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: textColor),
                               ),
-                              content: const Text(
+                              content: Text(
                                 'Are you sure you want to delete this folder?',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: textColor),
                               ),
                               actions: [
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     'Cancel',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: textColor),
                                   ),
                                 ),
                                 TextButton(
@@ -156,9 +162,7 @@ class FolderModelKen extends StatelessWidget {
                                             .doc(folderId)
                                             .update({
                                           "accessUsers":
-                                              FieldValue.arrayRemove([
-                                            /* Add logic to get the current user's ID */
-                                          ]),
+                                              FieldValue.arrayRemove([userId]),
                                         });
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
@@ -168,10 +172,12 @@ class FolderModelKen extends StatelessWidget {
                                           ),
                                         );
                                       } else {
-                                        await FirebaseFirestore.instance
-                                            .collection("folders")
-                                            .doc(folderId)
-                                            .delete();
+                                        final folderController = ref.read(
+                                            folderControllerProvider.notifier);
+                                        await folderController
+                                            .deleteFolderWithSubcollections(
+                                                folderId);
+
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           const SnackBar(
@@ -187,9 +193,14 @@ class FolderModelKen extends StatelessWidget {
                                       );
                                     }
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     'Delete',
-                                    style: TextStyle(color: Colors.red),
+                                    style: TextStyle(
+                                      color: isRedBackground
+                                          ? textColor
+                                          : Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -202,26 +213,27 @@ class FolderModelKen extends StatelessWidget {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               backgroundColor: folderColor,
-                              title: const Text(
+                              title: Text(
                                 'Share Folder',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: textColor,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Text(
+                                  Text(
                                     'Share this Folder ID with your friend. They can use it to add this folder to their account.',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: textColor),
                                   ),
                                   const SizedBox(height: 10),
                                   SelectableText(
                                     folderId,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: textColor,
                                       fontWeight: FontWeight.bold,
+                                      fontFamily: 'PressStart2P',
                                     ),
                                   ),
                                   const SizedBox(height: 10),
@@ -238,10 +250,10 @@ class FolderModelKen extends StatelessWidget {
                                       );
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          folderColor.withOpacity(0.8),
+                                      backgroundColor: folderColor,
                                     ),
-                                    child: const Text('Copy Folder ID'),
+                                    child: Text('Copy Folder ID',
+                                        style: TextStyle(color: textColor)),
                                   ),
                                 ],
                               ),
@@ -250,8 +262,8 @@ class FolderModelKen extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: const Text('Close',
-                                      style: TextStyle(color: Colors.white)),
+                                  child: Text('Close',
+                                      style: TextStyle(color: textColor)),
                                 ),
                               ],
                             );

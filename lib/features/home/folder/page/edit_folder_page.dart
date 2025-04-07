@@ -111,16 +111,7 @@ class _EditFolderPageState extends ConsumerState<EditFolderPage> {
               Navigator.pop(context);
             },
             isImported: widget.isImported,
-            onImport: () async {
-              await ref
-                  .read(folderControllerProvider.notifier)
-                  .removeFolderFromHome(folderId: widget.folderId);
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Folder removed successfully!')),
-              );
-              Navigator.pop(context);
-            },
+            onImport: () async {},
             isAddScreen: false,
             folderIdController: null,
             onFieldSubmitted: (_) {

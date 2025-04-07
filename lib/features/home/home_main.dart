@@ -30,6 +30,9 @@ class _HomeMainState extends ConsumerState<HomeMain>
   void initState() {
     super.initState();
 
+    loadUserId(ref);
+    loadUserColor(ref);
+
     _borderRadiusAnimationController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
