@@ -6,7 +6,6 @@ import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:lottie/lottie.dart';
 
-//TODO: add design in dialog
 class Shop extends ConsumerWidget {
   const Shop({super.key});
 
@@ -14,6 +13,7 @@ class Shop extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(userIdProvider);
     final textIconColor = ref.watch(textIconColorProvider);
+    final userColor = ref.watch(userColorProvider);
 
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
@@ -58,8 +58,8 @@ class Shop extends ConsumerWidget {
             onTap: currencyPoints >= 1000
                 ? () async {
                     print('Change Pet Name tapped');
-                    String newName =
-                        await _showInputDialog(context, 'Change Pet Name');
+                    String newName = await _showInputDialog(
+                        context, 'Change Pet Name', userColor, textIconColor);
                     if (newName.isNotEmpty) {
                       await FirebaseFirestore.instance
                           .collection('users')
@@ -80,8 +80,8 @@ class Shop extends ConsumerWidget {
             onTap: currencyPoints >= 1000
                 ? () async {
                     print('Change Username tapped');
-                    String newUsername =
-                        await _showInputDialog(context, 'Change Username');
+                    String newUsername = await _showInputDialog(
+                        context, 'Change Username', userColor, textIconColor);
                     if (newUsername.isNotEmpty) {
                       await FirebaseFirestore.instance
                           .collection('users')
@@ -217,28 +217,35 @@ class Product {
   });
 }
 
-Future<String> _showInputDialog(BuildContext context, String title) async {
+Future<String> _showInputDialog(BuildContext context, String title,
+    Color userColor, Color textIconColor) async {
   String inputText = '';
   await showDialog(
     context: context,
     builder: (context) {
       final TextEditingController controller = TextEditingController();
       return AlertDialog(
-        title: Text(title),
+        backgroundColor: userColor,
+        title: Text(title, style: TextStyle(color: textIconColor)),
         content: TextField(
             controller: controller,
-            decoration: InputDecoration(hintText: title)),
+            style: TextStyle(color: textIconColor),
+            decoration: InputDecoration(
+                hintText: title, hintStyle: TextStyle(color: textIconColor))),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text('Cancel', style: TextStyle(color: textIconColor)),
           ),
           TextButton(
             onPressed: () {
               inputText = controller.text;
               Navigator.of(context).pop();
             },
-            child: const Text('Confirm'),
+            child: Text(
+              'Confirm',
+              style: TextStyle(color: textIconColor),
+            ),
           ),
         ],
       );
