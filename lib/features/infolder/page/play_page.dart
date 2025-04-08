@@ -363,10 +363,13 @@ class _PlayPageState extends State<PlayPage> {
           decoration: const BoxDecoration(),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
               padding: const EdgeInsets.all(15),
               backgroundColor: buttonColor,
               side: BorderSide(
-                  color: getColorForTextAndIcon(widget.color), width: 2),
+                  color: getColorForTextAndIcon(widget.color), width: 3),
             ),
             onPressed: () => checkAnswer(answer),
             child: SizedBox(
@@ -435,8 +438,7 @@ class _PlayPageState extends State<PlayPage> {
               ),
             ),
           ),
-          Flexible(
-            fit: FlexFit.loose,
+          Expanded(
             child: Column(
               children: [
                 Padding(
@@ -525,26 +527,26 @@ class _PlayPageState extends State<PlayPage> {
                                         color: getColorForTextAndIcon(
                                             widget.color),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Text(
-                                          question['question']!,
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: getColorForTextAndIcon(
-                                                widget.color),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: SingleChildScrollView(
+                                            child: Text(
+                                              question['question']!,
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: getColorForTextAndIcon(
+                                                    widget.color),
+                                              ),
+                                            ),
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 10,
                             ),
                           ],
                         ),
@@ -555,90 +557,89 @@ class _PlayPageState extends State<PlayPage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: [
-                if (isMultipleOptionMode)
-                  buildAnswerButtons()
-                else
-                  Material(
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(8),
-                    child: TextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      onSubmitted: checkAnswer,
-                      style: const TextStyle(
-                        fontFamily: 'Arial',
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Type Answer',
-                        hintStyle: const TextStyle(
-                          fontFamily: 'PressStart2P',
-                          color: Color.fromARGB(150, 0, 0, 0),
-                        ),
-                        labelStyle: const TextStyle(
-                          fontFamily: 'PressStart2P',
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                        filled: true,
-                        fillColor: widget.color,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: getColorForTextAndIcon(widget.color),
-                            width: 3,
+          Expanded(
+            child: SingleChildScrollView(
+              child: isMultipleOptionMode
+                  ? buildAnswerButtons()
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Material(
+                        elevation: 2,
+                        borderRadius: BorderRadius.circular(8),
+                        child: TextField(
+                          controller: _controller,
+                          focusNode: _focusNode,
+                          onSubmitted: checkAnswer,
+                          style: const TextStyle(
+                            fontFamily: 'Arial',
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 14,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Type Answer',
+                            hintStyle: const TextStyle(
+                              fontFamily: 'PressStart2P',
+                              color: Color.fromARGB(150, 0, 0, 0),
+                            ),
+                            labelStyle: const TextStyle(
+                              fontFamily: 'PressStart2P',
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                            filled: true,
+                            fillColor: widget.color,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: getColorForTextAndIcon(widget.color),
+                                width: 3,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: getColorForTextAndIcon(widget.color),
+                                width: 3,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: getColorForTextAndIcon(widget.color),
+                                width: 3,
+                              ),
+                            ),
                           ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: getColorForTextAndIcon(widget.color),
-                            width: 3,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: getColorForTextAndIcon(widget.color),
-                            width: 3,
-                          ),
-                        ),
                       ),
                     ),
-                  ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_rounded),
-                      iconSize: 45,
-                      color: getColorForTextAndIcon(widget.color),
-                      onPressed: _previousQuestion,
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.lightbulb,
-                        size: 30,
-                        color: getColorForTextAndIcon(widget.color),
-                      ),
-                      onPressed: _showHint,
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 45,
-                        color: getColorForTextAndIcon(widget.color),
-                      ),
-                      onPressed: _nextQuestion,
-                    ),
-                  ],
-                ),
-              ],
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_rounded),
+                iconSize: 45,
+                color: getColorForTextAndIcon(widget.color),
+                onPressed: _previousQuestion,
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.lightbulb,
+                  size: 30,
+                  color: getColorForTextAndIcon(widget.color),
+                ),
+                onPressed: _showHint,
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 45,
+                  color: getColorForTextAndIcon(widget.color),
+                ),
+                onPressed: _nextQuestion,
+              ),
+            ],
           ),
         ],
       ),

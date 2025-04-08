@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
-import 'package:learn_n/core/provider/user_provider.dart'; // import userProvider for isVIP check
+import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/infolder/provider/flashcard_provider.dart';
@@ -159,6 +159,7 @@ class _AddFlashCardPageState extends ConsumerState<AddFlashCardPage> {
                                       content: Text(
                                           'Flashcard added successfully!')),
                                 );
+                                questionController.clear();
                                 Navigator.of(context).pop();
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
