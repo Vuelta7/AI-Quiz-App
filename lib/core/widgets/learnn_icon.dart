@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CustomIcon extends StatelessWidget {
+class LearnNIcon extends StatelessWidget {
   final IconData icon;
   final Offset offset;
   final Color color;
   final Color shadowColor;
   final double size;
 
-  const CustomIcon({
+  const LearnNIcon({
     super.key,
     required this.icon,
     required this.color,

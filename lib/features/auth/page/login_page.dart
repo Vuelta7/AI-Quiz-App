@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
-import 'package:learn_n/core/utils/introduction_utils.dart';
+import 'package:learn_n/core/widgets/learnn_logo.dart';
+import 'package:learn_n/core/widgets/learnn_text.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/auth/widgets/auth_textfield.dart';
 import 'package:learn_n/features/auth/widgets/text_gesture_detector.dart';
@@ -100,7 +101,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 buildLogo(Colors.black),
-                buildTitleText('Learn-N', Colors.black),
+                const LearnNText(
+                  fontSize: 30,
+                  text: 'Learn-N',
+                  font: 'PressStart2P',
+                  color: Colors.black,
+                  backgroundColor: Colors.grey,
+                ),
                 const SizedBox(height: 20),
                 const Text(
                   'Login',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_n/core/utils/introduction_utils.dart';
+import 'package:learn_n/core/widgets/learnn_logo.dart';
+import 'package:learn_n/core/widgets/learnn_text.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 
 class StartPage extends StatelessWidget {
@@ -18,7 +19,13 @@ class StartPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               buildLogo(),
-              buildTitleText('Learn-N'),
+              const LearnNText(
+                fontSize: 30,
+                text: 'Learn-N',
+                font: 'PressStart2P',
+                color: Colors.black,
+                backgroundColor: Colors.grey,
+              ),
               const SizedBox(height: 40),
               buildRetroButton(
                 'Register',

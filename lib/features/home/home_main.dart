@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
+import 'package:learn_n/core/widgets/learnn_icon.dart';
 import 'package:learn_n/features/home/activity/page/activity_page.dart';
 import 'package:learn_n/features/home/folder/page/add_folder_page.dart';
 import 'package:learn_n/features/home/folder/page/folder_page.dart';
@@ -266,14 +267,16 @@ class _HomeMainState extends ConsumerState<HomeMain>
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  index == 0
+                LearnNIcon(
+                  icon: index == 0
                       ? Icons.school_rounded
                       : index == 1
                           ? Icons.folder_rounded
                           : Icons.attractions_rounded,
-                  size: 55,
                   color: textIconColor,
+                  size: 55,
+                  shadowColor: getShade(userColor, 500),
+                  offset: const Offset(2, 2),
                 ),
                 if (showLabel)
                   Text(

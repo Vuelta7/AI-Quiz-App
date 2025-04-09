@@ -7,7 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/utils/general_utils.dart';
-import 'package:learn_n/core/utils/introduction_utils.dart';
+import 'package:learn_n/core/widgets/learnn_logo.dart';
+import 'package:learn_n/core/widgets/learnn_text.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -97,7 +98,13 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                         child: Column(
                           children: [
                             buildLogo(),
-                            buildTitleText('Learn-N'),
+                            const LearnNText(
+                              fontSize: 30,
+                              text: 'Learn-N',
+                              font: 'PressStart2P',
+                              color: Colors.black,
+                              backgroundColor: Colors.grey,
+                            ),
                           ],
                         ),
                       )

@@ -97,7 +97,7 @@ class Shop extends ConsumerWidget {
         ];
 
         return SizedBox(
-          height: 1000,
+          height: 750,
           child: Column(
             children: [
               Lottie.asset('assets/hints.json', height: 300),
@@ -230,6 +230,7 @@ Future<String> _showInputDialog(BuildContext context, String title,
         content: TextField(
             controller: controller,
             style: TextStyle(color: textIconColor),
+            maxLength: 8,
             decoration: InputDecoration(
                 hintText: title, hintStyle: TextStyle(color: textIconColor))),
         actions: [

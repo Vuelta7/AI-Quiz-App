@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
-import 'package:learn_n/core/widgets/loading.dart';
+import 'package:learn_n/core/widgets/custome_tile.dart';
+import 'package:learn_n/core/widgets/learnn_text.dart';
 import 'package:learn_n/features/home/settings/page/dnd_page.dart';
 import 'package:learn_n/features/home/settings/page/feedback.dart';
 import 'package:learn_n/features/home/settings/page/themes_page.dart';
-import 'package:learn_n/features/home/settings/provider/leaderboard_provider.dart';
 import 'package:learn_n/features/home/settings/widget/info_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,9 +18,6 @@ class SettingPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userColor = ref.watch(userColorProvider);
     final textIconColor = ref.watch(textIconColorProvider);
-
-    final leaderboardData = ref.watch(leaderboardProvider);
-
     return Scaffold(
       backgroundColor: getShade(userColor, 300),
       body: SingleChildScrollView(
@@ -50,94 +47,23 @@ class SettingPage extends ConsumerWidget {
                         width: 100,
                       ),
                     ),
-                    Text(
-                      'Learn-N',
-                      style: TextStyle(
-                        color: textIconColor,
+                    LearnNText(
                         fontSize: 16,
-                        fontFamily: 'PressStart2P',
-                      ),
-                    ),
+                        text: 'Learn-N',
+                        font: 'PressStart2P',
+                        color: textIconColor,
+                        backgroundColor: getShade(userColor, 500))
                   ],
                 ),
               ),
             ),
             const Divider(),
-            // Leaderboards section directly in settings page
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Leaderboards',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: textIconColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'PressStart2P',
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Leaderboard content
-                  leaderboardData.when(
-                    data: (data) {
-                      final streakData =
-                          data['streakData'] as List<UserRanking>;
-                      final donationData =
-                          data['donationData'] as List<UserRanking>;
-                      final currentUserId = data['currentUserId'] as String;
-
-                      return Column(
-                        children: [
-                          Column(
-                            children: [
-                              LeaderboardWidget(
-                                title: 'Streak',
-                                rankings: streakData,
-                                currentUserId: currentUserId,
-                                valueLabel: 'days',
-                              ),
-                              const SizedBox(height: 10),
-                              LeaderboardWidget(
-                                title: 'Donation',
-                                rankings: donationData,
-                                currentUserId: currentUserId,
-                                valueLabel: '₱',
-                                valuePrefix: true,
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    },
-                    loading: () => const Center(child: Loading()),
-                    error: (error, _) => const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          'Could not load leaderboards. Try again later.',
-                          style: TextStyle(color: Colors.red),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const Divider(),
-
-            // Regular settings list
             ListView(
               padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                _buildTile(
+                buildTile(
                   context,
                   'About Us',
                   Icons.info,
@@ -160,7 +86,7 @@ With this app, we strive to create an efficient and accessible platform that mak
                   },
                   textIconColor,
                 ),
-                _buildTile(
+                buildTile(
                   context,
                   'Our Team',
                   Icons.group,
@@ -195,7 +121,7 @@ Take on various tasks essential for the company's operations.
                   },
                   textIconColor,
                 ),
-                _buildTile(
+                buildTile(
                   context,
                   'Our Purpose',
                   Icons.lightbulb,
@@ -230,7 +156,7 @@ Core Values
                   },
                   textIconColor,
                 ),
-                _buildTile(
+                buildTile(
                   context,
                   'Privacy Policy',
                   Icons.privacy_tip,
@@ -287,7 +213,7 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
                   },
                   textIconColor,
                 ),
-                _buildTile(
+                buildTile(
                   context,
                   'Feedback',
                   Icons.feedback,
@@ -301,7 +227,7 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
                   },
                   textIconColor,
                 ),
-                _buildTile(
+                buildTile(
                   context,
                   'Focus Mode',
                   Icons.do_not_disturb_alt_rounded,
@@ -315,7 +241,7 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
                   },
                   textIconColor,
                 ),
-                _buildTile(
+                buildTile(
                   context,
                   'Themes',
                   Icons.color_lens,
@@ -355,29 +281,6 @@ By using Learn-N, you agree to this Privacy Policy. Enjoy your learning experien
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildTile(
-    BuildContext context,
-    String title,
-    IconData icon,
-    VoidCallback onTap,
-    textIconColor,
-  ) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: textIconColor,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: textIconColor,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      onTap: onTap,
     );
   }
 }
