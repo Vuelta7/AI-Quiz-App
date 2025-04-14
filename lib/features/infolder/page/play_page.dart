@@ -2,6 +2,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
+import 'package:learn_n/core/widgets/learnn_icon.dart';
+import 'package:learn_n/core/widgets/learnn_text.dart';
 import 'package:learn_n/features/infolder/infolder_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -381,6 +383,13 @@ class _PlayPageState extends State<PlayPage> {
                   color: getColorForTextAndIcon(buttonColor),
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
+                  shadows: [
+                    Shadow(
+                      offset: const Offset(2, 2),
+                      color: getShade(widget.color, 500),
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -397,17 +406,23 @@ class _PlayPageState extends State<PlayPage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: widget.color,
-        title: Text(
-          widget.folderName,
-          style: TextStyle(
-            fontSize: 16,
-            color: getColorForTextAndIcon(widget.color),
-            fontWeight: FontWeight.bold,
-            fontFamily: "PressStart2P",
+        title: LearnNText(
+          fontSize: 16,
+          text: widget.folderName,
+          font: 'PressStart2P',
+          color: getColorForTextAndIcon(widget.color),
+          backgroundColor: getShade(
+            widget.color,
+            500,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, size: 30),
+          icon: LearnNIcon(
+            icon: Icons.arrow_back,
+            color: getColorForTextAndIcon(widget.color),
+            shadowColor: getShade(widget.color, 500),
+            size: 45,
+          ),
           color: getColorForTextAndIcon(widget.color),
           onPressed: () {
             Navigator.pop(context);
@@ -415,11 +430,12 @@ class _PlayPageState extends State<PlayPage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              isMultipleOptionMode ? Icons.text_fields : Icons.list,
-              size: 30,
+            icon: LearnNIcon(
+              icon: isMultipleOptionMode ? Icons.text_fields : Icons.list,
+              color: getColorForTextAndIcon(widget.color),
+              shadowColor: getShade(widget.color, 500),
+              size: 45,
             ),
-            color: getColorForTextAndIcon(widget.color),
             onPressed: _toggleMode,
           ),
         ],
@@ -447,31 +463,36 @@ class _PlayPageState extends State<PlayPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          feedbackMessage,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: feedbackMessage == 'Try Again!'
-                                ? Colors.red
-                                : getColorForTextAndIcon(widget.color),
+                        LearnNText(
+                          fontSize: 16,
+                          text: feedbackMessage,
+                          font: 'PressStart2P',
+                          color: feedbackMessage == 'Try Again!'
+                              ? Colors.red
+                              : getColorForTextAndIcon(widget.color),
+                          backgroundColor: getShade(
+                            widget.color,
+                            500,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Row(
                           children: [
-                            Icon(
-                              Icons.lightbulb,
+                            LearnNIcon(
+                              icon: Icons.lightbulb,
                               color: getColorForTextAndIcon(widget.color),
+                              shadowColor: getShade(widget.color, 500),
                               size: 22,
                             ),
                             const SizedBox(width: 5),
-                            Text(
-                              '$hintCount',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: getColorForTextAndIcon(widget.color),
+                            LearnNText(
+                              fontSize: 16,
+                              text: hintCount.toString(),
+                              font: 'PressStart2P',
+                              color: getColorForTextAndIcon(widget.color),
+                              backgroundColor: getShade(
+                                widget.color,
+                                500,
                               ),
                             ),
                           ],
@@ -519,6 +540,14 @@ class _PlayPageState extends State<PlayPage> {
                                           fontWeight: FontWeight.bold,
                                           color: getColorForTextAndIcon(
                                               widget.color),
+                                          shadows: [
+                                            Shadow(
+                                              offset: const Offset(2, 2),
+                                              color:
+                                                  getShade(widget.color, 500),
+                                              blurRadius: 0,
+                                            ),
+                                          ],
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -538,6 +567,14 @@ class _PlayPageState extends State<PlayPage> {
                                                 fontSize: 20,
                                                 color: getColorForTextAndIcon(
                                                     widget.color),
+                                                shadows: [
+                                                  Shadow(
+                                                    offset: const Offset(2, 2),
+                                                    color: getShade(
+                                                        widget.color, 500),
+                                                    blurRadius: 0,
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),
@@ -618,24 +655,29 @@ class _PlayPageState extends State<PlayPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                icon: const Icon(Icons.arrow_back_rounded),
-                iconSize: 45,
-                color: getColorForTextAndIcon(widget.color),
+                icon: LearnNIcon(
+                  icon: Icons.arrow_back_rounded,
+                  color: getColorForTextAndIcon(widget.color),
+                  shadowColor: getShade(widget.color, 500),
+                  size: 45,
+                ),
                 onPressed: _previousQuestion,
               ),
               IconButton(
-                icon: Icon(
-                  Icons.lightbulb,
-                  size: 30,
+                icon: LearnNIcon(
+                  icon: Icons.lightbulb,
                   color: getColorForTextAndIcon(widget.color),
+                  shadowColor: getShade(widget.color, 500),
+                  size: 45,
                 ),
                 onPressed: _showHint,
               ),
               IconButton(
-                icon: Icon(
-                  Icons.arrow_forward_rounded,
-                  size: 45,
+                icon: LearnNIcon(
+                  icon: Icons.arrow_forward_rounded,
                   color: getColorForTextAndIcon(widget.color),
+                  shadowColor: getShade(widget.color, 500),
+                  size: 45,
                 ),
                 onPressed: _nextQuestion,
               ),

@@ -82,6 +82,13 @@ class FolderModelKen extends ConsumerWidget {
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: folderColor,
+                        shadows: [
+                          Shadow(
+                            offset: const Offset(1, 1),
+                            color: getShade(folderColor, 500),
+                            blurRadius: 0,
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -90,6 +97,13 @@ class FolderModelKen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 16,
                         color: folderColor,
+                        shadows: [
+                          Shadow(
+                            offset: const Offset(1, 1),
+                            color: getShade(folderColor, 500),
+                            blurRadius: 0,
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -218,6 +232,13 @@ class FolderModelKen extends ConsumerWidget {
                                 style: TextStyle(
                                   color: textColor,
                                   fontWeight: FontWeight.bold,
+                                  shadows: [
+                                    Shadow(
+                                      offset: const Offset(1, 1),
+                                      color: getShade(folderColor, 500),
+                                      blurRadius: 0,
+                                    ),
+                                  ],
                                 ),
                               ),
                               content: Column(
@@ -225,7 +246,9 @@ class FolderModelKen extends ConsumerWidget {
                                 children: [
                                   Text(
                                     'Share this Folder ID with your friend. They can use it to add this folder to their account.',
-                                    style: TextStyle(color: textColor),
+                                    style: TextStyle(
+                                      color: textColor,
+                                    ),
                                   ),
                                   const SizedBox(height: 10),
                                   SelectableText(

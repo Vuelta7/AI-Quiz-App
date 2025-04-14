@@ -256,6 +256,13 @@ class _HomeMainState extends ConsumerState<HomeMain>
                   Icons.add_rounded,
                   color: getShade(userColor, 800),
                   size: 30,
+                  shadows: [
+                    Shadow(
+                      offset: const Offset(1, 1),
+                      color: getShade(userColor, 500),
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
               )
             : null,

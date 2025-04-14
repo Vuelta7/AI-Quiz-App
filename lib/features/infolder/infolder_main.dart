@@ -158,6 +158,13 @@ class _InFolderMainState extends State<InFolderMain>
               color: getColorForTextAndIcon(widget.color),
               fontFamily: 'PressStart2P',
               fontSize: 16,
+              shadows: [
+                Shadow(
+                  offset: const Offset(2, 2),
+                  color: getShade(widget.color, 500),
+                  blurRadius: 0,
+                ),
+              ],
             ),
           ),
           leading: IconButton(
@@ -165,6 +172,13 @@ class _InFolderMainState extends State<InFolderMain>
               Icons.arrow_back_rounded,
               size: 30,
               color: getColorForTextAndIcon(widget.color),
+              shadows: [
+                Shadow(
+                  offset: const Offset(2, 2),
+                  color: getShade(widget.color, 500),
+                  blurRadius: 0,
+                ),
+              ],
             ),
             onPressed: () {
               Navigator.push(
@@ -239,6 +253,13 @@ class _InFolderMainState extends State<InFolderMain>
                           Icons.play_arrow_rounded,
                           size: 45,
                           color: getShade(widget.color, 800),
+                          shadows: [
+                            Shadow(
+                              offset: const Offset(2, 2),
+                              color: getShade(widget.color, 500),
+                              blurRadius: 0,
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -261,14 +282,28 @@ class _InFolderMainState extends State<InFolderMain>
                   index == 0 ? Icons.question_answer_rounded : Icons.people,
                   size: 45,
                   color: color,
+                  shadows: [
+                    Shadow(
+                      offset: const Offset(2, 2),
+                      color: getShade(widget.color, 500),
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
                 if (showLabel)
                   Text(
                     index == 0 ? 'Flashcards' : 'Learners',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: color,
                       fontSize: 10,
                       fontFamily: 'PressStart2P',
+                      shadows: [
+                        Shadow(
+                          offset: const Offset(2, 2),
+                          color: getShade(widget.color, 500),
+                          blurRadius: 0,
+                        ),
+                      ],
                     ),
                   )
               ],

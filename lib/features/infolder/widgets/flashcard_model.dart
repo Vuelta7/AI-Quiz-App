@@ -128,6 +128,13 @@ class _FlashCardModelState extends State<FlashCardModel>
               fontSize: 17,
               fontWeight: FontWeight.bold,
               color: getColorForTextAndIcon(widget.color),
+              shadows: [
+                Shadow(
+                  offset: const Offset(1, 1),
+                  color: getShade(widget.color, 500),
+                  blurRadius: 0,
+                ),
+              ],
             ),
             textAlign: TextAlign.center,
             maxLines: 3,
@@ -151,6 +158,13 @@ class _FlashCardModelState extends State<FlashCardModel>
               fontWeight: FontWeight.bold,
               fontSize: 17,
               color: getColorForTextAndIcon(widget.color),
+              shadows: [
+                Shadow(
+                  offset: const Offset(1, 1),
+                  color: getShade(widget.color, 500),
+                  blurRadius: 0,
+                ),
+              ],
             ),
             textAlign: TextAlign.center,
           ),
