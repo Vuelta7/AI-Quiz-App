@@ -13,7 +13,7 @@ class GeminiService {
         temperature: 0.3,
         topK: 64,
         topP: 0.95,
-        maxOutputTokens: 1024,
+        maxOutputTokens: 564,
         responseMimeType: 'text/plain',
       ),
     );
@@ -23,6 +23,24 @@ class GeminiService {
   Future<String?> sendMessage(String message) async {
     final content = Content.text(message);
     final response = await chat.sendMessage(content);
-    return response.text;
+    String? responseText = response.text;
+
+    if (responseText != null) {
+      // Apply formatting for bold, italic, and bold+italic text
+      responseText = responseText.replaceAllMapped(
+        RegExp(r'\*\*\*(.*?)\*\*\*'),
+        (match) => '***${match[1]}***',
+      );
+      responseText = responseText.replaceAllMapped(
+        RegExp(r'\*\*(.*?)\*\*'),
+        (match) => '**${match[1]}**',
+      );
+      responseText = responseText.replaceAllMapped(
+        RegExp(r'\*(.*?)\*'),
+        (match) => '*${match[1]}*',
+      );
+    }
+
+    return responseText;
   }
 }

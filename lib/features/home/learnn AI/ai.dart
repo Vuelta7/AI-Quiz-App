@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_n/core/provider/streak_pet_provider.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
+import 'package:learn_n/core/widgets/learnn_icon.dart';
 import 'package:learn_n/core/widgets/learnn_text.dart';
 import 'package:learn_n/core/widgets/loading.dart';
-import 'package:lottie/lottie.dart';
+import 'package:learn_n/services/gemini_service.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -16,6 +17,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final List<ChatMessage> _messages = [];
+  final GeminiService _geminiService = GeminiService();
   bool _isTyping = false;
 
   @override
@@ -24,7 +26,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     super.dispose();
   }
 
-  void _handleSubmitted(String text) {
+  void _handleSubmitted(String text, userColor) async {
     _messageController.clear();
 
     if (text.trim().isEmpty) return;
@@ -34,22 +36,25 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ChatMessage(
           text: text,
           isUser: true,
+          ref: ref,
+          userColor: userColor,
         ),
       );
       _isTyping = true;
     });
 
-    // Simulate AI response
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        _isTyping = false;
-        _messages.add(
-          ChatMessage(
-            text: "I'm your AI assistant. I'm responding to: '$text'",
-            isUser: false,
-          ),
-        );
-      });
+    final aiResponse = await _geminiService.sendMessage(text);
+
+    setState(() {
+      _isTyping = false;
+      _messages.add(
+        ChatMessage(
+          text: aiResponse ?? "I'm sorry, I couldn't process that.",
+          isUser: false,
+          ref: ref,
+          userColor: userColor,
+        ),
+      );
     });
   }
 
@@ -57,6 +62,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Widget build(BuildContext context) {
     final textIconColor = ref.watch(textIconColorProvider);
     final userColor = ref.watch(userColorProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: LearnNText(
@@ -68,16 +74,28 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ),
         centerTitle: true,
         backgroundColor: userColor,
-        foregroundColor: Colors.white,
         elevation: 2,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: LearnNIcon(
+            color: textIconColor,
+            size: 40,
+            icon: Icons.arrow_back_rounded,
+            shadowColor: getShade(userColor, 500),
+            offset: const Offset(2, 2),
+          ),
+        ),
       ),
+      backgroundColor: getShade(userColor, 400),
       body: Column(
         children: [
           Expanded(
             child: _messages.isEmpty
                 ? const Center(
                     child: Text(
-                      'Start a conversation with your AI assistant',
+                      'Start a conversation with Learn-N AI',
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 16,
@@ -96,30 +114,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           if (_isTyping)
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                    SizedBox(width: 8),
-                    Text("AI is typing...",
-                        style: TextStyle(color: Colors.grey)),
-                  ],
-                ),
-              ),
+              child: Align(alignment: Alignment.centerLeft, child: Loading()),
             ),
-          const Divider(height: 1.0),
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+              color: userColor,
             ),
             child: SafeArea(
-              child: _buildTextComposer(),
+              child: _buildTextComposer(userColor),
             ),
           ),
         ],
@@ -127,7 +129,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Widget _buildTextComposer() {
+  Widget _buildTextComposer(userColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
@@ -140,10 +142,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           Expanded(
             child: TextField(
               controller: _messageController,
-              onSubmitted: _handleSubmitted,
+              onSubmitted: (text) => _handleSubmitted(text, userColor),
               decoration: const InputDecoration(
                 hintText: 'Type a message...',
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               ),
@@ -151,8 +155,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.send),
-            onPressed: () => _handleSubmitted(_messageController.text),
-            color: Colors.blue,
+            onPressed: () =>
+                _handleSubmitted(_messageController.text, userColor),
+            color: userColor,
           ),
         ],
       ),
@@ -160,19 +165,23 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 }
 
-class ChatMessage extends ConsumerWidget {
+class ChatMessage extends StatelessWidget {
   final String text;
   final bool isUser;
+  final WidgetRef ref;
+  final Color userColor;
 
   const ChatMessage({
-    Key? key,
+    super.key,
     required this.text,
     required this.isUser,
-  }) : super(key: key);
+    required this.ref,
+    required this.userColor,
+  });
 
   Widget _buildAvatar() {
     return CircleAvatar(
-      backgroundColor: Colors.blue[700],
+      backgroundColor: userColor,
       child: const Icon(
         Icons.smart_toy,
         color: Colors.white,
@@ -180,27 +189,18 @@ class ChatMessage extends ConsumerWidget {
     );
   }
 
-  Widget _buildUserAvatar(Ref ref) {
-    final streakPetAsync = ref.watch(streakPetProvider);
-    return streakPetAsync.when(
-      data: (pet) => Lottie.asset(
-        pet,
-        width: 200,
-        height: 250,
-      ),
-      error: (error, stackTrace) => const Loading(),
-      loading: () => const CircleAvatar(
-        backgroundColor: Colors.grey,
-        child: Icon(
-          Icons.person,
-          color: Colors.white,
-        ),
+  Widget _buildUserAvatar() {
+    return CircleAvatar(
+      backgroundColor: userColor,
+      child: const Icon(
+        Icons.person,
+        color: Colors.white,
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -214,19 +214,21 @@ class ChatMessage extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isUser ? Colors.blue : Colors.grey[300],
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: isUser ? Colors.white : Colors.black,
+              child: MarkdownBody(
+                data: text, // Render text as Markdown
+                styleSheet: MarkdownStyleSheet(
+                  p: const TextStyle(
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
           ),
           const SizedBox(width: 8),
-          if (isUser) _buildUserAvatar(ref as Ref),
+          if (isUser) _buildUserAvatar(),
         ],
       ),
     );

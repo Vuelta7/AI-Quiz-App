@@ -90,23 +90,17 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                   )
                 : Column(
                     children: [
-                      ColorFiltered(
-                        colorFilter: const ColorFilter.mode(
-                          Colors.black,
-                          BlendMode.srcIn,
-                        ),
-                        child: Column(
-                          children: [
-                            buildLogo(),
-                            const LearnNText(
-                              fontSize: 30,
-                              text: 'Learn-N',
-                              font: 'PressStart2P',
-                              color: Colors.black,
-                              backgroundColor: Colors.grey,
-                            ),
-                          ],
-                        ),
+                      Column(
+                        children: [
+                          buildLogo(),
+                          const LearnNText(
+                            fontSize: 30,
+                            text: 'Learn-N',
+                            font: 'PressStart2P',
+                            color: Colors.black,
+                            backgroundColor: Colors.grey,
+                          ),
+                        ],
                       )
                     ],
                   ),
@@ -116,12 +110,12 @@ class SplashScreenState extends ConsumerState<SplashScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    loadingText,
-                    style: const TextStyle(
-                      fontFamily: 'PressStart2P',
-                      color: Colors.black,
-                    ),
+                  LearnNText(
+                    fontSize: 18,
+                    text: loadingText,
+                    font: 'PressStart2P',
+                    color: Colors.black,
+                    backgroundColor: Colors.grey,
                   ),
                   Container(
                     width: 260,

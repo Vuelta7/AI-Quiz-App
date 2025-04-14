@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_n/core/provider/streak_pet_provider.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
+import 'package:learn_n/core/widgets/learnn_icon.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/folder/provider/folder_provider.dart';
 import 'package:learn_n/features/home/folder/widget/folder_model_ken.dart';
@@ -94,10 +94,10 @@ class _FolderPageState extends ConsumerState<FolderPage> {
     final userId = ref.watch(userIdProvider);
     final folderSnapshot = ref.watch(folderStreamProvider);
     final textIconColor = ref.watch(textIconColorProvider);
-    final streakPetAsync = ref.watch(streakPetProvider);
 
     return Scaffold(
       backgroundColor: getShade(userColor, 600),
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Column(
@@ -227,10 +227,11 @@ class _FolderPageState extends ConsumerState<FolderPage> {
               ),
             ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: GestureDetector(
-              onTap: () {
+          Positioned(
+            bottom: 65,
+            left: 0,
+            child: IconButton(
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -238,14 +239,13 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                   ),
                 );
               },
-              child: streakPetAsync.when(
-                data: (pet) => Lottie.asset(
-                  pet,
-                  width: 200,
-                  height: 250,
-                ),
-                error: (error, stackTrace) => null,
-                loading: () => null,
+              icon: LearnNIcon(
+                color: textIconColor,
+                size: 80,
+                icon: Icons.smart_toy,
+                shadowColor: getShade(userColor, 500),
+                offset: const Offset(1, 1),
+                blur: 10,
               ),
             ),
           ),

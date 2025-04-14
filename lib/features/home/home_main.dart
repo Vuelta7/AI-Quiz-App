@@ -240,7 +240,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
       child: Scaffold(
         extendBody: true,
         key: _scaffoldKey,
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         body: body,
         floatingActionButton: _selectedIndex == 1
             ? FloatingActionButton(

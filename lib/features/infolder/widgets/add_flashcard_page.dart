@@ -5,6 +5,7 @@ import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/infolder/provider/flashcard_provider.dart';
+import 'package:learn_n/features/infolder/widgets/auto_quiz.dart';
 import 'package:lottie/lottie.dart';
 
 class AddFlashCardPage extends ConsumerStatefulWidget {
@@ -176,6 +177,24 @@ class _AddFlashCardPageState extends ConsumerState<AddFlashCardPage> {
                         ],
                       );
                     },
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              buildRetroButton(
+                'Quiz Generator',
+                height: 60,
+                icon: Icons.quiz,
+                getShade(widget.color, 300),
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AutoQuizPage(
+                        folderId: widget.folderId,
+                        color: widget.color,
+                      ),
+                    ),
                   );
                 },
               ),

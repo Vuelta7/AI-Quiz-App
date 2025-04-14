@@ -6,6 +6,7 @@ class LearnNIcon extends StatelessWidget {
   final Color color;
   final Color shadowColor;
   final double size;
+  final double blur;
 
   const LearnNIcon({
     super.key,
@@ -14,6 +15,7 @@ class LearnNIcon extends StatelessWidget {
     required this.shadowColor,
     this.offset = const Offset(2, 2),
     required this.size,
+    this.blur = 0,
   });
 
   @override
@@ -26,7 +28,7 @@ class LearnNIcon extends StatelessWidget {
         Shadow(
           offset: offset,
           color: shadowColor,
-          blurRadius: 0,
+          blurRadius: blur,
         ),
       ],
     );
