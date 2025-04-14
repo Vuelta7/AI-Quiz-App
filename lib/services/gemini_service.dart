@@ -7,10 +7,10 @@ class GeminiService {
 
   GeminiService() {
     model = GenerativeModel(
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash',
       apiKey: APIKey.gemini,
       generationConfig: GenerationConfig(
-        temperature: 0.7,
+        temperature: 0.3,
         topK: 64,
         topP: 0.95,
         maxOutputTokens: 1024,

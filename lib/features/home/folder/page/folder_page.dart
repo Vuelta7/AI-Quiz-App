@@ -7,6 +7,7 @@ import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/features/home/folder/provider/folder_provider.dart';
 import 'package:learn_n/features/home/folder/widget/folder_model_ken.dart';
+import 'package:learn_n/features/home/learnn%20AI/ai.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -230,7 +231,12 @@ class _FolderPageState extends ConsumerState<FolderPage> {
             alignment: Alignment.bottomCenter,
             child: GestureDetector(
               onTap: () {
-                // Empty function for now
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChatScreen(),
+                  ),
+                );
               },
               child: streakPetAsync.when(
                 data: (pet) => Lottie.asset(

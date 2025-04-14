@@ -77,7 +77,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           'selectedColor': defaultColorHex,
           'streakDays': [],
           'warningGiven': false,
-          'isVIP': false,
           'donation': 0,
         });
 

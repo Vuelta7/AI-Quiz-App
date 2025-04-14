@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
-import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/features/infolder/provider/flashcard_provider.dart';
-import 'package:learn_n/features/infolder/widgets/auto_quiz.dart';
 import 'package:lottie/lottie.dart';
 
 class AddFlashCardPage extends ConsumerStatefulWidget {
@@ -38,10 +36,6 @@ class _AddFlashCardPageState extends ConsumerState<AddFlashCardPage> {
   @override
   Widget build(BuildContext context) {
     final flashcardService = ref.read(flashcardProvider);
-    final isVIP = ref.watch(userProvider).maybeWhen(
-          data: (vip) => vip,
-          orElse: () => false,
-        );
 
     return Scaffold(
       appBar: AppBar(
@@ -185,29 +179,6 @@ class _AddFlashCardPageState extends ConsumerState<AddFlashCardPage> {
                   );
                 },
               ),
-
-              // show only if user is VIP
-              if (isVIP) ...[
-                const SizedBox(height: 16),
-                buildRetroButton(
-                  'Quiz Generator',
-                  height: 60,
-                  icon: Icons.quiz,
-                  getShade(widget.color, 300),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AutoQuizPage(
-                          folderId: widget.folderId,
-                          color: widget.color,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-
               const SizedBox(height: 16),
               Text(
                 "Existing Flashcards:",
@@ -219,7 +190,6 @@ class _AddFlashCardPageState extends ConsumerState<AddFlashCardPage> {
                   fontFamily: 'PressStart2P',
                 ),
               ),
-
               StreamBuilder<QuerySnapshot>(
                 stream: flashcardService.getFlashcards(widget.folderId),
                 builder: (context, snapshot) {
