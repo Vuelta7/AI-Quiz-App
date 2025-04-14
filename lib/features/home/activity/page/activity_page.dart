@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_n/core/provider/streak_pet_provider.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/custome_tile.dart';
@@ -76,6 +77,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
     final streakPointsAsync = ref.watch(streakPointsProvider);
     final textIconColor = ref.watch(textIconColorProvider);
     final leaderboardData = ref.watch(leaderboardProvider);
+    final streakPetAsync = ref.watch(streakPetProvider);
 
     return Scaffold(
       backgroundColor: getShade(userColor, 300),
@@ -109,14 +111,14 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                             const Text('Error loading pet name'),
                       ),
                     ),
-                    Lottie.asset(
-                      streakPoints >= 30
-                          ? 'assets/streakpet1.json'
-                          : streakPoints >= 10
-                              ? 'assets/streakpet2.json'
-                              : 'assets/streakpet3.json',
-                      width: double.infinity,
-                      height: 300,
+                    streakPetAsync.when(
+                      data: (pet) => Lottie.asset(
+                        pet,
+                        width: double.infinity,
+                        height: 300,
+                      ),
+                      error: (error, stackTrace) => const Loading(),
+                      loading: () => const Loading(),
                     ),
                     Align(
                       alignment: Alignment.topRight,
@@ -199,7 +201,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                     child: LearnNText(
                         fontSize: 22,
                         text: 'Weekly Library',
-                        font: 'PressStart2p',
+                        font: 'PressStart2P',
                         color: textIconColor,
                         backgroundColor: userColor),
                   ),
@@ -236,7 +238,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                         LearnNText(
                             fontSize: 22,
                             text: 'Leaderboards',
-                            font: 'PressStart2p',
+                            font: 'PressStart2P',
                             color: textIconColor,
                             backgroundColor: userColor),
                         const SizedBox(height: 16),
@@ -293,7 +295,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                     child: const Shop(),
                   ),
                   const Divider(),
-                  const SizedBox(height: 80),
+                  const SizedBox(height: 70),
                 ],
               ),
             ),

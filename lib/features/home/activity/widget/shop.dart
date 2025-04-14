@@ -97,7 +97,7 @@ class Shop extends ConsumerWidget {
         ];
 
         return SizedBox(
-          height: 750,
+          height: 800,
           child: Column(
             children: [
               Lottie.asset('assets/hints.json', height: 300),

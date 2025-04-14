@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_n/core/provider/streak_pet_provider.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
@@ -92,131 +93,154 @@ class _FolderPageState extends ConsumerState<FolderPage> {
     final userId = ref.watch(userIdProvider);
     final folderSnapshot = ref.watch(folderStreamProvider);
     final textIconColor = ref.watch(textIconColorProvider);
+    final streakPetAsync = ref.watch(streakPetProvider);
 
     return Scaffold(
       backgroundColor: getShade(userColor, 600),
-      body: Column(
+      body: Stack(
         children: [
-          Container(
-            width: double.infinity,
-            height: 80,
-            decoration: BoxDecoration(
-              color: userColor,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(32),
-                bottomRight: Radius.circular(32),
-              ),
-            ),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
-                child: TextFormField(
-                  controller: _searchController,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    color: textIconColor,
-                    fontSize: 14,
+          Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: userColor,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(32),
+                    bottomRight: Radius.circular(32),
                   ),
-                  decoration: InputDecoration(
-                    focusColor: textIconColor,
-                    hintText: 'Search Folder',
-                    hintStyle: TextStyle(
-                      fontFamily: 'PressStart2P',
-                      color: textIconColor,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: textIconColor,
-                    ),
-                    filled: true,
-                    fillColor: getShade(userColor, 600),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
+                    child: TextFormField(
+                      controller: _searchController,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         color: textIconColor,
-                        width: 2,
+                        fontSize: 14,
+                      ),
+                      decoration: InputDecoration(
+                        focusColor: textIconColor,
+                        hintText: 'Search Folder',
+                        hintStyle: TextStyle(
+                          fontFamily: 'PressStart2P',
+                          color: textIconColor,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: textIconColor,
+                        ),
+                        filled: true,
+                        fillColor: getShade(userColor, 600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: textIconColor,
+                            width: 2,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-          Flexible(
-            child: folderSnapshot.when(
-              data: (snapshot) {
-                final docs = snapshot.docs;
-                _folders = _filterFolders(docs.where((folderDoc) {
-                  final folderData = folderDoc.data();
-                  final accessUsers =
-                      List<String>.from(folderData['accessUsers']);
-                  return folderData['creator'] == userId ||
-                      accessUsers.contains(userId);
-                }).toList());
+              Flexible(
+                child: folderSnapshot.when(
+                  data: (snapshot) {
+                    final docs = snapshot.docs;
+                    _folders = _filterFolders(docs.where((folderDoc) {
+                      final folderData = folderDoc.data();
+                      final accessUsers =
+                          List<String>.from(folderData['accessUsers']);
+                      return folderData['creator'] == userId ||
+                          accessUsers.contains(userId);
+                    }).toList());
 
-                _folders.sort((a, b) {
-                  final aPos = _folderPositions[a.id] ?? 0;
-                  final bPos = _folderPositions[b.id] ?? 0;
-                  return aPos.compareTo(bPos);
-                });
+                    _folders.sort((a, b) {
+                      final aPos = _folderPositions[a.id] ?? 0;
+                      final bPos = _folderPositions[b.id] ?? 0;
+                      return aPos.compareTo(bPos);
+                    });
 
-                if (_folders.isEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.all(40.0),
-                    child: SingleChildScrollView(
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Lottie.asset('assets/folders.json'),
-                            Text(
-                              'No Libraries here\nCreate one by clicking the\nAdd Button.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'PressStart2P',
-                                color: textIconColor,
-                              ),
+                    if (_folders.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: SingleChildScrollView(
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Lottie.asset('assets/folders.json'),
+                                Text(
+                                  'No Libraries here\nCreate one by clicking the\nAdd Button.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'PressStart2P',
+                                    color: textIconColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }
-
-                return ReorderableListView.builder(
-                  itemCount: _folders.length + 1,
-                  onReorder: _onReorder,
-                  itemBuilder: (context, index) {
-                    if (index == _folders.length) {
-                      return const ListTile(
-                        key: ValueKey('dummy_space'),
-                        title: SizedBox(height: 50),
                       );
                     }
 
-                    final folderDoc = _folders[index];
-                    final folderData = folderDoc.data() as Map<String, dynamic>;
-                    final isImported =
-                        List<String>.from(folderData['accessUsers'])
-                            .contains(userId);
+                    return ReorderableListView.builder(
+                      itemCount: _folders.length + 1,
+                      onReorder: _onReorder,
+                      itemBuilder: (context, index) {
+                        if (index == _folders.length) {
+                          return const ListTile(
+                            key: ValueKey('dummy_space'),
+                            title: SizedBox(height: 50),
+                          );
+                        }
 
-                    return ListTile(
-                      key: ValueKey(folderDoc.id),
-                      title: FolderModelKen(
-                        folderId: folderDoc.id,
-                        folderColor: hexToColor(folderData['color']),
-                        folderName: folderData['folderName'],
-                        description: folderData['description'],
-                        isImported: isImported,
-                        userId: userId!,
-                      ),
+                        final folderDoc = _folders[index];
+                        final folderData =
+                            folderDoc.data() as Map<String, dynamic>;
+                        final isImported =
+                            List<String>.from(folderData['accessUsers'])
+                                .contains(userId);
+
+                        return ListTile(
+                          key: ValueKey(folderDoc.id),
+                          title: FolderModelKen(
+                            folderId: folderDoc.id,
+                            folderColor: hexToColor(folderData['color']),
+                            folderName: folderData['folderName'],
+                            description: folderData['description'],
+                            isImported: isImported,
+                            userId: userId!,
+                          ),
+                        );
+                      },
                     );
                   },
-                );
+                  loading: () => const Loading(),
+                  error: (error, stackTrace) =>
+                      Center(child: Text('Error: $error')),
+                ),
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: GestureDetector(
+              onTap: () {
+                // Empty function for now
               },
-              loading: () => const Loading(),
-              error: (error, stackTrace) =>
-                  Center(child: Text('Error: $error')),
+              child: streakPetAsync.when(
+                data: (pet) => Lottie.asset(
+                  pet,
+                  width: 200,
+                  height: 250,
+                ),
+                error: (error, stackTrace) => null,
+                loading: () => null,
+              ),
             ),
           ),
         ],

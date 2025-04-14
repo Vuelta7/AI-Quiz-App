@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/provider/user_provider.dart';
 import 'package:learn_n/core/widgets/learnn_icon.dart';
+import 'package:learn_n/core/widgets/learnn_text.dart';
 import 'package:learn_n/features/home/activity/page/activity_page.dart';
 import 'package:learn_n/features/home/folder/page/add_folder_page.dart';
 import 'package:learn_n/features/home/folder/page/folder_page.dart';
@@ -279,18 +280,18 @@ class _HomeMainState extends ConsumerState<HomeMain>
                   offset: const Offset(2, 2),
                 ),
                 if (showLabel)
-                  Text(
-                    index == 0
+                  LearnNText(
+                    fontSize: 8,
+                    text: index == 0
                         ? 'Activity'
                         : index == 1
                             ? 'Library'
                             : 'Options',
-                    style: TextStyle(
-                      color: textIconColor,
-                      fontSize: 8,
-                      fontFamily: 'PressStart2P',
-                    ),
-                  )
+                    font: 'PressStart2P',
+                    color: textIconColor,
+                    backgroundColor: getShade(userColor, 500),
+                    offset: const Offset(2, 2),
+                  ),
               ],
             );
           },
