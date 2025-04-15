@@ -1,21 +1,20 @@
-# Learn-N: Study Smarter, Not Harder
+<h1>Learn-N</h1> 
 
 <div align="center">
-  <img src="assets/logo_icon.png" alt="Learn-N Logo" width="150"/>
+  <img src="assets/learnn_ai_pic.webp" alt="Learn-N Logo" width="400"/>
+  <img src="assets/learnn_showcase.webp" alt="Learn-N Logo" width="400"/>
   <br>
   <b>Master any subject with Active Recall learning</b>
 </div>
 
 ## 🚀 Overview
 
-Learn-N is a powerful, intuitive study companion designed to help students effectively master any subject through Active Recall - one of the most scientifically-proven techniques for long-term information retention. Whether you're studying programming fundamentals, SQL, or any other topic, Learn-N transforms your learning experience.
-
-
+Learn-N is a intuitive study companion designed to help students effectively master any subject through Active Recall - one of the most scientifically-proven techniques for long-term information retention. Whether you're studying programming or any other topic, Learn-N transforms your learning experience.
 
 ## ✨ Key Features
 
 ### 📚 Weekly Library
-Access structured learning materials organized by subject, from Programming Fundamentals to SQL and JavaScript, all presented in an easy-to-navigate interface.
+Access structured learning materials organized by subject, from Programming Fundamentals, all presented in an easy-to-navigate interface.
 
 ### 🤖 Learn-N AI Assistant
 - Get instant answers to your questions
@@ -37,16 +36,9 @@ Access structured learning materials organized by subject, from Programming Fund
 ## 🛠️ Technology
 
 Learn-N is built using modern development frameworks, offering a seamless experience across multiple platforms:
-- Flutter/React Native for cross-platform compatibility
+- Flutter for cross-platform compatibility
 - AI-powered quiz generation and assistance
 - Clean, distraction-free UI designed for focus
-
-## 📱 Platforms
-
-Available on:
-- iOS
-- Android
-- Web (coming soon)
 
 ## 💯 Why Learn-N?
 
@@ -56,25 +48,17 @@ Available on:
 - **User-Friendly Design**: Intuitive interface requires no learning curve
 - **Customization**: Tailor the app to your preferences and study habits
 
-## 📋 Roadmap
-
-- Community quiz sharing
-- Advanced statistics and learning analytics
-- Additional subject libraries
-- Spaced repetition scheduling
-- Dark mode
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📬 Contact
 
-Questions? Suggestions? Reach out to us at [your-email@example.com]
+Questions? Suggestions? Reach out to urielvuelta@gmail.com
 
 ## 📄 License
 
-This project is licensed under the [License Name] - see the LICENSE file for details.
+This project is licensed under the GNU General Public License v3.0 – see the LICENSE file for details.
 
 ---
 
