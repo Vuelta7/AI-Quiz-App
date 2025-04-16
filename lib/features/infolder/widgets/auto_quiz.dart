@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/widgets/loading.dart';
 import 'package:learn_n/core/widgets/retro_button.dart';
 import 'package:learn_n/services/gemini_service.dart';
 import 'package:lottie/lottie.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class AutoQuizPage extends StatefulWidget {
   final String folderId;
@@ -84,6 +87,44 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
       timeoutTimer.cancel();
       setState(() {
         _isLoading = false;
+        _isTimeout = true;
+      });
+    }
+  }
+
+  Future<void> pickAndExtractText() async {
+    setState(() {
+      _isLoading = true;
+    });
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      String filePath = result.files.single.path!;
+      File file = File(filePath);
+
+      try {
+        final PdfDocument pdfDoc = PdfDocument(
+          inputBytes: file.readAsBytesSync(),
+        );
+        String text = "";
+        for (int i = 0; i < pdfDoc.pages.count; i++) {
+          PdfTextExtractor extractor = PdfTextExtractor(pdfDoc);
+          text += "${extractor.extractText()}\n\n";
+        }
+
+        pdfDoc.dispose();
+
+        generateQuestionsFromText(text, '');
+      } catch (e) {
+        setState(() {
+          _isTimeout = true;
+        });
+      }
+    } else {
+      setState(() {
         _isTimeout = true;
       });
     }
@@ -243,6 +284,15 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
                                 setState(() {
                                   _isLoading = false;
                                 });
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            buildRetroButton(
+                              'Generate Questions from PDF',
+                              icon: Icons.picture_as_pdf_rounded,
+                              getShade(widget.color, 300),
+                              () async {
+                                await pickAndExtractText();
                               },
                             ),
                             Padding(
