@@ -300,10 +300,8 @@ class _PlayPageState extends State<PlayPage> {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final snapshot = await transaction.get(userDoc);
         if (snapshot.exists) {
-          final currentRankPoints = snapshot.data()?['rankpoints'] ?? 0;
           final currentCurrencyPoints = snapshot.data()?['currencypoints'] ?? 0;
           transaction.update(userDoc, {
-            'rankpoints': currentRankPoints + points,
             'currencypoints': currentCurrencyPoints + points,
           });
         }
