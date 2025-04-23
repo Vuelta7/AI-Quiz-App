@@ -37,7 +37,7 @@ class FlashcardsPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Lottie.asset(
-                    'assets/makequiz.json',
+                    'assets/lottie/makequiz.json',
                   ),
                   Text(
                     'No Flashcards here!\nCreate one by clicking the\n"Edit library"',

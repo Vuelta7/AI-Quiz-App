@@ -100,7 +100,7 @@ class Shop extends ConsumerWidget {
           height: 800,
           child: Column(
             children: [
-              Lottie.asset('assets/hints.json', height: 300),
+              Lottie.asset('assets/lottie/hints.json', height: 300),
               Text(
                 'Points: $currencyPoints',
                 style: TextStyle(

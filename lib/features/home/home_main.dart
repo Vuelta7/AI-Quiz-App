@@ -175,7 +175,7 @@ class _HomeMainState extends ConsumerState<HomeMain>
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Lottie.asset('assets/sadstar.json'),
+              Lottie.asset('assets/lottie/sadstar.json'),
               Text(
                 message,
                 textAlign: TextAlign.center,

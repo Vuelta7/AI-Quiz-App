@@ -42,7 +42,7 @@ class DoNotDisturbPage extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Lottie.asset('assets/dnd.json'),
+              Lottie.asset('assets/lottie/dnd.json'),
               const SizedBox(height: 20),
               Text(
                 dndController.notifPolicyAccess

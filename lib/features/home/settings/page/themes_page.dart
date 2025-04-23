@@ -57,7 +57,7 @@ class _ThemesPageState extends ConsumerState<ThemesPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Lottie.asset('assets/theme.json'),
+            Lottie.asset('assets/lottie/theme.json'),
             ColorPicker(
               pickersEnabled: const {
                 ColorPickerType.wheel: true,

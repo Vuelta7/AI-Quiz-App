@@ -172,7 +172,7 @@ class _FolderPageState extends ConsumerState<FolderPage> {
                           child: Center(
                             child: Column(
                               children: [
-                                Lottie.asset('assets/folders.json'),
+                                Lottie.asset('assets/lottie/folders.json'),
                                 Text(
                                   'No Libraries here\nCreate one by clicking the\nAdd Button.',
                                   textAlign: TextAlign.center,

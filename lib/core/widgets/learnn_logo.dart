@@ -7,7 +7,7 @@ Widget buildLogo([Color color = Colors.black]) {
       BlendMode.srcIn,
     ),
     child: Image.asset(
-      'assets/logo_icon.png',
+      'assets/images/logo_icon.png',
       height: 200,
       width: 200,
     ),

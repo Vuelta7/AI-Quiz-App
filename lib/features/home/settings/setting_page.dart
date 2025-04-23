@@ -42,7 +42,7 @@ class SettingPage extends ConsumerWidget {
                         BlendMode.srcIn,
                       ),
                       child: Image.asset(
-                        'assets/logo_icon.png',
+                        'assets/images/logo_icon.png',
                         height: 100,
                         width: 100,
                       ),

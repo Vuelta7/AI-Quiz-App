@@ -34,7 +34,7 @@ class _FeedbackPageState extends ConsumerState<FeedbackPage> {
     return Scaffold(
       appBar: AppBar(
         title: Image.asset(
-          'assets/logo.png',
+          'assets/images/logo.png',
           width: 170,
         ),
         toolbarHeight: 70,

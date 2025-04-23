@@ -31,13 +31,14 @@ dependencies:
   flutter_markdown: ^0.7.7
   file_picker: ^10.1.2
   syncfusion_flutter_pdf: ^29.1.38
+  just_audio: ^0.10.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  flutter_launcher_icons: ^0.14.1
+  flutter_launcher_icons: ^0.14.3
   custom_lint: ^0.7.5
   riverpod_lint: ^2.6.5
 
@@ -53,33 +54,12 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/logo_icon.png
-    - assets/wrong_sf.mp3
-    - assets/correct_sf.mp3
-    - assets/fire.json
-    - assets/streakpet1.json
-    - assets/streakpet2.json
-    - assets/streakpet3.json
-    - assets/makequiz.json
-    - assets/leaderboard.json
-    - assets/digitalizequiz.json
-    - assets/folders.json
-    - assets/logo.png
-    - assets/hints.json
-    - assets/effectbg.json
-    - assets/dnd.json
-    - assets/theme.json
-    - assets/confetti.json
-    - assets/award.json
-    - assets/loading.json
-    - assets/sti_logo.webp
-    - assets/1.webp
-    - assets/2.webp
-    - assets/3.webp
-    - assets/sadstar.json
+    - assets/audio/
+    - assets/lottie/
+    - assets/images/
 
-flutter_icons:
-  android: true
+flutter_launcher_icons:
+  android: "launcher_icon"
   ios: true
-  web: true
-  image_path: "assets/logo_icon.png"
+  image_path: "assets/images/logo_icon.png"
+  min_sdk_android: 21

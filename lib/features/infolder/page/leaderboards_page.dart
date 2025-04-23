@@ -25,7 +25,7 @@ class LeaderboardPage extends StatelessWidget {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Column(
             children: [
-              Lottie.asset('assets/award.json'),
+              Lottie.asset('assets/lottie/award.json'),
               const Divider(
                 color: Colors.white,
                 thickness: 5,
@@ -53,7 +53,7 @@ class LeaderboardPage extends StatelessWidget {
 
         return Column(
           children: [
-            Lottie.asset('assets/award.json'),
+            Lottie.asset('assets/lottie/award.json'),
             const Divider(
               color: Colors.white,
               thickness: 5,

@@ -302,7 +302,7 @@ class _AutoQuizPageState extends State<AutoQuizPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Lottie.asset(
-                                      'assets/makequiz.json',
+                                      'assets/lottie/makequiz.json',
                                     ),
                                     Text(
                                       'Generate by copy and pasting your notes in textfield then press the "Generate Questions from Text", then wait for few seconds.',

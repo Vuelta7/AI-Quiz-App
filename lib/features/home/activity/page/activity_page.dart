@@ -91,7 +91,7 @@ class _ActivtyPageState extends ConsumerState<ActivtyPage> {
                 child: Stack(
                   children: [
                     Lottie.asset(
-                      'assets/effectbg.json',
+                      'assets/lottie/effectbg.json',
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: 200,

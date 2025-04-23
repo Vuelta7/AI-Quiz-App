@@ -19,19 +19,19 @@ class _LiquidSwipeStreakState extends State<LiquidSwipeStreak> {
     StreakTutorialPage(
       description:
           "This is your default streak pet. Keep your streak for 10 days to upgrade to Streak Pet 2!",
-      lottieAsset: 'assets/streakpet3.json',
+      lottieAsset: 'assets/lottie/streakpet3.json',
       daysRequired: "0-9 Days",
       color: Colors.purple[300]!,
     ),
     const StreakTutorialPage(
       description: "Keep your streak for 30 days to upgrade to Streak Pet 1!",
-      lottieAsset: 'assets/streakpet2.json',
+      lottieAsset: 'assets/lottie/streakpet2.json',
       daysRequired: "10-29 Days",
       color: Colors.teal,
     ),
     const StreakTutorialPage(
       description: "Keep your streak alive to maintain this pet!",
-      lottieAsset: 'assets/streakpet1.json',
+      lottieAsset: 'assets/lottie/streakpet1.json',
       daysRequired: "30+ Days",
       color: Colors.green,
     ),
@@ -158,7 +158,7 @@ class StreakTutorialPage extends StatelessWidget {
             height: 300,
             child: Stack(children: [
               Lottie.asset(
-                'assets/effectbg.json',
+                'assets/lottie/effectbg.json',
                 width: 300,
                 height: 300,
               ),

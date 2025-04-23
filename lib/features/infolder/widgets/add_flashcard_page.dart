@@ -222,7 +222,7 @@ class _AddFlashCardPageState extends ConsumerState<AddFlashCardPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Lottie.asset('assets/makequiz.json'),
+                            Lottie.asset('assets/lottie/makequiz.json'),
                             const Text(
                               'No Flashcards here!\nCreate one by clicking the\n"Add Flashcard"',
                               textAlign: TextAlign.center,

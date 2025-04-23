@@ -1,6 +1,6 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
 import 'package:learn_n/core/widgets/learnn_icon.dart';
 import 'package:learn_n/core/widgets/learnn_text.dart';
@@ -40,6 +40,7 @@ class _PlayPageState extends State<PlayPage> {
   String feedbackMessage = 'Work Smart';
   final TextEditingController _controller = TextEditingController();
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _doneSoundPlayer = AudioPlayer();
   List<List<String>> cachedAnswers = [];
   List<String> positiveFeedback = [
     "Great Job!",
@@ -84,6 +85,7 @@ class _PlayPageState extends State<PlayPage> {
     _stopwatch = Stopwatch()..start();
     _fetchHintCount();
     _loadModePreference();
+    _doneSoundPlayer.setAsset('assets/audio/done.mp3');
   }
 
   Future<void> _fetchHintCount() async {
@@ -132,7 +134,8 @@ class _PlayPageState extends State<PlayPage> {
       if (userAnswer.trim().toLowerCase() ==
           correctAnswer.trim().toLowerCase()) {
         currentHint = '';
-        _audioPlayer.play(AssetSource('correct_sf.mp3'));
+        _audioPlayer.setAsset('assets/audio/correct_sf.mp3');
+        _audioPlayer.play();
         feedbackMessage =
             positiveFeedback[currentIndex % positiveFeedback.length];
         _nextQuestion();
@@ -142,7 +145,8 @@ class _PlayPageState extends State<PlayPage> {
         if (widget.isMultipleOptionMode) {
           attemptedAnswers.add(userAnswer);
         }
-        _audioPlayer.play(AssetSource('wrong_sf.mp3'));
+        _audioPlayer.setAsset('assets/audio/wrong_sf.mp3');
+        _audioPlayer.play();
 
         feedbackMessage = negativeFeedback[
             wrongAnswerCount[currentIndex] % negativeFeedback.length];
@@ -213,6 +217,8 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _showCompletionDialog() {
+    _doneSoundPlayer.seek(Duration.zero);
+    _doneSoundPlayer.play();
     _stopwatch.stop();
     final timeSpent = _stopwatch.elapsed.inSeconds;
 
@@ -226,7 +232,7 @@ class _PlayPageState extends State<PlayPage> {
           child: Stack(
             children: [
               Lottie.asset(
-                'assets/confetti.json',
+                'assets/lottie/confetti.json',
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
@@ -462,7 +468,7 @@ class _PlayPageState extends State<PlayPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         LearnNText(
-                          fontSize: 16,
+                          fontSize: 12,
                           text: feedbackMessage,
                           font: 'PressStart2P',
                           color: feedbackMessage == 'Try Again!'

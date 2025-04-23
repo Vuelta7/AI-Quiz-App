@@ -17,7 +17,7 @@ class WelcomePage extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Lottie.asset(
-            'assets/digitalizequiz.json',
+            'assets/lottie/digitalizequiz.json',
             fit: BoxFit.cover,
           ),
           const Text(
@@ -50,7 +50,7 @@ class IntroPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Lottie.asset('assets/fire.json'),
+          Lottie.asset('assets/lottie/fire.json'),
           const Text(
             "Become a productivity master and be an egoist to reach Rank 1!",
             textAlign: TextAlign.center,
@@ -88,22 +88,26 @@ class StreakIntro extends StatelessWidget {
                 Positioned(
                   left: -120,
                   top: -40,
-                  child: Lottie.asset('assets/effectbg.json', width: 600),
+                  child:
+                      Lottie.asset('assets/lottie/effectbg.json', width: 600),
                 ),
                 Positioned(
                   left: -60,
                   top: 180,
-                  child: Lottie.asset('assets/streakpet1.json', width: 300),
+                  child:
+                      Lottie.asset('assets/lottie/streakpet1.json', width: 300),
                 ),
                 Positioned(
                   left: 130,
                   top: 180,
-                  child: Lottie.asset('assets/streakpet2.json', width: 300),
+                  child:
+                      Lottie.asset('assets/lottie/streakpet2.json', width: 300),
                 ),
                 Positioned(
                   left: 30,
                   top: 140,
-                  child: Lottie.asset('assets/streakpet3.json', width: 300),
+                  child:
+                      Lottie.asset('assets/lottie/streakpet3.json', width: 300),
                 ),
               ],
             ),

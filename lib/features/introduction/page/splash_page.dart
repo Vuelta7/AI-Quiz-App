@@ -84,7 +84,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                       BlendMode.srcIn,
                     ),
                     child: Image.asset(
-                      'assets/logo.png',
+                      'assets/images/logo.png',
                       width: 500,
                     ),
                   )
