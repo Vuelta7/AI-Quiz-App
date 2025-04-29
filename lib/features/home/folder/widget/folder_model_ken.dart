@@ -76,6 +76,7 @@ class FolderModelKen extends ConsumerWidget {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    //put a better font here
                     Text(
                       folderName,
                       style: TextStyle(
@@ -97,6 +98,7 @@ class FolderModelKen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 16,
                         color: folderColor,
+                        fontWeight: FontWeight.bold,
                         shadows: [
                           Shadow(
                             offset: const Offset(1, 1),
