@@ -43,15 +43,13 @@ class FolderController extends StateNotifier<bool> {
       final id = await _generateUnique4DigitCode();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? userId = prefs.getString('userId');
-      if (userId != null) {
-        await _firestore.collection("folders").doc(id).set({
-          "folderName": folderName,
-          "description": description,
-          "creator": userId,
-          "color": color,
-          "accessUsers": [],
-        });
-      }
+      await _firestore.collection("folders").doc(id).set({
+        "folderName": folderName,
+        "description": description,
+        "creator": userId,
+        "color": color,
+        "accessUsers": [],
+      });
     } finally {
       state = false;
     }
@@ -62,11 +60,9 @@ class FolderController extends StateNotifier<bool> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? userId = prefs.getString('userId');
-      if (userId != null) {
-        await _firestore.collection("folders").doc(folderId).update({
-          "accessUsers": FieldValue.arrayUnion([userId]),
-        });
-      }
+      await _firestore.collection("folders").doc(folderId).update({
+        "accessUsers": FieldValue.arrayUnion([userId]),
+      });
     } finally {
       state = false;
     }

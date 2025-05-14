@@ -46,14 +46,14 @@ class _PlayPageState extends State<PlayPage> {
     "Great Job!",
     "Well Done!",
     "Excellent!",
-    "Keep it up!"
+    "Keep it up!",
   ];
 
   List<String> negativeFeedback = [
     "Try Again!",
     "Oops, not quite!",
     "give it another shot!",
-    "Almost there!"
+    "Almost there!",
   ];
   late Stopwatch _stopwatch;
   final FocusNode _focusNode = FocusNode();
@@ -70,11 +70,12 @@ class _PlayPageState extends State<PlayPage> {
     if (widget.isMultipleOptionMode) {
       for (var question in widget.questions) {
         String correctAnswer = question['answer']!;
-        List<String> incorrectAnswers = widget.questions
-            .where((q) => q['answer'] != correctAnswer)
-            .map((q) => q['answer']!)
-            .toSet()
-            .toList();
+        List<String> incorrectAnswers =
+            widget.questions
+                .where((q) => q['answer'] != correctAnswer)
+                .map((q) => q['answer']!)
+                .toSet()
+                .toList();
 
         incorrectAnswers.shuffle();
         List<String> answers = [correctAnswer, ...incorrectAnswers.take(3)];
@@ -91,14 +92,11 @@ class _PlayPageState extends State<PlayPage> {
   Future<void> _fetchHintCount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
-    if (userId != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(userId);
-      final userSnapshot = await userDoc.get();
-      setState(() {
-        hintCount = userSnapshot.data()?['hints'] ?? 0;
-      });
-    }
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+    final userSnapshot = await userDoc.get();
+    setState(() {
+      hintCount = userSnapshot.data()?['hints'] ?? 0;
+    });
   }
 
   Future<void> _loadModePreference() async {
@@ -148,8 +146,9 @@ class _PlayPageState extends State<PlayPage> {
         _audioPlayer.setAsset('assets/audio/wrong_sf.mp3');
         _audioPlayer.play();
 
-        feedbackMessage = negativeFeedback[
-            wrongAnswerCount[currentIndex] % negativeFeedback.length];
+        feedbackMessage =
+            negativeFeedback[wrongAnswerCount[currentIndex] %
+                negativeFeedback.length];
 
         if (widget.isMultipleOptionMode && attemptedAnswers.length == 3) {
           feedbackMessage = 'Wrong, next question...';
@@ -179,7 +178,9 @@ class _PlayPageState extends State<PlayPage> {
   void _previousQuestion() {
     if (currentIndex > 0) {
       _pageController.previousPage(
-          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
       setState(() {
         currentIndex--;
         currentHint = '';
@@ -191,28 +192,25 @@ class _PlayPageState extends State<PlayPage> {
   void _showHint() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
-    if (userId != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(userId);
-      final userSnapshot = await userDoc.get();
-      int hintCount = userSnapshot.data()?['hints'] ?? 0;
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+    final userSnapshot = await userDoc.get();
+    int hintCount = userSnapshot.data()?['hints'] ?? 0;
 
-      if (hintCount > 0) {
-        final answer = widget.questions[currentIndex]['answer']!;
-        setState(() {
-          if (currentHint.length < answer.length) {
-            currentHint = answer.substring(0, currentHint.length + 1);
-            userDoc.update({'hints': hintCount - 1});
-            _fetchHintCount();
-          } else {
-            feedbackMessage = 'Hint maxed out';
-          }
-        });
-      } else {
-        setState(() {
-          feedbackMessage = 'No hints left';
-        });
-      }
+    if (hintCount > 0) {
+      final answer = widget.questions[currentIndex]['answer']!;
+      setState(() {
+        if (currentHint.length < answer.length) {
+          currentHint = answer.substring(0, currentHint.length + 1);
+          userDoc.update({'hints': hintCount - 1});
+          _fetchHintCount();
+        } else {
+          feedbackMessage = 'Hint maxed out';
+        }
+      });
+    } else {
+      setState(() {
+        feedbackMessage = 'No hints left';
+      });
     }
   }
 
@@ -253,10 +251,7 @@ class _PlayPageState extends State<PlayPage> {
                     const SizedBox(height: 20),
                     Text(
                       "You've completed all questions.\n\nTotal Wrong Attempts: $wrongAnswers\nTime Spent: ${timeSpent}s",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
+                      style: const TextStyle(fontSize: 20, color: Colors.black),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 10),
@@ -265,12 +260,13 @@ class _PlayPageState extends State<PlayPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => InFolderMain(
-                              folderName: widget.folderName,
-                              folderId: widget.folderId,
-                              color: widget.color,
-                              isImported: widget.isImported,
-                            ),
+                            builder:
+                                (context) => InFolderMain(
+                                  folderName: widget.folderName,
+                                  folderId: widget.folderId,
+                                  color: widget.color,
+                                  isImported: widget.isImported,
+                                ),
                           ),
                         );
                         await _addPointsToUser(20);
@@ -300,52 +296,43 @@ class _PlayPageState extends State<PlayPage> {
   Future<void> _addPointsToUser(int points) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
-    if (userId != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(userId);
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        final snapshot = await transaction.get(userDoc);
-        if (snapshot.exists) {
-          final currentCurrencyPoints = snapshot.data()?['currencypoints'] ?? 0;
-          transaction.update(userDoc, {
-            'currencypoints': currentCurrencyPoints + points,
-          });
-        }
-      });
-    }
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(userDoc);
+      if (snapshot.exists) {
+        final currentCurrencyPoints = snapshot.data()?['currencypoints'] ?? 0;
+        transaction.update(userDoc, {
+          'currencypoints': currentCurrencyPoints + points,
+        });
+      }
+    });
   }
 
   Future<void> _updateLeaderboard(int timeSpent) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
-    if (userId != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(userId);
-      final userSnapshot = await userDoc.get();
-      final username = userSnapshot.data()?['username'] ?? 'Unknown';
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+    final userSnapshot = await userDoc.get();
+    final username = userSnapshot.data()?['username'] ?? 'Unknown';
 
-      final leaderboardDoc = FirebaseFirestore.instance
-          .collection('folders')
-          .doc(widget.folderId)
-          .collection('leaderboard')
-          .doc(userId);
+    final leaderboardDoc = FirebaseFirestore.instance
+        .collection('folders')
+        .doc(widget.folderId)
+        .collection('leaderboard')
+        .doc(userId);
 
-      final leaderboardSnapshot = await leaderboardDoc.get();
-      if (leaderboardSnapshot.exists) {
-        final previousTimeSpent =
-            leaderboardSnapshot.data()?['timeSpent'] ?? double.infinity;
-        if (timeSpent < previousTimeSpent) {
-          await leaderboardDoc.set({
-            'username': username,
-            'timeSpent': timeSpent,
-          });
-        }
-      } else {
+    final leaderboardSnapshot = await leaderboardDoc.get();
+    if (leaderboardSnapshot.exists) {
+      final previousTimeSpent =
+          leaderboardSnapshot.data()?['timeSpent'] ?? double.infinity;
+      if (timeSpent < previousTimeSpent) {
         await leaderboardDoc.set({
           'username': username,
           'timeSpent': timeSpent,
         });
       }
+    } else {
+      await leaderboardDoc.set({'username': username, 'timeSpent': timeSpent});
     }
   }
 
@@ -360,46 +347,49 @@ class _PlayPageState extends State<PlayPage> {
     List<String> answers = cachedAnswers[currentIndex];
 
     return Column(
-      children: answers.map((answer) {
-        Color buttonColor =
-            attemptedAnswers.contains(answer) ? Colors.grey : widget.color;
+      children:
+          answers.map((answer) {
+            Color buttonColor =
+                attemptedAnswers.contains(answer) ? Colors.grey : widget.color;
 
-        return Container(
-          padding: const EdgeInsets.all(4.0),
-          decoration: const BoxDecoration(),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              padding: const EdgeInsets.all(15),
-              backgroundColor: buttonColor,
-              side: BorderSide(
-                  color: getColorForTextAndIcon(widget.color), width: 3),
-            ),
-            onPressed: () => checkAnswer(answer),
-            child: SizedBox(
-              width: double.infinity,
-              child: Text(
-                answer,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: getColorForTextAndIcon(buttonColor),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  shadows: [
-                    Shadow(
-                      offset: const Offset(2, 2),
-                      color: getShade(widget.color, 500),
-                      blurRadius: 0,
+            return Container(
+              padding: const EdgeInsets.all(4.0),
+              decoration: const BoxDecoration(),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.all(15),
+                  backgroundColor: buttonColor,
+                  side: BorderSide(
+                    color: getColorForTextAndIcon(widget.color),
+                    width: 3,
+                  ),
+                ),
+                onPressed: () => checkAnswer(answer),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    answer,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: getColorForTextAndIcon(buttonColor),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      shadows: [
+                        Shadow(
+                          offset: const Offset(2, 2),
+                          color: getShade(widget.color, 500),
+                          blurRadius: 0,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        );
-      }).toList(),
+            );
+          }).toList(),
     );
   }
 
@@ -415,10 +405,7 @@ class _PlayPageState extends State<PlayPage> {
           text: widget.folderName,
           font: 'PressStart2P',
           color: getColorForTextAndIcon(widget.color),
-          backgroundColor: getShade(
-            widget.color,
-            500,
-          ),
+          backgroundColor: getShade(widget.color, 500),
         ),
         leading: IconButton(
           icon: LearnNIcon(
@@ -471,13 +458,11 @@ class _PlayPageState extends State<PlayPage> {
                           fontSize: 12,
                           text: feedbackMessage,
                           font: 'PressStart2P',
-                          color: feedbackMessage == 'Try Again!'
-                              ? Colors.red
-                              : getColorForTextAndIcon(widget.color),
-                          backgroundColor: getShade(
-                            widget.color,
-                            500,
-                          ),
+                          color:
+                              feedbackMessage == 'Try Again!'
+                                  ? Colors.red
+                                  : getColorForTextAndIcon(widget.color),
+                          backgroundColor: getShade(widget.color, 500),
                         ),
                         const SizedBox(width: 10),
                         Row(
@@ -494,10 +479,7 @@ class _PlayPageState extends State<PlayPage> {
                               text: hintCount.toString(),
                               font: 'PressStart2P',
                               color: getColorForTextAndIcon(widget.color),
-                              backgroundColor: getShade(
-                                widget.color,
-                                500,
-                              ),
+                              backgroundColor: getShade(widget.color, 500),
                             ),
                           ],
                         ),
@@ -528,8 +510,9 @@ class _PlayPageState extends State<PlayPage> {
                                     borderRadius: BorderRadius.circular(9),
                                     border: Border.all(
                                       width: 3,
-                                      color:
-                                          getColorForTextAndIcon(widget.color),
+                                      color: getColorForTextAndIcon(
+                                        widget.color,
+                                      ),
                                     ),
                                   ),
                                   child: Column(
@@ -543,12 +526,15 @@ class _PlayPageState extends State<PlayPage> {
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold,
                                           color: getColorForTextAndIcon(
-                                              widget.color),
+                                            widget.color,
+                                          ),
                                           shadows: [
                                             Shadow(
                                               offset: const Offset(2, 2),
-                                              color:
-                                                  getShade(widget.color, 500),
+                                              color: getShade(
+                                                widget.color,
+                                                500,
+                                              ),
                                               blurRadius: 0,
                                             ),
                                           ],
@@ -558,24 +544,29 @@ class _PlayPageState extends State<PlayPage> {
                                       Divider(
                                         thickness: 3,
                                         color: getColorForTextAndIcon(
-                                            widget.color),
+                                          widget.color,
+                                        ),
                                       ),
                                       Expanded(
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
+                                            horizontal: 10,
+                                          ),
                                           child: SingleChildScrollView(
                                             child: Text(
                                               question['question']!,
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 color: getColorForTextAndIcon(
-                                                    widget.color),
+                                                  widget.color,
+                                                ),
                                                 shadows: [
                                                   Shadow(
                                                     offset: const Offset(2, 2),
                                                     color: getShade(
-                                                        widget.color, 500),
+                                                      widget.color,
+                                                      500,
+                                                    ),
                                                     blurRadius: 0,
                                                   ),
                                                 ],
@@ -600,59 +591,60 @@ class _PlayPageState extends State<PlayPage> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              child: isMultipleOptionMode
-                  ? buildAnswerButtons()
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Material(
-                        elevation: 2,
-                        borderRadius: BorderRadius.circular(8),
-                        child: TextField(
-                          controller: _controller,
-                          focusNode: _focusNode,
-                          onSubmitted: checkAnswer,
-                          style: const TextStyle(
-                            fontFamily: 'Arial',
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontSize: 14,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Type Answer',
-                            hintStyle: const TextStyle(
-                              fontFamily: 'PressStart2P',
-                              color: Color.fromARGB(150, 0, 0, 0),
-                            ),
-                            labelStyle: const TextStyle(
-                              fontFamily: 'PressStart2P',
+              child:
+                  isMultipleOptionMode
+                      ? buildAnswerButtons()
+                      : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Material(
+                          elevation: 2,
+                          borderRadius: BorderRadius.circular(8),
+                          child: TextField(
+                            controller: _controller,
+                            focusNode: _focusNode,
+                            onSubmitted: checkAnswer,
+                            style: const TextStyle(
+                              fontFamily: 'Arial',
                               color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 14,
                             ),
-                            filled: true,
-                            fillColor: widget.color,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: getColorForTextAndIcon(widget.color),
-                                width: 3,
+                            decoration: InputDecoration(
+                              hintText: 'Type Answer',
+                              hintStyle: const TextStyle(
+                                fontFamily: 'PressStart2P',
+                                color: Color.fromARGB(150, 0, 0, 0),
                               ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: getColorForTextAndIcon(widget.color),
-                                width: 3,
+                              labelStyle: const TextStyle(
+                                fontFamily: 'PressStart2P',
+                                color: Color.fromARGB(255, 0, 0, 0),
                               ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: getColorForTextAndIcon(widget.color),
-                                width: 3,
+                              filled: true,
+                              fillColor: widget.color,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: getColorForTextAndIcon(widget.color),
+                                  width: 3,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: getColorForTextAndIcon(widget.color),
+                                  width: 3,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: getColorForTextAndIcon(widget.color),
+                                  width: 3,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
             ),
           ),
           Row(

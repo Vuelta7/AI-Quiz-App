@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:learn_n/core/provider/dnd_provider.dart';
 import 'package:learn_n/core/provider/user_color_provider.dart';
@@ -36,7 +35,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  usePathUrlStrategy();
+  ErrorWidget.builder = (FlutterErrorDetails details) => Container();
   // debugPaintSizeEnabled = true;
   runApp(
     const ProviderScope(
